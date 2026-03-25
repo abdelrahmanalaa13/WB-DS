@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WideBot Design System</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface-hover: #1a1a26;
+    --border: #2a2a3a;
+    --text: #e4e4ed;
+    --text-dim: #8888a0;
+    --accent: #6366f1;
+    --accent-soft: rgba(99,102,241,0.12);
+    --green: #22c55e;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .header {
+    padding: 48px 32px 32px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .meta-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .meta-tag .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .search-bar {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 24px;
+  }
+
+  .search-bar input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-bar input:focus {
+    border-color: var(--accent);
+  }
+
+  .search-bar .search-wrap {
+    position: relative;
+  }
+
+  .search-bar .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+
+  .grid {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.15s, border-color 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .card-path {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    word-break: break-all;
+  }
+
+  .card-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 3px 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .loader {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px;
+  }
+
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .category-label {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 16px 0 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .header { padding: 32px 16px 24px; }
+    .search-bar, .grid { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>WideBot Design System</h1>
+  <p>AI-native design system portal. All HTML artifacts are auto-discovered from the repository.</p>
+  <div class="meta-bar">
+    <span class="meta-tag"><span class="dot"></span> <span id="file-count">...</span> files</span>
+    <span class="meta-tag" id="version-tag">...</span>
+    <span class="meta-tag" id="last-updated">...</span>
+  </div>
+</div>
+
+<div class="search-bar">
+  <div class="search-wrap">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="search" placeholder="Search files..." autocomplete="off">
+  </div>
+</div>
+
+<div class="grid" id="grid">
+  <div class="loader">
+    <div class="spinner"></div>
+    <div style="color: var(--text-dim); font-size: 13px;">Loading from GitHub...</div>
+  </div>
+</div>
+
+<script>
+const REPO_OWNER = 'abdelrahmanalaa13';
+const REPO_NAME = 'WB-DS';
+const BRANCH = 'main';
+const BASE_URL = `https://${REPO_OWNER}.github.io/${REPO_NAME}`;
+const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+
+const CATEGORIES = {
+  'Design System Library': f => f === 'ds-library.html',
+  'Architecture': f => /architect/i.test(f),
+  'Analysis & Research': f => /analysis|deep-dive|gap|rethink|status/i.test(f),
+  'Audit & Review': f => /audit|eval|review/i.test(f),
+  'Testing': f => /test|font-test/i.test(f),
+};
+
+function categorize(filename) {
+  for (const [label, test] of Object.entries(CATEGORIES)) {
+    if (test(filename)) return label;
+  }
+  return 'Other';
+}
+
+function prettifyName(path) {
+  const name = path.split('/').pop().replace('.html', '');
+  return name
+    .split(/[-_]/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+async function fetchTree() {
+  const res = await fetch(`${API_BASE}/git/trees/${BRANCH}?recursive=1`);
+  const data = await res.json();
+  return data.tree || [];
+}
+
+async function fetchVersion() {
+  try {
+    const res = await fetch(`${API_BASE}/contents/VERSION?ref=${BRANCH}`);
+    const data = await res.json();
+    return atob(data.content).trim();
+  } catch { return null; }
+}
+
+async function fetchLastCommit() {
+  try {
+    const res = await fetch(`${API_BASE}/commits/${BRANCH}`);
+    const data = await res.json();
+    return data.commit.committer.date;
+  } catch { return null; }
+}
+
+function renderCards(files) {
+  const grid = document.getElementById('grid');
+  const search = document.getElementById('search').value.toLowerCase();
+  const filtered = files.filter(f => f.path.toLowerCase().includes(search));
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty">No matching HTML files found.</div>';
+    return;
+  }
+
+  const grouped = {};
+  filtered.forEach(f => {
+    const cat = categorize(f.path);
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(f);
+  });
+
+  const order = [...Object.keys(CATEGORIES), 'Other'];
+  let html = '';
+
+  for (const cat of order) {
+    const items = grouped[cat];
+    if (!items || items.length === 0) continue;
+    html += `<div class="category-label">${cat}</div>`;
+    for (const f of items) {
+      const href = `${BASE_URL}/${f.path}`;
+      const name = prettifyName(f.path);
+      const badge = f.path.includes('/') ? f.path.split('/')[0] : 'root';
+      html += `
+        <a class="card" href="${href}" target="_blank" rel="noopener">
+          <span class="card-badge">${badge}</span>
+          <span class="card-title">${name}</span>
+          <span class="card-path">${f.path}</span>
+        </a>`;
+    }
+  }
+
+  grid.innerHTML = html;
+}
+
+async function init() {
+  const [tree, version, lastCommit] = await Promise.all([
+    fetchTree(),
+    fetchVersion(),
+    fetchLastCommit()
+  ]);
+
+  const htmlFiles = tree
+    .filter(t => t.type === 'blob' && t.path.endsWith('.html') && t.path !== 'index.html')
+    .sort((a, b) => a.path.localeCompare(b.path));
+
+  document.getElementById('file-count').textContent = htmlFiles.length;
+
+  if (version) {
+    document.getElementById('version-tag').textContent = `v${version}`;
+  }
+
+  if (lastCommit) {
+    const date = new Date(lastCommit);
+    document.getElementById('last-updated').textContent = `Updated ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+  }
+
+  renderCards(htmlFiles);
+
+  document.getElementById('search').addEventListener('input', () => renderCards(htmlFiles));
+}
+
+init().catch(() => {
+  document.getElementById('grid').innerHTML =
+    '<div class="empty">Failed to load file list. Make sure GitHub Pages is enabled and the repo is public.</div>';
+});
+</script>
+</body>
+</html>
