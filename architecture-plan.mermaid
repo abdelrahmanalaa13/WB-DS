@@ -1,0 +1,94 @@
+---
+title: AI-Native Design System Architecture v2
+---
+graph TB
+    subgraph GRAPH["LAYER 1: KNOWLEDGE GRAPH (The Brain)"]
+        direction LR
+        NODES["Entity Nodes<br/>tokens, components, patterns,<br/>templates, interactions, motions,<br/>compliance-rules, a11y-rules"]
+        EDGES["Relationship Edges<br/>uses-token, participates-in,<br/>composes-into, requires-rule,<br/>conflicts-with, depends-on"]
+        QUERIES["Query Interface<br/>Impact analysis, overlap detection,<br/>blast radius, dependency traversal"]
+        NODES --- EDGES
+        EDGES --- QUERIES
+    end
+
+    subgraph CONTRACTS["LAYER 2: CONTRACT LAYER (Schemas)"]
+        direction LR
+        ENTITY_SCHEMA["Unified Entity Schema<br/>Polymorphic with discriminator<br/>Base + type extensions"]
+        REL_SCHEMA["Relationship Schema<br/>Valid edge types per entity<br/>Referential integrity"]
+        GOV_SCHEMA["Governance Schema<br/>7-state lifecycle<br/>Transition rules + approval gates"]
+        BRAND_SCHEMA["Brand Config Schema<br/>Per-brand overrides as data<br/>WCAG level, RTL, fonts"]
+    end
+
+    subgraph FOUNDATION["LAYER 3: FOUNDATION (Source of Truth)"]
+        direction LR
+        TOKENS["Token Store<br/>global + semantic + motion<br/>+ per-brand (light/dark)"]
+        REGISTRY["Component Registry<br/>PRIMARY AI INTERFACE<br/>Full specs per component"]
+        LIBRARIES["Patterns + Templates<br/>+ Interactions + Motions<br/>Cross-referenced by ID"]
+        RULES["Rules Engine<br/>a11y, responsive, RTL,<br/>governance, touch (JSON)"]
+    end
+
+    subgraph AGENTS["LAYER 4: AGENT ORCHESTRATION"]
+        direction LR
+        DS_COPILOT["ds-copilot<br/>Orchestrator + approver<br/>Routes + resolves conflicts"]
+        FRONTEND["frontend-copilot<br/>Angular 21 code gen<br/>Reads registry + patterns"]
+        COMPLIANCE["compliance + a11y<br/>Can BLOCK lifecycle<br/>Enterprise + WCAG"]
+        UX_AI["ux-research + ai-agent<br/>PROPOSE only<br/>Usability + AI UX"]
+    end
+
+    subgraph GENERATION["LAYER 5: GENERATION (Multiple Entry Points)"]
+        direction LR
+        ENTRY_A["A: New Component<br/>proposal -> overlap check<br/>-> schema validate<br/>-> registry -> MDs"]
+        ENTRY_B["B: Lovable Prototype<br/>CSS vars + guidelines<br/>-> extract intent<br/>-> map to registry"]
+        ENTRY_C["C: Evolve Existing<br/>change request<br/>-> impact analysis<br/>-> modify + re-gen"]
+        ENTRY_D["D: Fix / Audit<br/>a11y or compliance gap<br/>-> auto-propose fixes<br/>-> update + validate"]
+        ENTRY_E["E: Add Brand<br/>new config<br/>-> inherit + override<br/>-> bulk generation"]
+    end
+
+    subgraph OUTPUT["LAYER 6: OUTPUT (Single Source, Multiple Targets)"]
+        direction LR
+        MDS["Feature MDs<br/>ui-feature-builder<br/>Per-brand tokens"]
+        PREVIEW["JSX Preview<br/>ui-feature-previewer<br/>Brand/theme/direction"]
+        FIGMA["Figma Sync<br/>figma-md-sync<br/>LTR+RTL, Light+Dark"]
+        ANGULAR["Angular 21 Code<br/>Standalone, signals<br/>OnPush, CDK"]
+        DOCS["4-Audience Docs<br/>designers, engineers<br/>product, AI agents"]
+    end
+
+    subgraph LEARNING["LAYER 7: CONTINUOUS LEARNING"]
+        direction LR
+        SIGNALS["Signal Collection<br/>Usage, UX research,<br/>engineering feedback"]
+        EVALUATE["Impact Evaluation<br/>Classify signal type<br/>Graph blast radius"]
+        SAFEGUARDS["Consistency Safeguards<br/>Token arch, no duplication,<br/>a11y + compliance check"]
+        EVOLVE["Graph Evolution<br/>New edges, updated weights,<br/>changelog with reasoning"]
+    end
+
+    %% Inter-layer connections
+    GRAPH --> CONTRACTS
+    CONTRACTS --> FOUNDATION
+    FOUNDATION --> AGENTS
+    AGENTS --> GENERATION
+    GENERATION --> OUTPUT
+    OUTPUT --> LEARNING
+    LEARNING --> GRAPH
+
+    %% Key cross-layer connections
+    QUERIES -.->|"agents query before acting"| DS_COPILOT
+    REGISTRY -.->|"primary AI interface"| FRONTEND
+    RULES -.->|"validates all changes"| COMPLIANCE
+    SAFEGUARDS -.->|"feeds back to graph"| NODES
+
+    %% Styling
+    classDef graph fill:#ff006e11,stroke:#ff006e,color:#ff006e
+    classDef contract fill:#8338ec11,stroke:#8338ec,color:#8338ec
+    classDef foundation fill:#e9456011,stroke:#e94560,color:#e94560
+    classDef agent fill:#ff7b0011,stroke:#ff7b00,color:#ff7b00
+    classDef gen fill:#3a86ff11,stroke:#3a86ff,color:#3a86ff
+    classDef output fill:#06d6a011,stroke:#06d6a0,color:#06d6a0
+    classDef learn fill:#ffbe0b11,stroke:#ffbe0b,color:#ffbe0b
+
+    class NODES,EDGES,QUERIES graph
+    class ENTITY_SCHEMA,REL_SCHEMA,GOV_SCHEMA,BRAND_SCHEMA contract
+    class TOKENS,REGISTRY,LIBRARIES,RULES foundation
+    class DS_COPILOT,FRONTEND,COMPLIANCE,UX_AI agent
+    class ENTRY_A,ENTRY_B,ENTRY_C,ENTRY_D,ENTRY_E gen
+    class MDS,PREVIEW,FIGMA,ANGULAR,DOCS output
+    class SIGNALS,EVALUATE,SAFEGUARDS,EVOLVE learn

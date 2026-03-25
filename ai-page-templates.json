@@ -1,0 +1,3700 @@
+{
+  "$schema": "ai-page-templates/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "globalLayout": {
+    "shell": {
+      "description": "App shell that wraps all templates",
+      "structure": {
+        "navRail": {
+          "position": "inline-start",
+          "width": "64px (collapsed) / 240px (expanded)",
+          "contains": ["logo", "nav-links", "collapse-toggle"],
+          "sticky": true
+        },
+        "topBar": {
+          "position": "top",
+          "height": "56px",
+          "contains": ["breadcrumb", "search", "notifications", "user-menu"],
+          "sticky": true,
+          "elevation": "shadow-sm"
+        },
+        "content": {
+          "position": "center",
+          "overflow": "auto",
+          "padding": "var(--space-6)",
+          "minHeight": "calc(100vh - 112px)"
+        },
+        "bottomNav": {
+          "position": "bottom",
+          "height": "56px",
+          "showOn": "mobile only",
+          "contains": ["nav-items (5-6 max)"]
+        }
+      }
+    }
+  },
+  "templates": [
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "description": "Analytics and metrics overview with configurable widget grid for KPIs, charts, and data tables",
+      "layout": {
+        "type": "css-grid",
+        "desktop": {
+          "gridTemplate": "grid-template-columns: repeat(12, 1fr)",
+          "gap": "var(--space-4)",
+          "padding": "var(--space-6)"
+        },
+        "mobile": {
+          "gridTemplate": "grid-template-columns: 1fr",
+          "gap": "var(--space-3)",
+          "padding": "var(--space-4)"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 13",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": [],
+              "description": "Navigation breadcrumb (Home > Dashboard)"
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 with dashboard name"
+                },
+                {
+                  "name": "subtitle",
+                  "content": "optional description"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "date-range-picker",
+                  "component": "date-picker",
+                  "description": "Filter all widgets by date range"
+                },
+                {
+                  "name": "refresh-button",
+                  "component": "icon-button",
+                  "icon": "refresh",
+                  "tooltip": "Refresh all widgets"
+                },
+                {
+                  "name": "layout-toggle",
+                  "component": "button-group",
+                  "options": ["grid view", "list view"],
+                  "description": "Switch dashboard layout"
+                },
+                {
+                  "name": "actions-menu",
+                  "component": "menu",
+                  "items": ["export dashboard", "configure widgets", "share dashboard"]
+                }
+              ]
+            }
+          ],
+          "description": "Page title, date range filter, and dashboard controls"
+        },
+        {
+          "id": "kpi-row",
+          "gridArea": "2 / 1 / 3 / 13",
+          "mobileGridArea": "2 / 1 / 3 / 2",
+          "components": [
+            {
+              "type": "card",
+              "variant": "metric",
+              "quantity": 4,
+              "slots": [
+                {
+                  "name": "metric-value",
+                  "content": "large number"
+                },
+                {
+                  "name": "metric-label",
+                  "content": "metric name"
+                },
+                {
+                  "name": "metric-delta",
+                  "component": "chip",
+                  "content": "percentage change with trend icon"
+                },
+                {
+                  "name": "metric-sparkline",
+                  "component": "mini-chart",
+                  "chartType": "sparkline"
+                }
+              ],
+              "description": "Key performance indicators with trend visualization",
+              "layout": "horizontal-scroll on mobile"
+            }
+          ],
+          "description": "Row of 4 KPI cards showing main metrics"
+        },
+        {
+          "id": "widget-grid",
+          "gridArea": "3 / 1 / 20 / 13",
+          "mobileGridArea": "3 / 1 / 50 / 2",
+          "components": [
+            {
+              "type": "card",
+              "variant": "widget-card",
+              "quantity": "variable",
+              "slots": [
+                {
+                  "name": "widget-header",
+                  "content": "title + chart type indicator"
+                },
+                {
+                  "name": "widget-actions",
+                  "component": "menu",
+                  "items": ["expand", "configure", "remove", "export"]
+                },
+                {
+                  "name": "widget-body",
+                  "content": "chart, table, or metric content",
+                  "minHeight": "240px"
+                },
+                {
+                  "name": "widget-footer",
+                  "content": "optional: timestamp, data source, legend"
+                }
+              ],
+              "description": "Configurable widget cards containing charts or tables",
+              "desktopSpan": "variable (3-col, 4-col, 6-col, 12-col)",
+              "mobileSpan": "1-col full width"
+            }
+          ],
+          "description": "Grid of configurable dashboard widgets with multiple chart types"
+        }
+      ],
+      "widgetTypes": [
+        {
+          "name": "metric-card",
+          "description": "Single KPI with trend arrow and comparison",
+          "minDimensions": {
+            "width": "200px",
+            "height": "240px"
+          }
+        },
+        {
+          "name": "line-chart",
+          "description": "Time-series line chart with legend and tooltip",
+          "minDimensions": {
+            "width": "300px",
+            "height": "280px"
+          }
+        },
+        {
+          "name": "bar-chart",
+          "description": "Vertical or horizontal bar chart for comparisons",
+          "minDimensions": {
+            "width": "300px",
+            "height": "280px"
+          }
+        },
+        {
+          "name": "pie-chart",
+          "description": "Pie or donut chart for distribution breakdown",
+          "minDimensions": {
+            "width": "280px",
+            "height": "280px"
+          }
+        },
+        {
+          "name": "data-table",
+          "description": "Compact data grid within card with sort/filter",
+          "minDimensions": {
+            "width": "400px",
+            "height": "300px"
+          }
+        },
+        {
+          "name": "activity-feed",
+          "description": "Recent events or transaction list with timestamps",
+          "minDimensions": {
+            "width": "300px",
+            "height": "300px"
+          }
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "date-range-picker change",
+          "action": "update all widgets with new data range",
+          "animation": "fade-in staggered"
+        },
+        {
+          "trigger": "KPI card click",
+          "action": "navigate to detail view or drill-down dashboard",
+          "navigation": "same window"
+        },
+        {
+          "trigger": "widget menu - expand",
+          "action": "open widget in full-screen modal or new tab",
+          "modal": true
+        },
+        {
+          "trigger": "widget menu - configure",
+          "action": "open configuration dialog for widget type and data source",
+          "modal": true
+        },
+        {
+          "trigger": "widget menu - remove",
+          "action": "remove widget from dashboard with undo option",
+          "duration": "5 seconds undo window"
+        },
+        {
+          "trigger": "widget drag (desktop only)",
+          "action": "reorder widget in grid with visual feedback",
+          "feedback": "shadow-lg on dragged element, dashed border at drop target"
+        },
+        {
+          "trigger": "widget resize handle (desktop only)",
+          "action": "resize widget to new grid span",
+          "minSpan": "3 columns"
+        },
+        {
+          "trigger": "refresh button",
+          "action": "reload all widgets with loading skeletons",
+          "animation": "staggered 100ms delay between widgets"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "gridColumns": 1,
+          "kpiLayout": "horizontally scrollable container",
+          "widgetLayout": "stacked single-column",
+          "mobileExclusions": ["drag-to-reorder", "widget-resize"],
+          "chartResize": "responsive with reduced padding"
+        },
+        "tablet": {
+          "gridColumns": 6,
+          "kpiLayout": "2x2 grid of KPI cards",
+          "widgetLayout": "6-column grid with 3-col widgets"
+        },
+        "desktop": {
+          "gridColumns": 12,
+          "kpiLayout": "horizontal scroll container",
+          "widgetLayout": "12-column grid with variable spans (3/4/6/12 col)",
+          "features": ["drag-to-reorder", "widget-resize", "expand-to-fullscreen"]
+        }
+      },
+      "dataLoadingBehavior": {
+        "initialLoad": "show loading skeleton for all widgets with staggered 100ms delay",
+        "errorState": "per-widget error boundary with retry button, not full-page error",
+        "staleData": "show 'Last updated 5 minutes ago' timestamp if data older than 5 minutes",
+        "refresh": "all widgets update with new loading skeleton, staggered animation"
+      },
+      "patterns": ["dashboard"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/dashboard",
+        "breadcrumb": ["Home", "Dashboard"],
+        "navRailPosition": "first",
+        "deepLink": "/dashboard?dateRange=last-30-days&view=grid"
+      }
+    },
+    {
+      "id": "conversation-inbox",
+      "name": "Conversation Inbox",
+      "description": "Split-view inbox with conversation list and detail panel for messaging, support, and customer conversations",
+      "layout": {
+        "type": "split-view",
+        "desktop": {
+          "structure": "list-panel (360px) + detail-panel (fill)",
+          "gap": "0",
+          "divider": "resizable"
+        },
+        "tablet": {
+          "structure": "list-panel (collapsible) / detail-panel (full)",
+          "gap": "0"
+        },
+        "mobile": {
+          "structure": "list-screen | detail-screen (tabs or swipe)",
+          "gap": "0"
+        }
+      },
+      "sections": [
+        {
+          "id": "list-panel-header",
+          "position": "left-top",
+          "width": "360px",
+          "height": "auto",
+          "components": [
+            {
+              "type": "search",
+              "placeholder": "Search conversations...",
+              "slots": [
+                {
+                  "name": "search-input",
+                  "component": "text-field",
+                  "icon": "search"
+                },
+                {
+                  "name": "search-clear",
+                  "component": "icon-button",
+                  "icon": "close"
+                }
+              ]
+            },
+            {
+              "type": "tabs",
+              "variant": "button-group",
+              "tabs": [
+                {
+                  "label": "All",
+                  "value": "all",
+                  "default": true
+                },
+                {
+                  "label": "Unread",
+                  "value": "unread",
+                  "badge": "count"
+                },
+                {
+                  "label": "Assigned to me",
+                  "value": "assigned-to-me",
+                  "badge": "count"
+                },
+                {
+                  "label": "Starred",
+                  "value": "starred",
+                  "badge": "count"
+                }
+              ]
+            }
+          ],
+          "description": "Search bar and filter tabs for conversation list"
+        },
+        {
+          "id": "conversation-list",
+          "position": "left-middle",
+          "width": "360px",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "list",
+              "itemType": "conversation-item",
+              "slots": [
+                {
+                  "name": "avatar",
+                  "component": "avatar",
+                  "size": "md",
+                  "status": "online/offline/away dot overlay"
+                },
+                {
+                  "name": "contact-info",
+                  "content": "contact name + channel icon (WhatsApp/Email/Web)"
+                },
+                {
+                  "name": "message-preview",
+                  "content": "last message text (truncated to 2 lines)",
+                  "typography": "body-sm gray-600"
+                },
+                {
+                  "name": "timestamp",
+                  "content": "time ago (2m, 1h, yesterday)",
+                  "typography": "caption gray-500"
+                },
+                {
+                  "name": "unread-badge",
+                  "component": "badge",
+                  "visibility": "only if unread",
+                  "content": "unread count"
+                },
+                {
+                  "name": "actions",
+                  "component": "menu",
+                  "trigger": "hover or right-click",
+                  "items": ["mark as read", "star", "assign", "close", "tag"]
+                }
+              ],
+              "description": "Scrollable list of conversations with preview and status"
+            }
+          ],
+          "description": "Scrollable list of conversations with avatars, previews, and timestamps"
+        },
+        {
+          "id": "detail-panel-header",
+          "position": "right-top",
+          "flex": 1,
+          "height": "auto",
+          "minHeight": "56px",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "contact-name",
+                  "content": "h2 contact name"
+                },
+                {
+                  "name": "contact-status",
+                  "component": "chip",
+                  "content": "online/offline + response time"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "header-actions",
+                  "component": "button-group",
+                  "buttons": [
+                    {
+                      "label": "Assign",
+                      "component": "button",
+                      "variant": "tonal"
+                    },
+                    {
+                      "label": "More",
+                      "component": "menu",
+                      "items": ["view contact", "convert to ticket", "add note", "close conversation"]
+                    }
+                  ]
+                },
+                {
+                  "name": "toggle-context",
+                  "component": "icon-button",
+                  "icon": "chevron_right",
+                  "tooltip": "Toggle customer context sidebar"
+                }
+              ]
+            }
+          ],
+          "description": "Contact header with name, status, and action buttons"
+        },
+        {
+          "id": "chat-container",
+          "position": "right-middle",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "ai-chat",
+              "variant": "conversation-detail",
+              "slots": [
+                {
+                  "name": "message-list",
+                  "component": "scrollable-container",
+                  "content": "AI Chat messages from both parties"
+                },
+                {
+                  "name": "typing-indicator",
+                  "component": "loading",
+                  "variant": "typing-bubble",
+                  "visibility": "when other party typing"
+                },
+                {
+                  "name": "read-receipt",
+                  "component": "chip",
+                  "content": "seen at timestamp"
+                }
+              ],
+              "description": "AI Chat component showing conversation history"
+            }
+          ],
+          "description": "Chat message history and real-time conversation"
+        },
+        {
+          "id": "chat-footer",
+          "position": "right-bottom",
+          "flex": "0",
+          "height": "auto",
+          "components": [
+            {
+              "type": "ai-chat",
+              "variant": "input-area",
+              "slots": [
+                {
+                  "name": "message-input",
+                  "component": "text-field",
+                  "placeholder": "Type a message...",
+                  "multiline": true,
+                  "maxRows": 4
+                },
+                {
+                  "name": "formatting-toolbar",
+                  "component": "button-group",
+                  "buttons": ["bold", "italic", "link", "emoji", "attachment"]
+                },
+                {
+                  "name": "send-button",
+                  "component": "icon-button",
+                  "icon": "send"
+                }
+              ]
+            }
+          ],
+          "description": "Message input area with formatting options and send button"
+        },
+        {
+          "id": "context-sidebar",
+          "position": "right-side",
+          "width": "320px",
+          "visibility": "toggleable (hidden on mobile, collapsed on tablet)",
+          "components": [
+            {
+              "type": "card",
+              "title": "Contact Details",
+              "slots": [
+                {
+                  "name": "contact-fields",
+                  "content": "Name, email, phone, organization, status"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "Conversation History",
+              "slots": [
+                {
+                  "name": "history-list",
+                  "component": "list",
+                  "content": "previous conversations with this contact"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "Tags",
+              "slots": [
+                {
+                  "name": "tags",
+                  "component": "chip-group",
+                  "content": "conversation tags with add capability"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "Notes",
+              "slots": [
+                {
+                  "name": "notes-input",
+                  "component": "text-field",
+                  "placeholder": "Add internal notes...",
+                  "multiline": true
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "CRM Link",
+              "slots": [
+                {
+                  "name": "crm-link-button",
+                  "component": "button",
+                  "label": "Open in CRM",
+                  "icon": "external"
+                }
+              ]
+            }
+          ],
+          "description": "Collapsible sidebar with contact info, history, tags, and CRM integration"
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "click conversation in list",
+          "action": "load conversation in detail panel and mark as read",
+          "animation": "fade-in detail content"
+        },
+        {
+          "trigger": "search input change",
+          "action": "filter conversation list in real-time",
+          "debounce": "300ms"
+        },
+        {
+          "trigger": "filter tab change",
+          "action": "update conversation list to show filtered subset",
+          "animation": "fade"
+        },
+        {
+          "trigger": "send message",
+          "action": "append message to chat, update list preview, scroll to bottom",
+          "animation": "slide-up new message"
+        },
+        {
+          "trigger": "assign button click",
+          "action": "open assign dialog to select team member",
+          "modal": true
+        },
+        {
+          "trigger": "context sidebar toggle",
+          "action": "show/hide customer context panel",
+          "animation": "slide-in/out from right"
+        },
+        {
+          "trigger": "star conversation",
+          "action": "add to starred tab, show visual feedback",
+          "icon": "star filled yellow"
+        },
+        {
+          "trigger": "new message arrives",
+          "action": "move conversation to top of list with highlight flash, update preview text",
+          "sound": "notification (if enabled)"
+        },
+        {
+          "trigger": "other party typing",
+          "action": "show typing indicator in chat area",
+          "animation": "pulse"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "full-width list OR full-width detail with back navigation",
+          "tabs": "bottom-navigation for quick access to All/Unread/Assigned",
+          "contextSidebar": "hidden (access via menu)",
+          "detailNavigation": "back button to return to list",
+          "detailHeaderHeight": "56px"
+        },
+        "tablet": {
+          "layout": "collapsible list panel + detail panel",
+          "listWidth": "300px (collapsed) or 360px (expanded)",
+          "contextSidebar": "collapsed by default, toggle shows/hides",
+          "detailFlex": "fills remaining space"
+        },
+        "desktop": {
+          "layout": "permanent three-column (list 360px + detail + context 320px)",
+          "listWidth": "360px fixed",
+          "dividerResizable": true,
+          "contextSidebarAlwaysVisible": true,
+          "listMinWidth": "300px"
+        }
+      },
+      "realtimeBehavior": {
+        "newMessages": "conversation moves to top of list with 200ms yellow highlight flash, unread badge increments",
+        "typingIndicators": "show 'Contact is typing...' bubble with animation in chat area",
+        "presenceDots": "online/offline/away status indicator on conversation avatar in list",
+        "soundNotifications": "optional notification sound for new messages (user preference configurable)",
+        "readReceipts": "show 'seen at HH:MM' timestamp after message, updated when recipient reads"
+      },
+      "patterns": ["inbox"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/inbox",
+        "breadcrumb": ["Home", "Inbox"],
+        "navRailPosition": "second",
+        "deepLink": "/inbox/conversation/{conversationId}"
+      }
+    },
+    {
+      "id": "analytics-workspace",
+      "name": "Analytics Workspace",
+      "description": "Advanced analytics and reporting workspace with custom report builder, data export, and scheduling capabilities",
+      "layout": {
+        "type": "css-grid",
+        "desktop": {
+          "gridTemplate": "grid-template-columns: 200px 1fr",
+          "gap": "var(--space-4)",
+          "padding": "var(--space-6)"
+        },
+        "mobile": {
+          "gridTemplate": "grid-template-columns: 1fr",
+          "gap": "var(--space-3)",
+          "padding": "var(--space-4)"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 3",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 Analytics Workspace"
+                },
+                {
+                  "name": "subtitle",
+                  "content": "Custom reports and data analysis"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "new-report-button",
+                  "component": "button",
+                  "label": "New Report",
+                  "variant": "filled"
+                },
+                {
+                  "name": "saved-reports-menu",
+                  "component": "menu",
+                  "label": "My Reports",
+                  "items": ["Recent", "All", "Shared with me", "Templates"]
+                }
+              ]
+            }
+          ],
+          "description": "Page header with title and report creation controls"
+        },
+        {
+          "id": "left-sidebar",
+          "gridArea": "2 / 1 / 10 / 2",
+          "mobileGridArea": "2 / 1 / 3 / 2",
+          "visibility": "collapsible on mobile",
+          "components": [
+            {
+              "type": "card",
+              "title": "Data Sources",
+              "slots": [
+                {
+                  "name": "data-source-list",
+                  "component": "list",
+                  "content": "available data sources (CRM, support, billing, etc.)",
+                  "itemsClickable": true
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "Saved Reports",
+              "slots": [
+                {
+                  "name": "saved-list",
+                  "component": "list",
+                  "content": "user's saved reports with star/delete actions"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "Templates",
+              "slots": [
+                {
+                  "name": "template-list",
+                  "component": "list",
+                  "content": "pre-built report templates"
+                }
+              ]
+            }
+          ],
+          "description": "Left sidebar with data sources, saved reports, and templates"
+        },
+        {
+          "id": "main-content",
+          "gridArea": "2 / 2 / 10 / 3",
+          "mobileGridArea": "2 / 1 / 10 / 2",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "tabs",
+              "tabs": [
+                {
+                  "label": "Builder",
+                  "value": "builder",
+                  "default": true
+                },
+                {
+                  "label": "Preview",
+                  "value": "preview"
+                },
+                {
+                  "label": "Export",
+                  "value": "export"
+                },
+                {
+                  "label": "Schedule",
+                  "value": "schedule"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "builder-section",
+                  "visibility": "tab = builder",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Report Configuration",
+                      "slots": [
+                        {
+                          "name": "report-name",
+                          "component": "text-field",
+                          "label": "Report Name"
+                        },
+                        {
+                          "name": "data-source-select",
+                          "component": "select",
+                          "label": "Data Source"
+                        },
+                        {
+                          "name": "date-range",
+                          "component": "date-picker",
+                          "label": "Date Range"
+                        },
+                        {
+                          "name": "filters",
+                          "component": "container",
+                          "content": "add/remove filter rules"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Visualization",
+                      "slots": [
+                        {
+                          "name": "chart-type",
+                          "component": "button-group",
+                          "options": ["table", "line", "bar", "pie", "heatmap", "map"]
+                        },
+                        {
+                          "name": "grouping",
+                          "component": "select",
+                          "label": "Group by"
+                        },
+                        {
+                          "name": "metrics",
+                          "component": "container",
+                          "content": "select metrics to display"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "preview-section",
+                  "visibility": "tab = preview",
+                  "content": "live preview of report with sample data"
+                },
+                {
+                  "name": "export-section",
+                  "visibility": "tab = export",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Export Options",
+                      "slots": [
+                        {
+                          "name": "export-format",
+                          "component": "select",
+                          "label": "Format",
+                          "options": ["CSV", "Excel", "PDF", "JSON"]
+                        },
+                        {
+                          "name": "export-button",
+                          "component": "button",
+                          "label": "Download",
+                          "variant": "filled"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "schedule-section",
+                  "visibility": "tab = schedule",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Email Schedule",
+                      "slots": [
+                        {
+                          "name": "schedule-frequency",
+                          "component": "select",
+                          "label": "Frequency",
+                          "options": ["Daily", "Weekly", "Monthly"]
+                        },
+                        {
+                          "name": "schedule-time",
+                          "component": "time-picker",
+                          "label": "Send at"
+                        },
+                        {
+                          "name": "recipients",
+                          "component": "text-field",
+                          "label": "Email recipients"
+                        },
+                        {
+                          "name": "save-schedule",
+                          "component": "button",
+                          "label": "Save Schedule"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Main content area with report builder, preview, export, and scheduling"
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "new report button click",
+          "action": "open blank report builder or template selection dialog",
+          "modal": true
+        },
+        {
+          "trigger": "data source select",
+          "action": "load available fields and metrics for that source",
+          "animation": "fade-in field list"
+        },
+        {
+          "trigger": "chart type change",
+          "action": "update preview visualization in real-time",
+          "animation": "cross-fade"
+        },
+        {
+          "trigger": "add filter rule",
+          "action": "append filter condition to builder, update preview",
+          "animation": "slide-down new filter"
+        },
+        {
+          "trigger": "save report button",
+          "action": "save report to workspace and show confirmation",
+          "duration": "3 second toast"
+        },
+        {
+          "trigger": "export button",
+          "action": "download report in selected format",
+          "background": "download task"
+        },
+        {
+          "trigger": "save schedule button",
+          "action": "create recurring report email delivery",
+          "confirmation": "toast with schedule confirmation"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-column, sidebar hidden (access via menu button)",
+          "tabs": "scrollable horizontally",
+          "cardStack": "full width",
+          "chartResize": "responsive"
+        },
+        "desktop": {
+          "layout": "two-column with fixed left sidebar (200px)",
+          "sidebarFixed": true,
+          "contentFlex": 1
+        }
+      },
+      "patterns": ["report-builder"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/analytics",
+        "breadcrumb": ["Home", "Analytics Workspace"],
+        "navRailPosition": "fourth",
+        "deepLink": "/analytics/report/{reportId}"
+      }
+    },
+    {
+      "id": "admin-console",
+      "name": "Admin Console",
+      "description": "Administrative interface for system configuration, user management, billing, and organization settings",
+      "layout": {
+        "type": "css-grid",
+        "desktop": {
+          "gridTemplate": "grid-template-columns: 240px 1fr",
+          "gap": "var(--space-4)",
+          "padding": "var(--space-6)"
+        },
+        "mobile": {
+          "gridTemplate": "grid-template-columns: 1fr",
+          "gap": "var(--space-3)",
+          "padding": "var(--space-4)"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 3",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 Admin Console"
+                },
+                {
+                  "name": "org-name",
+                  "content": "current organization name"
+                }
+              ]
+            }
+          ],
+          "description": "Page header with organization context"
+        },
+        {
+          "id": "settings-sidebar",
+          "gridArea": "2 / 1 / 20 / 2",
+          "mobileGridArea": "2 / 1 / 3 / 2",
+          "visibility": "collapsible on mobile",
+          "components": [
+            {
+              "type": "list",
+              "itemType": "nav-item",
+              "sections": [
+                {
+                  "title": "Organization",
+                  "items": [
+                    {
+                      "label": "General Settings",
+                      "value": "general",
+                      "icon": "settings"
+                    },
+                    {
+                      "label": "Billing & Plan",
+                      "value": "billing",
+                      "icon": "credit_card"
+                    },
+                    {
+                      "label": "Security",
+                      "value": "security",
+                      "icon": "security"
+                    }
+                  ]
+                },
+                {
+                  "title": "Access & Permissions",
+                  "items": [
+                    {
+                      "label": "Users & Roles",
+                      "value": "users",
+                      "icon": "people"
+                    },
+                    {
+                      "label": "API Keys",
+                      "value": "api-keys",
+                      "icon": "vpn_key"
+                    },
+                    {
+                      "label": "SSO Integration",
+                      "value": "sso",
+                      "icon": "login"
+                    }
+                  ]
+                },
+                {
+                  "title": "Features & Integrations",
+                  "items": [
+                    {
+                      "label": "Feature Flags",
+                      "value": "features",
+                      "icon": "flag"
+                    },
+                    {
+                      "label": "Integrations",
+                      "value": "integrations",
+                      "icon": "extension"
+                    },
+                    {
+                      "label": "Webhooks",
+                      "value": "webhooks",
+                      "icon": "https"
+                    }
+                  ]
+                },
+                {
+                  "title": "System",
+                  "items": [
+                    {
+                      "label": "Logs & Audit",
+                      "value": "logs",
+                      "icon": "history"
+                    },
+                    {
+                      "label": "System Health",
+                      "value": "health",
+                      "icon": "favorite"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Vertical navigation sidebar with admin sections"
+        },
+        {
+          "id": "content-area",
+          "gridArea": "2 / 2 / 20 / 3",
+          "mobileGridArea": "2 / 1 / 20 / 2",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "general-settings",
+                  "visibility": "section = general",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Organization Information",
+                      "slots": [
+                        {
+                          "name": "org-name-field",
+                          "component": "text-field",
+                          "label": "Organization Name"
+                        },
+                        {
+                          "name": "org-domain-field",
+                          "component": "text-field",
+                          "label": "Domain",
+                          "disabled": true
+                        },
+                        {
+                          "name": "org-logo-upload",
+                          "component": "file-input",
+                          "label": "Organization Logo"
+                        },
+                        {
+                          "name": "save-button",
+                          "component": "button",
+                          "label": "Save Changes"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "billing-section",
+                  "visibility": "section = billing",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Current Plan",
+                      "slots": [
+                        {
+                          "name": "plan-info",
+                          "content": "plan name, price, billing cycle, next renewal date"
+                        },
+                        {
+                          "name": "upgrade-button",
+                          "component": "button",
+                          "label": "Upgrade Plan"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Payment Method",
+                      "slots": [
+                        {
+                          "name": "payment-info",
+                          "content": "card ending in X, expiry date"
+                        },
+                        {
+                          "name": "update-button",
+                          "component": "button",
+                          "label": "Update Payment Method"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Invoice History",
+                      "slots": [
+                        {
+                          "name": "invoice-list",
+                          "component": "data-grid",
+                          "columns": ["Date", "Amount", "Status", "Download"],
+                          "content": "past 12 months of invoices"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "security-section",
+                  "visibility": "section = security",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Two-Factor Authentication",
+                      "slots": [
+                        {
+                          "name": "2fa-status",
+                          "content": "enable/disable toggle"
+                        },
+                        {
+                          "name": "2fa-method",
+                          "component": "select",
+                          "options": ["Email", "SMS", "Authenticator App"]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Data Encryption",
+                      "slots": [
+                        {
+                          "name": "encryption-status",
+                          "content": "display encryption methods in use"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "users-section",
+                  "visibility": "section = users",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Team Members",
+                      "slots": [
+                        {
+                          "name": "add-user-button",
+                          "component": "button",
+                          "label": "Add User"
+                        },
+                        {
+                          "name": "user-list",
+                          "component": "data-grid",
+                          "columns": ["Name", "Email", "Role", "Status", "Actions"],
+                          "content": "all organization users"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "api-keys-section",
+                  "visibility": "section = api-keys",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "API Keys",
+                      "slots": [
+                        {
+                          "name": "generate-key-button",
+                          "component": "button",
+                          "label": "Generate New Key"
+                        },
+                        {
+                          "name": "keys-list",
+                          "component": "data-grid",
+                          "columns": ["Name", "Key", "Created", "Last Used", "Revoke"],
+                          "content": "all API keys for organization"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "integrations-section",
+                  "visibility": "section = integrations",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Available Integrations",
+                      "slots": [
+                        {
+                          "name": "integration-grid",
+                          "component": "grid",
+                          "gridTemplate": "repeat(auto-fill, minmax(200px, 1fr))",
+                          "content": "integration cards with connect buttons"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "logs-section",
+                  "visibility": "section = logs",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Audit Logs",
+                      "slots": [
+                        {
+                          "name": "date-range-filter",
+                          "component": "date-picker",
+                          "label": "Date Range"
+                        },
+                        {
+                          "name": "action-filter",
+                          "component": "select",
+                          "label": "Action Type"
+                        },
+                        {
+                          "name": "user-filter",
+                          "component": "select",
+                          "label": "User"
+                        },
+                        {
+                          "name": "logs-table",
+                          "component": "data-grid",
+                          "columns": ["Timestamp", "User", "Action", "Resource", "Status"],
+                          "content": "audit log entries"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Main content area with dynamic sections based on sidebar selection"
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "sidebar nav item click",
+          "action": "switch content section with fade animation",
+          "animation": "fade"
+        },
+        {
+          "trigger": "save button in settings",
+          "action": "save changes and show confirmation toast",
+          "duration": "3 seconds"
+        },
+        {
+          "trigger": "add user button",
+          "action": "open user creation dialog",
+          "modal": true
+        },
+        {
+          "trigger": "generate API key button",
+          "action": "create new key and show copy dialog",
+          "modal": true
+        },
+        {
+          "trigger": "upgrade plan button",
+          "action": "navigate to billing page or open upgrade modal",
+          "target": "new tab or modal"
+        },
+        {
+          "trigger": "logs filter change",
+          "action": "filter audit log table in real-time",
+          "debounce": "300ms"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-column",
+          "sidebar": "hidden, accessible via menu button",
+          "contentPadding": "var(--space-4)",
+          "gridLayout": "full-width cards"
+        },
+        "desktop": {
+          "layout": "two-column with fixed sidebar (240px)",
+          "sidebarFixed": true,
+          "contentFlex": 1
+        }
+      },
+      "patterns": ["admin-panel"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/admin/general",
+        "breadcrumb": ["Home", "Admin", "Settings"],
+        "navRailPosition": "last",
+        "restrictedAccess": "admin-role only"
+      }
+    },
+    {
+      "id": "approval-workflow",
+      "name": "Approval Workflow Page",
+      "description": "Task-based approval workflow interface with queue, detail view, and audit trail",
+      "layout": {
+        "type": "split-view",
+        "desktop": {
+          "structure": "queue-panel (320px) + detail-panel (fill)",
+          "gap": "var(--space-4)"
+        },
+        "mobile": {
+          "structure": "queue-screen | detail-screen (tabs)",
+          "gap": "0"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 3",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 Approvals"
+                },
+                {
+                  "name": "queue-stats",
+                  "component": "chip-group",
+                  "chips": [
+                    {
+                      "label": "Pending",
+                      "value": "count"
+                    },
+                    {
+                      "label": "Today",
+                      "value": "count"
+                    },
+                    {
+                      "label": "Overdue",
+                      "value": "count",
+                      "color": "error"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Page header with approval queue stats"
+        },
+        {
+          "id": "queue-panel",
+          "width": "320px",
+          "flex": "0 0 320px",
+          "components": [
+            {
+              "type": "card",
+              "title": "Approval Queue",
+              "slots": [
+                {
+                  "name": "filter-tabs",
+                  "component": "tabs",
+                  "tabs": [
+                    {
+                      "label": "All",
+                      "value": "all",
+                      "badge": "total count"
+                    },
+                    {
+                      "label": "Assigned to me",
+                      "value": "assigned",
+                      "badge": "my count"
+                    },
+                    {
+                      "label": "Overdue",
+                      "value": "overdue",
+                      "badge": "overdue count",
+                      "color": "error"
+                    }
+                  ]
+                },
+                {
+                  "name": "sort-menu",
+                  "component": "menu",
+                  "label": "Sort by",
+                  "items": ["Created (Newest first)", "Deadline (Soonest first)", "Priority (High to Low)"]
+                },
+                {
+                  "name": "approval-list",
+                  "component": "list",
+                  "itemType": "approval-item",
+                  "slots": [
+                    {
+                      "name": "priority-indicator",
+                      "content": "colored dot (red/orange/blue)"
+                    },
+                    {
+                      "name": "request-title",
+                      "content": "brief title of approval request"
+                    },
+                    {
+                      "name": "requester-name",
+                      "component": "avatar",
+                      "size": "sm",
+                      "content": "requester avatar or initials"
+                    },
+                    {
+                      "name": "deadline-badge",
+                      "component": "badge",
+                      "content": "days remaining or 'overdue'",
+                      "color": "conditional"
+                    },
+                    {
+                      "name": "actions",
+                      "component": "menu",
+                      "trigger": "hover",
+                      "items": ["view details", "assign to me", "reassign"]
+                    }
+                  ],
+                  "onClick": "load approval in detail panel"
+                }
+              ]
+            }
+          ],
+          "description": "Left panel with approval queue and filtering"
+        },
+        {
+          "id": "detail-panel-header",
+          "flex": 1,
+          "height": "auto",
+          "minHeight": "80px",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "status-badge",
+                  "component": "badge",
+                  "content": "Pending / Approved / Rejected",
+                  "color": "conditional"
+                },
+                {
+                  "name": "request-title",
+                  "content": "h2 approval request title"
+                },
+                {
+                  "name": "requester-info",
+                  "component": "container",
+                  "content": "requested by [name] on [date]"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "deadline",
+                  "component": "chip",
+                  "content": "due [date/time]",
+                  "color": "conditional"
+                },
+                {
+                  "name": "priority",
+                  "component": "chip",
+                  "content": "priority level"
+                },
+                {
+                  "name": "actions-menu",
+                  "component": "menu",
+                  "items": ["assign to me", "reassign", "add note", "request info"]
+                }
+              ]
+            }
+          ],
+          "description": "Detail header with status, deadline, and priority"
+        },
+        {
+          "id": "detail-tabs",
+          "flex": 1,
+          "components": [
+            {
+              "type": "tabs",
+              "tabs": [
+                {
+                  "label": "Request Details",
+                  "value": "details",
+                  "default": true
+                },
+                {
+                  "label": "History",
+                  "value": "history"
+                },
+                {
+                  "label": "Comments",
+                  "value": "comments"
+                }
+              ]
+            }
+          ],
+          "description": "Tab navigation for approval details, history, and comments"
+        },
+        {
+          "id": "details-tab-content",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "container",
+              "visibility": "tab = details",
+              "slots": [
+                {
+                  "name": "request-content",
+                  "component": "card",
+                  "slots": [
+                    {
+                      "name": "request-body",
+                      "content": "detailed request information, form fields, or document content"
+                    }
+                  ]
+                },
+                {
+                  "name": "approval-criteria",
+                  "component": "card",
+                  "title": "Approval Criteria",
+                  "slots": [
+                    {
+                      "name": "criteria-list",
+                      "component": "list",
+                      "content": "checklist of approval requirements"
+                    }
+                  ]
+                },
+                {
+                  "name": "approval-chain",
+                  "component": "card",
+                  "title": "Approval Chain",
+                  "slots": [
+                    {
+                      "name": "chain-steps",
+                      "component": "list",
+                      "content": "sequential or parallel approval steps with status",
+                      "items": [
+                        {
+                          "step": 1,
+                          "approver": "name",
+                          "status": "approved/pending/rejected",
+                          "timestamp": "date approved"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "visibility": "tab = history",
+              "slots": [
+                {
+                  "name": "audit-timeline",
+                  "component": "list",
+                  "itemType": "timeline-item",
+                  "content": "chronological audit trail of all status changes",
+                  "items": [
+                    {
+                      "timestamp": "date/time",
+                      "action": "status change or comment",
+                      "by": "user name",
+                      "details": "additional context"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "visibility": "tab = comments",
+              "slots": [
+                {
+                  "name": "comments-section",
+                  "component": "list",
+                  "itemType": "comment",
+                  "content": "collaborative comments on approval",
+                  "items": [
+                    {
+                      "author": "user name",
+                      "avatar": "user avatar",
+                      "timestamp": "posted date/time",
+                      "content": "comment text",
+                      "replies": "reply count"
+                    }
+                  ]
+                },
+                {
+                  "name": "add-comment",
+                  "component": "text-field",
+                  "placeholder": "Add a comment...",
+                  "multiline": true,
+                  "actionButton": "send"
+                }
+              ]
+            }
+          ],
+          "description": "Tab content area for request details, history, and comments"
+        },
+        {
+          "id": "approval-actions",
+          "flex": "0",
+          "height": "auto",
+          "minHeight": "60px",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "approve-button",
+                  "component": "button",
+                  "label": "Approve",
+                  "variant": "filled",
+                  "color": "success",
+                  "visibility": "status = pending"
+                },
+                {
+                  "name": "reject-button",
+                  "component": "button",
+                  "label": "Reject",
+                  "variant": "outlined",
+                  "color": "error",
+                  "visibility": "status = pending"
+                },
+                {
+                  "name": "request-info-button",
+                  "component": "button",
+                  "label": "Request More Info",
+                  "variant": "outlined",
+                  "visibility": "status = pending"
+                }
+              ]
+            }
+          ],
+          "description": "Action buttons for approval decision (approve/reject/request-info)"
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "click approval in queue",
+          "action": "load approval details in right panel, mark as viewed",
+          "animation": "fade-in"
+        },
+        {
+          "trigger": "filter tab change",
+          "action": "update approval queue list",
+          "animation": "fade"
+        },
+        {
+          "trigger": "sort menu selection",
+          "action": "reorder approval list",
+          "animation": "smooth transition"
+        },
+        {
+          "trigger": "approve button click",
+          "action": "open confirmation dialog, then mark as approved",
+          "modal": true
+        },
+        {
+          "trigger": "reject button click",
+          "action": "open rejection reason dialog",
+          "modal": true,
+          "requiredField": "rejection reason"
+        },
+        {
+          "trigger": "request info button click",
+          "action": "open dialog to send info request back to requester",
+          "modal": true
+        },
+        {
+          "trigger": "assign to me button",
+          "action": "assign approval to current user and show confirmation",
+          "toast": "3 seconds"
+        },
+        {
+          "trigger": "add comment",
+          "action": "post comment and update comments section",
+          "animation": "append with fade-in"
+        },
+        {
+          "trigger": "approval decision made",
+          "action": "update queue list status, move to history if chain complete",
+          "animation": "slide-out and notification"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-view tabs (Queue | Detail)",
+          "queuePanel": "full-width list in Queue tab",
+          "detailPanel": "full-width content in Detail tab",
+          "backButton": "navigate back to Queue tab after action"
+        },
+        "desktop": {
+          "layout": "side-by-side split view",
+          "queueWidth": "320px fixed",
+          "detailFlex": 1,
+          "dividerResizable": false
+        }
+      },
+      "notificationBehavior": {
+        "newApproval": "toast notification with approval title",
+        "deadline": "highlight overdue items in red, show warning 24 hours before deadline",
+        "rejectReason": "show reject reason in comments section with highlighted background"
+      },
+      "patterns": ["kanban-board", "approval-workflow"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/approvals",
+        "breadcrumb": ["Home", "Approvals"],
+        "navRailPosition": "third",
+        "deepLink": "/approvals/{approvalId}"
+      }
+    },
+    {
+      "id": "settings-page",
+      "name": "Settings Page",
+      "description": "User account settings, preferences, and profile management",
+      "layout": {
+        "type": "css-grid",
+        "desktop": {
+          "gridTemplate": "grid-template-columns: 200px 1fr",
+          "gap": "var(--space-4)",
+          "padding": "var(--space-6)"
+        },
+        "mobile": {
+          "gridTemplate": "grid-template-columns: 1fr",
+          "gap": "var(--space-3)",
+          "padding": "var(--space-4)"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 3",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 Settings"
+                }
+              ]
+            }
+          ],
+          "description": "Page header"
+        },
+        {
+          "id": "settings-nav",
+          "gridArea": "2 / 1 / 15 / 2",
+          "mobileGridArea": "2 / 1 / 3 / 2",
+          "visibility": "collapsible on mobile",
+          "components": [
+            {
+              "type": "list",
+              "itemType": "nav-item",
+              "sections": [
+                {
+                  "title": "Account",
+                  "items": [
+                    {
+                      "label": "Profile",
+                      "value": "profile",
+                      "icon": "person"
+                    },
+                    {
+                      "label": "Preferences",
+                      "value": "preferences",
+                      "icon": "tune"
+                    },
+                    {
+                      "label": "Notifications",
+                      "value": "notifications",
+                      "icon": "notifications"
+                    },
+                    {
+                      "label": "Privacy",
+                      "value": "privacy",
+                      "icon": "privacy_tip"
+                    }
+                  ]
+                },
+                {
+                  "title": "Security",
+                  "items": [
+                    {
+                      "label": "Password",
+                      "value": "password",
+                      "icon": "lock"
+                    },
+                    {
+                      "label": "Two-Factor Auth",
+                      "value": "2fa",
+                      "icon": "verified_user"
+                    },
+                    {
+                      "label": "Connected Apps",
+                      "value": "apps",
+                      "icon": "extension"
+                    },
+                    {
+                      "label": "Sessions",
+                      "value": "sessions",
+                      "icon": "device_hub"
+                    }
+                  ]
+                },
+                {
+                  "title": "Workspace",
+                  "items": [
+                    {
+                      "label": "Workspace Members",
+                      "value": "members",
+                      "icon": "group"
+                    },
+                    {
+                      "label": "Workspace Settings",
+                      "value": "workspace",
+                      "icon": "settings"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Vertical settings navigation menu"
+        },
+        {
+          "id": "content-area",
+          "gridArea": "2 / 2 / 15 / 3",
+          "mobileGridArea": "2 / 1 / 15 / 2",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "profile-section",
+                  "visibility": "section = profile",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Profile Picture",
+                      "slots": [
+                        {
+                          "name": "avatar-display",
+                          "component": "avatar",
+                          "size": "lg"
+                        },
+                        {
+                          "name": "upload-button",
+                          "component": "button",
+                          "label": "Upload New Picture"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Personal Information",
+                      "slots": [
+                        {
+                          "name": "first-name",
+                          "component": "text-field",
+                          "label": "First Name"
+                        },
+                        {
+                          "name": "last-name",
+                          "component": "text-field",
+                          "label": "Last Name"
+                        },
+                        {
+                          "name": "email",
+                          "component": "text-field",
+                          "label": "Email Address",
+                          "disabled": true
+                        },
+                        {
+                          "name": "phone",
+                          "component": "text-field",
+                          "label": "Phone Number"
+                        },
+                        {
+                          "name": "timezone",
+                          "component": "select",
+                          "label": "Timezone"
+                        },
+                        {
+                          "name": "save-button",
+                          "component": "button",
+                          "label": "Save Changes"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "preferences-section",
+                  "visibility": "section = preferences",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Display Settings",
+                      "slots": [
+                        {
+                          "name": "theme-toggle",
+                          "component": "button-group",
+                          "label": "Theme",
+                          "options": ["Light", "Dark", "Auto"]
+                        },
+                        {
+                          "name": "language-select",
+                          "component": "select",
+                          "label": "Language"
+                        },
+                        {
+                          "name": "compact-ui-toggle",
+                          "component": "checkbox",
+                          "label": "Use Compact UI"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Default Behavior",
+                      "slots": [
+                        {
+                          "name": "default-view",
+                          "component": "select",
+                          "label": "Default View on Login"
+                        },
+                        {
+                          "name": "sidebar-default",
+                          "component": "select",
+                          "label": "Sidebar Default State",
+                          "options": ["Expanded", "Collapsed"]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "notifications-section",
+                  "visibility": "section = notifications",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Email Notifications",
+                      "slots": [
+                        {
+                          "name": "email-frequency",
+                          "component": "select",
+                          "label": "Email Digest Frequency"
+                        },
+                        {
+                          "name": "notification-toggles",
+                          "component": "list",
+                          "itemType": "toggle",
+                          "items": [
+                            {
+                              "label": "New messages",
+                              "enabled": true
+                            },
+                            {
+                              "label": "Approvals",
+                              "enabled": true
+                            },
+                            {
+                              "label": "Tasks assigned to me",
+                              "enabled": true
+                            },
+                            {
+                              "label": "Weekly summary",
+                              "enabled": false
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Push Notifications",
+                      "slots": [
+                        {
+                          "name": "push-enabled",
+                          "component": "toggle",
+                          "label": "Enable Push Notifications"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "password-section",
+                  "visibility": "section = password",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Change Password",
+                      "slots": [
+                        {
+                          "name": "current-password",
+                          "component": "text-field",
+                          "label": "Current Password",
+                          "type": "password"
+                        },
+                        {
+                          "name": "new-password",
+                          "component": "text-field",
+                          "label": "New Password",
+                          "type": "password"
+                        },
+                        {
+                          "name": "confirm-password",
+                          "component": "text-field",
+                          "label": "Confirm New Password",
+                          "type": "password"
+                        },
+                        {
+                          "name": "password-requirements",
+                          "component": "list",
+                          "content": "password strength requirements"
+                        },
+                        {
+                          "name": "update-button",
+                          "component": "button",
+                          "label": "Update Password"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "2fa-section",
+                  "visibility": "section = 2fa",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Two-Factor Authentication",
+                      "slots": [
+                        {
+                          "name": "2fa-status",
+                          "content": "current 2FA status and method"
+                        },
+                        {
+                          "name": "enable-2fa-button",
+                          "component": "button",
+                          "label": "Enable 2FA"
+                        },
+                        {
+                          "name": "backup-codes",
+                          "component": "card",
+                          "title": "Backup Codes",
+                          "content": "generate and display backup codes for account recovery"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "connected-apps-section",
+                  "visibility": "section = apps",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Connected Applications",
+                      "slots": [
+                        {
+                          "name": "apps-list",
+                          "component": "list",
+                          "itemType": "app-item",
+                          "content": "applications with access to account"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "sessions-section",
+                  "visibility": "section = sessions",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Active Sessions",
+                      "slots": [
+                        {
+                          "name": "sessions-list",
+                          "component": "list",
+                          "itemType": "session-item",
+                          "content": "active login sessions with logout buttons"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Main content area with dynamic section content"
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "nav item click",
+          "action": "switch settings section",
+          "animation": "fade"
+        },
+        {
+          "trigger": "save button",
+          "action": "save settings and show confirmation",
+          "duration": "3 seconds"
+        },
+        {
+          "trigger": "upload profile picture",
+          "action": "open file picker, crop image, save",
+          "modal": false
+        },
+        {
+          "trigger": "toggle notification",
+          "action": "enable/disable immediately",
+          "animation": "none"
+        },
+        {
+          "trigger": "enable 2FA button",
+          "action": "show 2FA setup dialog with QR code",
+          "modal": true
+        },
+        {
+          "trigger": "update password",
+          "action": "validate password requirements, save, show confirmation",
+          "validation": "required before save"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-column",
+          "navSidebar": "hidden, accessible via menu button",
+          "contentFull": true
+        },
+        "desktop": {
+          "layout": "two-column with fixed sidebar (200px)",
+          "sidebarSticky": true
+        }
+      },
+      "patterns": ["settings-panel"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/settings/profile",
+        "breadcrumb": ["Home", "Settings"],
+        "navRailPosition": "user-menu",
+        "accessControl": "authenticated users only"
+      }
+    },
+    {
+      "id": "user-management",
+      "name": "User Management",
+      "description": "Administrative interface for managing team members, roles, and permissions",
+      "layout": {
+        "type": "css-grid",
+        "desktop": {
+          "gridTemplate": "grid-template-columns: repeat(12, 1fr)",
+          "gap": "var(--space-4)",
+          "padding": "var(--space-6)"
+        },
+        "mobile": {
+          "gridTemplate": "grid-template-columns: 1fr",
+          "gap": "var(--space-3)",
+          "padding": "var(--space-4)"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 13",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 Team Members"
+                },
+                {
+                  "name": "subtitle",
+                  "content": "Manage team members and their permissions"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "add-user-button",
+                  "component": "button",
+                  "label": "Add Team Member",
+                  "variant": "filled"
+                },
+                {
+                  "name": "import-button",
+                  "component": "button",
+                  "label": "Import Users",
+                  "variant": "outlined"
+                }
+              ]
+            }
+          ],
+          "description": "Page header with user management actions"
+        },
+        {
+          "id": "filters-bar",
+          "gridArea": "2 / 1 / 3 / 13",
+          "mobileGridArea": "2 / 1 / 3 / 2",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "search-field",
+                  "component": "text-field",
+                  "placeholder": "Search users by name or email...",
+                  "icon": "search"
+                },
+                {
+                  "name": "role-filter",
+                  "component": "select",
+                  "label": "Filter by Role"
+                },
+                {
+                  "name": "status-filter",
+                  "component": "select",
+                  "label": "Filter by Status",
+                  "options": ["All", "Active", "Inactive", "Pending Invite"]
+                },
+                {
+                  "name": "sort-menu",
+                  "component": "menu",
+                  "label": "Sort by",
+                  "items": ["Name (A-Z)", "Date Added (Newest)", "Last Active"]
+                }
+              ]
+            }
+          ],
+          "description": "Search and filter controls for user list"
+        },
+        {
+          "id": "users-table",
+          "gridArea": "3 / 1 / 15 / 13",
+          "mobileGridArea": "3 / 1 / 15 / 2",
+          "components": [
+            {
+              "type": "data-grid",
+              "columns": [
+                {
+                  "name": "name",
+                  "label": "Name",
+                  "width": "20%",
+                  "sortable": true
+                },
+                {
+                  "name": "email",
+                  "label": "Email",
+                  "width": "25%",
+                  "sortable": true
+                },
+                {
+                  "name": "role",
+                  "label": "Role",
+                  "width": "15%",
+                  "sortable": true,
+                  "editable": true
+                },
+                {
+                  "name": "status",
+                  "label": "Status",
+                  "width": "15%",
+                  "sortable": true,
+                  "badge": true
+                },
+                {
+                  "name": "last-active",
+                  "label": "Last Active",
+                  "width": "15%",
+                  "sortable": true
+                },
+                {
+                  "name": "actions",
+                  "label": "Actions",
+                  "width": "10%",
+                  "sortable": false
+                }
+              ],
+              "rows": "user-list-data",
+              "pagination": {
+                "pageSize": 20,
+                "pageSizeOptions": [10, 20, 50, 100]
+              },
+              "selection": "checkbox multi-select",
+              "rowActions": [
+                {
+                  "label": "View Profile",
+                  "icon": "open_in_new"
+                },
+                {
+                  "label": "Edit Permissions",
+                  "icon": "edit"
+                },
+                {
+                  "label": "Deactivate",
+                  "icon": "block",
+                  "color": "error",
+                  "visibility": "status = active"
+                },
+                {
+                  "label": "Reactivate",
+                  "icon": "check",
+                  "color": "success",
+                  "visibility": "status = inactive"
+                },
+                {
+                  "label": "Remove",
+                  "icon": "delete",
+                  "color": "error"
+                }
+              ]
+            }
+          ],
+          "description": "Data grid of all team members with sorting, filtering, and bulk actions"
+        },
+        {
+          "id": "bulk-actions",
+          "gridArea": "15 / 1 / 16 / 13",
+          "mobileGridArea": "15 / 1 / 16 / 2",
+          "visibility": "show when rows selected",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "selection-info",
+                  "content": "[X] users selected"
+                },
+                {
+                  "name": "bulk-role-change",
+                  "component": "button",
+                  "label": "Change Role"
+                },
+                {
+                  "name": "bulk-deactivate",
+                  "component": "button",
+                  "label": "Deactivate",
+                  "color": "error"
+                },
+                {
+                  "name": "bulk-remove",
+                  "component": "button",
+                  "label": "Remove Users",
+                  "color": "error"
+                }
+              ]
+            }
+          ],
+          "description": "Bulk actions toolbar for selected users"
+        }
+      ],
+      "detailModal": {
+        "id": "user-detail-modal",
+        "title": "Edit User",
+        "width": "600px",
+        "sections": [
+          {
+            "title": "Personal Information",
+            "fields": [
+              {
+                "name": "first-name",
+                "component": "text-field",
+                "label": "First Name"
+              },
+              {
+                "name": "last-name",
+                "component": "text-field",
+                "label": "Last Name"
+              },
+              {
+                "name": "email",
+                "component": "text-field",
+                "label": "Email",
+                "disabled": true
+              }
+            ]
+          },
+          {
+            "title": "Roles & Permissions",
+            "fields": [
+              {
+                "name": "primary-role",
+                "component": "select",
+                "label": "Primary Role"
+              },
+              {
+                "name": "custom-permissions",
+                "component": "list",
+                "itemType": "permission-toggle",
+                "content": "granular permission checkboxes"
+              }
+            ]
+          },
+          {
+            "title": "Access",
+            "fields": [
+              {
+                "name": "teams",
+                "component": "multi-select",
+                "label": "Teams"
+              },
+              {
+                "name": "department",
+                "component": "select",
+                "label": "Department"
+              },
+              {
+                "name": "manager",
+                "component": "select",
+                "label": "Reports to"
+              }
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "label": "Save Changes",
+            "variant": "filled"
+          },
+          {
+            "label": "Cancel",
+            "variant": "outlined"
+          }
+        ]
+      },
+      "interactionRules": [
+        {
+          "trigger": "add team member button",
+          "action": "open user creation dialog",
+          "modal": true
+        },
+        {
+          "trigger": "import button",
+          "action": "open CSV import dialog",
+          "modal": true
+        },
+        {
+          "trigger": "search input change",
+          "action": "filter user list in real-time",
+          "debounce": "300ms"
+        },
+        {
+          "trigger": "filter or sort change",
+          "action": "update user list",
+          "animation": "fade"
+        },
+        {
+          "trigger": "click user row",
+          "action": "open user detail modal",
+          "modal": true
+        },
+        {
+          "trigger": "role edit in table",
+          "action": "open role selector, update on select",
+          "animation": "inline"
+        },
+        {
+          "trigger": "checkbox select",
+          "action": "show bulk actions toolbar",
+          "animation": "slide-down"
+        },
+        {
+          "trigger": "bulk role change",
+          "action": "open dialog to select new role, apply to all selected",
+          "modal": true
+        },
+        {
+          "trigger": "deactivate/remove user",
+          "action": "show confirmation dialog",
+          "modal": true,
+          "requiresConfirmation": true
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-column",
+          "tableLayout": "card list view with collapsible details",
+          "actions": "menu per row instead of inline buttons"
+        },
+        "desktop": {
+          "layout": "full data-grid with all columns visible",
+          "tableLayout": "standard data-grid"
+        }
+      },
+      "patterns": ["admin-panel", "data-management"],
+      "navigation": {
+        "parent": "admin-console",
+        "defaultRoute": "/admin/users",
+        "breadcrumb": ["Home", "Admin", "Team Members"],
+        "accessControl": "admin-role only"
+      }
+    },
+    {
+      "id": "knowledge-base",
+      "name": "Knowledge Base",
+      "description": "Self-service knowledge base and documentation with search, categories, and article management",
+      "layout": {
+        "type": "css-grid",
+        "desktop": {
+          "gridTemplate": "grid-template-columns: 280px 1fr",
+          "gap": "var(--space-4)",
+          "padding": "var(--space-6)"
+        },
+        "mobile": {
+          "gridTemplate": "grid-template-columns: 1fr",
+          "gap": "var(--space-3)",
+          "padding": "var(--space-4)"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "gridArea": "1 / 1 / 2 / 3",
+          "mobileGridArea": "1 / 1 / 2 / 2",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "title",
+                  "content": "h1 Knowledge Base"
+                },
+                {
+                  "name": "subtitle",
+                  "content": "Find answers and learn how to use the platform"
+                }
+              ]
+            }
+          ],
+          "description": "Page header"
+        },
+        {
+          "id": "search-section",
+          "gridArea": "2 / 1 / 3 / 3",
+          "mobileGridArea": "2 / 1 / 3 / 2",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "search-input",
+                  "component": "text-field",
+                  "placeholder": "Search articles...",
+                  "size": "lg",
+                  "icon": "search"
+                },
+                {
+                  "name": "popular-topics",
+                  "component": "chip-group",
+                  "chips": [
+                    "Getting Started",
+                    "Billing",
+                    "API Documentation",
+                    "Integrations"
+                  ],
+                  "description": "Quick link to popular topics"
+                }
+              ]
+            }
+          ],
+          "description": "Large search box with popular topic chips"
+        },
+        {
+          "id": "categories-sidebar",
+          "gridArea": "3 / 1 / 15 / 2",
+          "mobileGridArea": "3 / 1 / 4 / 2",
+          "visibility": "collapsible on mobile",
+          "components": [
+            {
+              "type": "list",
+              "itemType": "category-item",
+              "sections": [
+                {
+                  "title": "Getting Started",
+                  "expanded": true,
+                  "items": [
+                    {
+                      "label": "Account Setup",
+                      "icon": "person_add"
+                    },
+                    {
+                      "label": "First Steps",
+                      "icon": "flag"
+                    },
+                    {
+                      "label": "System Requirements",
+                      "icon": "computer"
+                    }
+                  ]
+                },
+                {
+                  "title": "Features",
+                  "items": [
+                    {
+                      "label": "Dashboard",
+                      "icon": "dashboard"
+                    },
+                    {
+                      "label": "Messages & Inbox",
+                      "icon": "mail"
+                    },
+                    {
+                      "label": "Tasks & Workflows",
+                      "icon": "checklist"
+                    },
+                    {
+                      "label": "Analytics",
+                      "icon": "analytics"
+                    }
+                  ]
+                },
+                {
+                  "title": "Administration",
+                  "items": [
+                    {
+                      "label": "User Management",
+                      "icon": "people"
+                    },
+                    {
+                      "label": "Permissions",
+                      "icon": "security"
+                    },
+                    {
+                      "label": "Billing",
+                      "icon": "payment"
+                    }
+                  ]
+                },
+                {
+                  "title": "API & Integrations",
+                  "items": [
+                    {
+                      "label": "API Overview",
+                      "icon": "api"
+                    },
+                    {
+                      "label": "Webhooks",
+                      "icon": "webhook"
+                    },
+                    {
+                      "label": "Integrations",
+                      "icon": "extension"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Categories sidebar with expandable sections"
+        },
+        {
+          "id": "content-area",
+          "gridArea": "3 / 2 / 15 / 3",
+          "mobileGridArea": "4 / 1 / 15 / 2",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "articles-list",
+                  "component": "list",
+                  "itemType": "article-card",
+                  "slots": [
+                    {
+                      "name": "article-title",
+                      "component": "link",
+                      "content": "article title"
+                    },
+                    {
+                      "name": "article-description",
+                      "content": "brief excerpt of article content"
+                    },
+                    {
+                      "name": "article-category",
+                      "component": "badge",
+                      "content": "category label"
+                    },
+                    {
+                      "name": "article-meta",
+                      "content": "updated date, read time estimate"
+                    },
+                    {
+                      "name": "helpful-button",
+                      "component": "button-group",
+                      "options": ["Helpful", "Not Helpful"]
+                    }
+                  ],
+                  "layout": "vertical stack",
+                  "description": "List of articles matching search or category"
+                }
+              ]
+            }
+          ],
+          "description": "Main content area with article list or search results"
+        }
+      ],
+      "articleDetailPage": {
+        "id": "article-detail",
+        "layout": {
+          "type": "single-column",
+          "maxWidth": "800px",
+          "center": true
+        },
+        "sections": [
+          {
+            "id": "article-header",
+            "components": [
+              {
+                "type": "breadcrumb",
+                "slots": []
+              },
+              {
+                "type": "container",
+                "slots": [
+                  {
+                    "name": "article-title",
+                    "content": "h1 article title"
+                  },
+                  {
+                    "name": "article-meta",
+                    "content": "updated [date], estimated read time [X] min"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "article-content",
+            "components": [
+              {
+                "type": "container",
+                "slots": [
+                  {
+                    "name": "rich-content",
+                    "content": "markdown/HTML article body with images, code blocks, embeds"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "article-footer",
+            "components": [
+              {
+                "type": "container",
+                "slots": [
+                  {
+                    "name": "was-helpful",
+                    "component": "button-group",
+                    "label": "Was this article helpful?",
+                    "buttons": ["Yes", "No"]
+                  },
+                  {
+                    "name": "feedback-form",
+                    "component": "text-field",
+                    "placeholder": "Additional feedback (optional)",
+                    "multiline": true,
+                    "visibility": "conditional on no/yes"
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "title": "Related Articles",
+                "slots": [
+                  {
+                    "name": "related-list",
+                    "component": "list",
+                    "content": "links to related articles"
+                  }
+                ]
+              },
+              {
+                "type": "card",
+                "title": "Still Need Help?",
+                "slots": [
+                  {
+                    "name": "contact-cta",
+                    "component": "button",
+                    "label": "Contact Support",
+                    "variant": "filled"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "interactionRules": [
+        {
+          "trigger": "search input change",
+          "action": "filter articles and show matching results",
+          "debounce": "300ms"
+        },
+        {
+          "trigger": "category click",
+          "action": "show articles in that category",
+          "animation": "fade"
+        },
+        {
+          "trigger": "article click",
+          "action": "navigate to article detail page",
+          "navigation": "same window"
+        },
+        {
+          "trigger": "helpful button",
+          "action": "record feedback and show thank you message",
+          "toast": "2 seconds"
+        },
+        {
+          "trigger": "share article",
+          "action": "show share dialog with copy link and social options",
+          "modal": true
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-column",
+          "sidebar": "hidden by default, accessible via menu",
+          "searchSticky": true
+        },
+        "desktop": {
+          "layout": "two-column with fixed sidebar (280px)",
+          "contentFlex": 1
+        }
+      },
+      "patterns": ["content-management", "search"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/help",
+        "breadcrumb": ["Home", "Knowledge Base"],
+        "publicAccess": true,
+        "deepLink": "/help/article/{articleSlug}"
+      }
+    },
+    {
+      "id": "report-builder",
+      "name": "Report Builder",
+      "description": "Interactive interface for building, customizing, and managing business reports with visualization options",
+      "layout": {
+        "type": "split-view",
+        "desktop": {
+          "structure": "builder-panel (fill) + preview-sidebar (360px)",
+          "gap": "var(--space-4)",
+          "divider": "resizable"
+        },
+        "mobile": {
+          "structure": "builder-tabs (builder | preview)",
+          "gap": "0"
+        }
+      },
+      "sections": [
+        {
+          "id": "page-header",
+          "components": [
+            {
+              "type": "breadcrumb",
+              "slots": []
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "report-title-input",
+                  "component": "text-field",
+                  "placeholder": "Untitled Report",
+                  "editable": true,
+                  "size": "lg"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "save-button",
+                  "component": "button",
+                  "label": "Save Report"
+                },
+                {
+                  "name": "export-menu",
+                  "component": "menu",
+                  "label": "Export",
+                  "items": ["Download PDF", "Download Excel", "Download CSV"]
+                },
+                {
+                  "name": "more-menu",
+                  "component": "menu",
+                  "items": ["Share", "Schedule Email", "Delete"]
+                }
+              ]
+            }
+          ],
+          "description": "Page header with report title and actions"
+        },
+        {
+          "id": "builder-panel",
+          "flex": 1,
+          "components": [
+            {
+              "type": "tabs",
+              "tabs": [
+                {
+                  "label": "Data",
+                  "value": "data",
+                  "default": true
+                },
+                {
+                  "label": "Visualization",
+                  "value": "visualization"
+                },
+                {
+                  "label": "Layout",
+                  "value": "layout"
+                }
+              ]
+            },
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "data-tab",
+                  "visibility": "tab = data",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Data Source",
+                      "slots": [
+                        {
+                          "name": "source-select",
+                          "component": "select",
+                          "label": "Select Data Source"
+                        },
+                        {
+                          "name": "load-data-button",
+                          "component": "button",
+                          "label": "Load Data"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Fields",
+                      "slots": [
+                        {
+                          "name": "available-fields",
+                          "component": "list",
+                          "content": "draggable list of available data fields",
+                          "itemType": "field-item",
+                          "draggable": true
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Filters",
+                      "slots": [
+                        {
+                          "name": "filter-builder",
+                          "component": "container",
+                          "content": "visual filter rule builder",
+                          "addButton": "Add Filter"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Grouping",
+                      "slots": [
+                        {
+                          "name": "group-fields",
+                          "component": "container",
+                          "content": "draggable list of grouping dimensions"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "visualization-tab",
+                  "visibility": "tab = visualization",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Chart Type",
+                      "slots": [
+                        {
+                          "name": "chart-type-grid",
+                          "component": "button-group",
+                          "layout": "grid",
+                          "options": [
+                            {
+                              "label": "Table",
+                              "icon": "table_chart",
+                              "value": "table"
+                            },
+                            {
+                              "label": "Line Chart",
+                              "icon": "show_chart",
+                              "value": "line"
+                            },
+                            {
+                              "label": "Bar Chart",
+                              "icon": "bar_chart",
+                              "value": "bar"
+                            },
+                            {
+                              "label": "Pie Chart",
+                              "icon": "pie_chart",
+                              "value": "pie"
+                            },
+                            {
+                              "label": "Area Chart",
+                              "icon": "area_chart",
+                              "value": "area"
+                            },
+                            {
+                              "label": "Scatter",
+                              "icon": "scatter_plot",
+                              "value": "scatter"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Appearance",
+                      "slots": [
+                        {
+                          "name": "chart-title",
+                          "component": "text-field",
+                          "label": "Chart Title"
+                        },
+                        {
+                          "name": "show-legend",
+                          "component": "checkbox",
+                          "label": "Show Legend"
+                        },
+                        {
+                          "name": "show-values",
+                          "component": "checkbox",
+                          "label": "Show Values on Chart"
+                        },
+                        {
+                          "name": "color-scheme",
+                          "component": "select",
+                          "label": "Color Scheme"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "layout-tab",
+                  "visibility": "tab = layout",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Page Layout",
+                      "slots": [
+                        {
+                          "name": "layout-grid",
+                          "component": "button-group",
+                          "layout": "grid",
+                          "options": [
+                            "1 Column",
+                            "2 Column",
+                            "3 Column",
+                            "Custom"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "card",
+                      "title": "Elements",
+                      "slots": [
+                        {
+                          "name": "add-text-button",
+                          "component": "button",
+                          "label": "Add Text"
+                        },
+                        {
+                          "name": "add-image-button",
+                          "component": "button",
+                          "label": "Add Image"
+                        },
+                        {
+                          "name": "add-divider-button",
+                          "component": "button",
+                          "label": "Add Divider"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Left panel with data, visualization, and layout builder tabs"
+        },
+        {
+          "id": "preview-sidebar",
+          "width": "360px",
+          "visibility": "desktop only, tabs on mobile",
+          "components": [
+            {
+              "type": "card",
+              "title": "Preview",
+              "slots": [
+                {
+                  "name": "preview-area",
+                  "content": "live preview of report with current configuration"
+                }
+              ]
+            },
+            {
+              "type": "card",
+              "title": "Info",
+              "slots": [
+                {
+                  "name": "data-summary",
+                  "content": "rows: [X], columns: [X], updated: [timestamp]"
+                }
+              ]
+            }
+          ],
+          "description": "Right sidebar with live preview of report"
+        }
+      ],
+      "interactionRules": [
+        {
+          "trigger": "data source select",
+          "action": "load available fields for that source",
+          "animation": "fade-in"
+        },
+        {
+          "trigger": "field drag to builder",
+          "action": "add field to report visualization",
+          "animation": "drop indicator"
+        },
+        {
+          "trigger": "chart type select",
+          "action": "update preview with new chart type",
+          "animation": "cross-fade"
+        },
+        {
+          "trigger": "filter rule add/change",
+          "action": "update preview data in real-time",
+          "debounce": "500ms"
+        },
+        {
+          "trigger": "save report button",
+          "action": "save report configuration and show confirmation",
+          "toast": "3 seconds"
+        },
+        {
+          "trigger": "export button",
+          "action": "generate and download report in selected format",
+          "background": "export task"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "single-column with tabs",
+          "previewSidebar": "preview tab",
+          "builderFull": true
+        },
+        "desktop": {
+          "layout": "split-view with resizable divider",
+          "builderFlex": 1,
+          "previewWidth": "360px",
+          "previewSticky": false
+        }
+      },
+      "patterns": ["report-builder", "data-visualization"],
+      "navigation": {
+        "parent": "app-shell",
+        "defaultRoute": "/reports",
+        "breadcrumb": ["Home", "Reports", "Builder"],
+        "deepLink": "/reports/builder/{reportId}"
+      }
+    },
+    {
+      "id": "onboarding-wizard",
+      "name": "Onboarding Wizard",
+      "description": "Step-by-step onboarding wizard for new users with setup tasks and progress tracking",
+      "layout": {
+        "type": "modal-overlay",
+        "desktop": {
+          "width": "800px",
+          "maxHeight": "90vh",
+          "centerScreen": true,
+          "backdrop": "dark with close button"
+        },
+        "mobile": {
+          "width": "100%",
+          "height": "100vh",
+          "fullScreen": true
+        }
+      },
+      "sections": [
+        {
+          "id": "wizard-header",
+          "height": "auto",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "wizard-title",
+                  "content": "h2 Welcome to [App Name]"
+                },
+                {
+                  "name": "wizard-subtitle",
+                  "content": "Let's get you set up in a few easy steps"
+                },
+                {
+                  "name": "close-button",
+                  "component": "icon-button",
+                  "icon": "close",
+                  "position": "top-right"
+                }
+              ]
+            }
+          ],
+          "description": "Wizard header with title and close button"
+        },
+        {
+          "id": "progress-indicator",
+          "height": "auto",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "progress-bar",
+                  "component": "progress-bar",
+                  "value": "current-step / total-steps",
+                  "animated": true
+                },
+                {
+                  "name": "step-counter",
+                  "content": "Step [X] of [Y]"
+                }
+              ]
+            }
+          ],
+          "description": "Progress indicator showing current step"
+        },
+        {
+          "id": "wizard-content",
+          "flex": 1,
+          "overflow": "auto",
+          "components": [
+            {
+              "type": "container",
+              "slots": [
+                {
+                  "name": "step-1-profile",
+                  "visibility": "step = 1",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Complete Your Profile",
+                      "slots": [
+                        {
+                          "name": "profile-avatar",
+                          "component": "avatar",
+                          "size": "lg",
+                          "editable": true
+                        },
+                        {
+                          "name": "first-name",
+                          "component": "text-field",
+                          "label": "First Name",
+                          "required": true
+                        },
+                        {
+                          "name": "last-name",
+                          "component": "text-field",
+                          "label": "Last Name",
+                          "required": true
+                        },
+                        {
+                          "name": "title",
+                          "component": "text-field",
+                          "label": "Job Title"
+                        },
+                        {
+                          "name": "department",
+                          "component": "select",
+                          "label": "Department"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "step-2-workspace",
+                  "visibility": "step = 2",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Set Up Your Workspace",
+                      "slots": [
+                        {
+                          "name": "workspace-name",
+                          "component": "text-field",
+                          "label": "Workspace Name",
+                          "required": true
+                        },
+                        {
+                          "name": "workspace-url",
+                          "component": "text-field",
+                          "label": "Workspace URL",
+                          "prefix": "app.example.com/",
+                          "required": true
+                        },
+                        {
+                          "name": "industry",
+                          "component": "select",
+                          "label": "Industry"
+                        },
+                        {
+                          "name": "team-size",
+                          "component": "select",
+                          "label": "Team Size"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "step-3-team",
+                  "visibility": "step = 3",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Invite Team Members",
+                      "slots": [
+                        {
+                          "name": "invite-description",
+                          "content": "Add your team members to start collaborating"
+                        },
+                        {
+                          "name": "email-list",
+                          "component": "text-field",
+                          "label": "Email Addresses",
+                          "placeholder": "Enter emails separated by commas",
+                          "multiline": true
+                        },
+                        {
+                          "name": "send-invites-button",
+                          "component": "button",
+                          "label": "Send Invites"
+                        },
+                        {
+                          "name": "skip-button",
+                          "component": "button",
+                          "label": "Skip for Now",
+                          "variant": "outlined"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "step-4-integrations",
+                  "visibility": "step = 4",
+                  "components": [
+                    {
+                      "type": "card",
+                      "title": "Connect Your Tools",
+                      "slots": [
+                        {
+                          "name": "integration-description",
+                          "content": "Connect your favorite tools to [App Name]"
+                        },
+                        {
+                          "name": "integration-grid",
+                          "component": "grid",
+                          "gridTemplate": "repeat(auto-fill, minmax(150px, 1fr))",
+                          "content": "integration cards with connect buttons",
+                          "items": [
+                            "Slack",
+                            "Gmail",
+                            "Salesforce",
+                            "Zapier"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "step-5-complete",
+                  "visibility": "step = 5",
+                  "components": [
+                    {
+                      "type": "container",
+                      "slots": [
+                        {
+                          "name": "success-icon",
+                          "component": "icon",
+                          "icon": "check_circle",
+                          "size": "xl",
+                          "color": "success"
+                        },
+                        {
+                          "name": "success-title",
+                          "content": "h2 You're All Set!"
+                        },
+                        {
+                          "name": "success-message",
+                          "content": "Your account is ready to go. Let's explore the platform!"
+                        },
+                        {
+                          "name": "get-started-button",
+                          "component": "button",
+                          "label": "Go to Dashboard",
+                          "variant": "filled",
+                          "size": "lg"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "description": "Wizard step content area with dynamic step content"
+        }
+      ],
+      "footerActions": {
+        "id": "wizard-footer",
+        "components": [
+          {
+            "type": "container",
+            "slots": [
+              {
+                "name": "back-button",
+                "component": "button",
+                "label": "Back",
+                "variant": "outlined",
+                "visibility": "step > 1"
+              },
+              {
+                "name": "next-button",
+                "component": "button",
+                "label": "Next",
+                "variant": "filled",
+                "visibility": "step < 5"
+              },
+              {
+                "name": "finish-button",
+                "component": "button",
+                "label": "Finish",
+                "variant": "filled",
+                "visibility": "step = 5"
+              }
+            ]
+          }
+        ],
+        "description": "Navigation buttons for wizard steps"
+      },
+      "interactionRules": [
+        {
+          "trigger": "next button",
+          "action": "validate current step form, move to next step if valid",
+          "validation": "required fields must be filled"
+        },
+        {
+          "trigger": "back button",
+          "action": "go to previous step without validation",
+          "animation": "fade"
+        },
+        {
+          "trigger": "close button",
+          "action": "show confirmation dialog before closing",
+          "modal": true,
+          "confirmMessage": "Are you sure you want to exit setup? You can complete this later."
+        },
+        {
+          "trigger": "send invites button",
+          "action": "send email invitations to listed addresses",
+          "validation": "valid email format required",
+          "toast": "Invites sent successfully"
+        },
+        {
+          "trigger": "integration connect button",
+          "action": "open OAuth flow for that integration",
+          "modal": false,
+          "popup": true
+        },
+        {
+          "trigger": "finish button",
+          "action": "complete onboarding and navigate to dashboard",
+          "navigation": "/dashboard"
+        }
+      ],
+      "responsiveBehavior": {
+        "breakpoint": "768px",
+        "mobile": {
+          "layout": "full-screen modal",
+          "width": "100%",
+          "height": "100vh",
+          "padding": "var(--space-4)"
+        },
+        "desktop": {
+          "layout": "centered modal",
+          "width": "800px",
+          "maxHeight": "90vh",
+          "boxShadow": "shadow-lg"
+        }
+      },
+      "patterns": ["wizard", "setup-flow"],
+      "navigation": {
+        "parent": "modal-overlay",
+        "trigger": "first-login or user-action",
+        "modalOnly": true,
+        "dismissible": true,
+        "skipableAtAnyPoint": true,
+        "saveDraft": true
+      }
+    }
+  ]
+}

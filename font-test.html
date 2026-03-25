@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Test: Rubik + Mono Pairing</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Fira+Code:wght@400;500;600&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#09090b;--card:#111114;--fg:#e4e4e7;--fg2:rgba(228,228,231,0.6);--fg3:rgba(228,228,231,0.35);--border:rgba(228,228,231,0.08);--accent:#FF5200}
+body{font-family:'Rubik',sans-serif;background:var(--bg);color:var(--fg);padding:40px;max-width:1100px;margin:0 auto;line-height:1.6}
+h1{font-size:2rem;font-weight:700;margin-bottom:8px}
+h2{font-size:1.25rem;font-weight:600;margin-top:48px;margin-bottom:16px;padding-top:24px;border-top:1px solid var(--border)}
+h3{font-size:0.875rem;font-weight:600;margin-top:24px;margin-bottom:8px;color:var(--fg2)}
+p.sub{color:var(--fg2);font-size:0.875rem;margin-bottom:32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:12px 0}
+.label{font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--fg3);margin-bottom:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.pass{color:#4ade80;font-size:0.6875rem;font-weight:600}
+.warn{color:#fbbf24;font-size:0.6875rem;font-weight:600}
+.fail{color:#f87171;font-size:0.6875rem;font-weight:600}
+.note{font-size:0.75rem;color:var(--fg3);margin-top:8px;line-height:1.5}
+.mono-compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+@media(max-width:700px){.mono-compare{grid-template-columns:1fr}}
+.mono-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.mono-card .name{font-family:'Rubik',sans-serif;font-size:0.75rem;font-weight:600;color:var(--accent);margin-bottom:12px}
+.mono-sample{font-size:0.8125rem;line-height:1.7;color:var(--fg2)}
+.verdict{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;padding:24px;margin:16px 0}
+.verdict h3{color:#4ade80;margin-top:0}
+</style>
+</head>
+<body>
+
+<h1>Font Test: Rubik</h1>
+<p class="sub">Testing Rubik (sans-serif) for Arabic + English rendering across all weights, plus mono font pairing evaluation.</p>
+
+<!-- Section 1: Weight Scale -->
+<h2>1. Rubik Weight Scale (English)</h2>
+<div class="card">
+  <div style="font-weight:300;font-size:1.25rem;margin-bottom:8px">Light 300 - The quick brown fox jumps over the lazy dog</div>
+  <div style="font-weight:400;font-size:1.25rem;margin-bottom:8px">Regular 400 - The quick brown fox jumps over the lazy dog</div>
+  <div style="font-weight:500;font-size:1.25rem;margin-bottom:8px">Medium 500 - The quick brown fox jumps over the lazy dog</div>
+  <div style="font-weight:600;font-size:1.25rem;margin-bottom:8px">SemiBold 600 - The quick brown fox jumps over the lazy dog</div>
+  <div style="font-weight:700;font-size:1.25rem;margin-bottom:8px">Bold 700 - The quick brown fox jumps over the lazy dog</div>
+  <div style="font-weight:800;font-size:1.25rem;margin-bottom:8px">ExtraBold 800 - The quick brown fox jumps over the lazy dog</div>
+  <div style="font-weight:900;font-size:1.25rem">Black 900 - The quick brown fox jumps over the lazy dog</div>
+</div>
+
+<!-- Section 2: Arabic Weight Scale -->
+<h2>2. Rubik Weight Scale (Arabic)</h2>
+<div class="card" dir="rtl" lang="ar">
+  <div style="font-weight:300;font-size:1.25rem;margin-bottom:8px">خفيف 300 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+  <div style="font-weight:400;font-size:1.25rem;margin-bottom:8px">عادي 400 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+  <div style="font-weight:500;font-size:1.25rem;margin-bottom:8px">متوسط 500 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+  <div style="font-weight:600;font-size:1.25rem;margin-bottom:8px">نصف عريض 600 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+  <div style="font-weight:700;font-size:1.25rem;margin-bottom:8px">عريض 700 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+  <div style="font-weight:800;font-size:1.25rem;margin-bottom:8px">عريض جدا 800 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+  <div style="font-weight:900;font-size:1.25rem">أسود 900 - الخط السريع البني يقفز فوق الكلب الكسول</div>
+</div>
+
+<!-- Section 3: Type Scale Test -->
+<h2>3. DS Type Scale Test (English + Arabic)</h2>
+<div class="card">
+  <div class="label">Display L (48px / 700)</div>
+  <div style="font-size:3rem;font-weight:700;line-height:1.17;letter-spacing:0.02em;margin-bottom:16px">Quiet Intelligence</div>
+
+  <div class="label">Headline (24px / 600)</div>
+  <div style="font-size:1.5rem;font-weight:600;line-height:1.33;letter-spacing:-0.01em;margin-bottom:16px">Design System for AI-Native Enterprise</div>
+
+  <div class="label">Title (16px / 600)</div>
+  <div style="font-size:1rem;font-weight:600;line-height:1.5;letter-spacing:-0.006em;margin-bottom:16px">Component tokens resolve per brand and theme</div>
+
+  <div class="label">Body (14px / 400)</div>
+  <div style="font-size:0.875rem;font-weight:400;line-height:1.5;letter-spacing:-0.006em;margin-bottom:16px">The design system uses a three-layer token architecture where primitive values flow upward through semantic naming to component-level usage. AI agents consume the semantic layer directly.</div>
+
+  <div class="label">Label (13px / 500)</div>
+  <div style="font-size:0.8125rem;font-weight:500;line-height:1.23;letter-spacing:0.01em;margin-bottom:16px">BUTTON LABEL</div>
+
+  <div class="label">Caption (11px / 400)</div>
+  <div style="font-size:0.6875rem;font-weight:400;line-height:1.45;letter-spacing:0.02em;color:var(--fg3)">Helper text, timestamps, metadata</div>
+</div>
+
+<div class="card" dir="rtl" lang="ar">
+  <div class="label" dir="ltr">Display L (48px / 700) - Arabic</div>
+  <div style="font-size:3rem;font-weight:700;line-height:1.25;margin-bottom:16px">ذكاء هادئ</div>
+
+  <div class="label" dir="ltr">Headline (24px / 600) - Arabic</div>
+  <div style="font-size:1.5rem;font-weight:600;line-height:1.4;margin-bottom:16px">نظام تصميم للمؤسسات الذكية</div>
+
+  <div class="label" dir="ltr">Title (16px / 600) - Arabic</div>
+  <div style="font-size:1rem;font-weight:600;line-height:1.6;margin-bottom:16px">الرموز المميزة للمكونات تعمل حسب العلامة التجارية والسمة</div>
+
+  <div class="label" dir="ltr">Body (14px / 400) - Arabic</div>
+  <div style="font-size:0.875rem;font-weight:400;line-height:1.6;margin-bottom:16px">يستخدم نظام التصميم بنية رموز من ثلاث طبقات حيث تتدفق القيم الأولية عبر التسمية الدلالية إلى مستوى استخدام المكونات. تستهلك عوامل الذكاء الاصطناعي الطبقة الدلالية مباشرة.</div>
+
+  <div class="label" dir="ltr">Label (13px / 500) - Arabic</div>
+  <div style="font-size:0.8125rem;font-weight:500;line-height:1.3;margin-bottom:16px">تسمية الزر</div>
+
+  <div class="label" dir="ltr">Caption (11px / 400) - Arabic</div>
+  <div style="font-size:0.6875rem;font-weight:400;line-height:1.5;color:var(--fg3)">نص مساعد، طوابع زمنية، بيانات وصفية</div>
+</div>
+
+<!-- Section 4: Mixed Bidi Content -->
+<h2>4. Bidirectional Mixed Content</h2>
+<div class="card">
+  <div class="label">English paragraph with Arabic terms</div>
+  <div style="font-size:0.875rem;line-height:1.6;margin-bottom:16px">The WideBot platform (وايدبوت) serves enterprise customers with WCAG AAA compliance. Hulul (حلول) targets SMB markets with WCAG AA standards. Both support Arabic (العربية) and English interfaces.</div>
+
+  <div class="label">Arabic paragraph with English terms</div>
+  <div style="font-size:0.875rem;line-height:1.6" dir="rtl" lang="ar">تخدم منصة WideBot عملاء المؤسسات بمعايير WCAG AAA. بينما تستهدف Hulul أسواق الشركات الصغيرة والمتوسطة بمعايير WCAG AA. كلاهما يدعم الواجهات العربية والإنجليزية.</div>
+</div>
+
+<!-- Section 5: Numbers and Data -->
+<h2>5. Numbers and Tabular Data</h2>
+<div class="card">
+  <div class="label">Tabular figures (critical for ERP)</div>
+  <div style="font-size:1rem;font-variant-numeric:tabular-nums;line-height:2">
+    <div>$1,234,567.89</div>
+    <div>$&nbsp;&nbsp;&nbsp;45,678.90</div>
+    <div>$&nbsp;&nbsp;123,456.00</div>
+  </div>
+  <div class="note" style="margin-top:12px">Rubik supports tabular-nums via OpenType features. Critical for financial data alignment in ERP tables.</div>
+</div>
+
+<div class="card" dir="rtl" lang="ar">
+  <div class="label" dir="ltr">Arabic-Indic numerals test</div>
+  <div style="font-size:1rem;line-height:2">
+    <div>المبلغ: ١٢٣٤٥٦٧٫٨٩ ر.س</div>
+    <div>المبلغ: ٤٥٦٧٨٫٩٠ ر.س</div>
+    <div>المبلغ: ١٢٣٤٥٦٫٠٠ ر.س</div>
+  </div>
+</div>
+
+<!-- Section 6: Mono Font Comparison -->
+<h2>6. Monospace Font Pairing Comparison</h2>
+<p class="sub" style="margin-bottom:16px">Evaluating four mono fonts paired with Rubik for code blocks, data, and technical content.</p>
+
+<div class="mono-compare">
+  <div class="mono-card">
+    <div class="name">IBM Plex Mono</div>
+    <div class="mono-sample" style="font-family:'IBM Plex Mono',monospace">
+      <div style="margin-bottom:8px">const ratio = (L1 + 0.05) / (L2 + 0.05);</div>
+      <div style="margin-bottom:8px">--primary-filled-bg: #8c2b00;</div>
+      <div style="margin-bottom:8px">font-weight: 600; /* semibold */</div>
+      <div style="margin-bottom:8px">0123456789 !@#$%^&*()</div>
+      <div style="font-weight:600">Bold: 0Oo1Il| {}[]()&lt;&gt;</div>
+    </div>
+    <div class="note">Neutral, corporate clarity. Excellent Unicode coverage. Good x-height match with Rubik. No ligatures.</div>
+  </div>
+
+  <div class="mono-card">
+    <div class="name">JetBrains Mono</div>
+    <div class="mono-sample" style="font-family:'JetBrains Mono',monospace">
+      <div style="margin-bottom:8px">const ratio = (L1 + 0.05) / (L2 + 0.05);</div>
+      <div style="margin-bottom:8px">--primary-filled-bg: #8c2b00;</div>
+      <div style="margin-bottom:8px">font-weight: 600; /* semibold */</div>
+      <div style="margin-bottom:8px">0123456789 !@#$%^&*()</div>
+      <div style="font-weight:600">Bold: 0Oo1Il| {}[]()&lt;&gt;</div>
+    </div>
+    <div class="note">Taller x-height, wider characters. Designed for code readability at small sizes. Optional ligatures. Modern feel.</div>
+  </div>
+
+  <div class="mono-card">
+    <div class="name">Fira Code</div>
+    <div class="mono-sample" style="font-family:'Fira Code',monospace">
+      <div style="margin-bottom:8px">const ratio = (L1 + 0.05) / (L2 + 0.05);</div>
+      <div style="margin-bottom:8px">--primary-filled-bg: #8c2b00;</div>
+      <div style="margin-bottom:8px">font-weight: 600; /* semibold */</div>
+      <div style="margin-bottom:8px">0123456789 !@#$%^&*()</div>
+      <div style="font-weight:600">Bold: 0Oo1Il| {}[]()&lt;&gt;</div>
+    </div>
+    <div class="note">Strong ligature support. Slightly wider than JetBrains Mono. Good for code-heavy UIs. Well-established.</div>
+  </div>
+
+  <div class="mono-card">
+    <div class="name">Source Code Pro</div>
+    <div class="mono-sample" style="font-family:'Source Code Pro',monospace">
+      <div style="margin-bottom:8px">const ratio = (L1 + 0.05) / (L2 + 0.05);</div>
+      <div style="margin-bottom:8px">--primary-filled-bg: #8c2b00;</div>
+      <div style="margin-bottom:8px">font-weight: 600; /* semibold */</div>
+      <div style="margin-bottom:8px">0123456789 !@#$%^&*()</div>
+      <div style="font-weight:600">Bold: 0Oo1Il| {}[]()&lt;&gt;</div>
+    </div>
+    <div class="note">Adobe's mono. Clean, traditional. Good weight range. Slightly narrower. Pairs well with humanist sans.</div>
+  </div>
+</div>
+
+<!-- Section 7: Mono in context -->
+<h2>7. Mono in UI Context (Token Reference)</h2>
+<div class="grid">
+  <div class="card">
+    <div class="label">IBM Plex Mono in token table</div>
+    <table style="width:100%;font-size:0.8125rem;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:6px 0;font-family:'IBM Plex Mono',monospace;color:var(--fg)">--surface-ground</td>
+        <td style="padding:6px 0;font-family:'IBM Plex Mono',monospace;color:var(--fg3)">#f6f8fa</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:6px 0;font-family:'IBM Plex Mono',monospace;color:var(--fg)">--content-primary</td>
+        <td style="padding:6px 0;font-family:'IBM Plex Mono',monospace;color:var(--fg3)">#0f1e21</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 0;font-family:'IBM Plex Mono',monospace;color:var(--fg)">--primary-filled-bg</td>
+        <td style="padding:6px 0;font-family:'IBM Plex Mono',monospace;color:var(--fg3)">#8c2b00</td>
+      </tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="label">JetBrains Mono in token table</div>
+    <table style="width:100%;font-size:0.8125rem;border-collapse:collapse">
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--fg)">--surface-ground</td>
+        <td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--fg3)">#f6f8fa</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--fg)">--content-primary</td>
+        <td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--fg3)">#0f1e21</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--fg)">--primary-filled-bg</td>
+        <td style="padding:6px 0;font-family:'JetBrains Mono',monospace;color:var(--fg3)">#8c2b00</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- Section 8: Small Size Readability -->
+<h2>8. Small Size Readability (Critical for ERP)</h2>
+<div class="card">
+  <div class="label">11px Caption</div>
+  <div style="font-size:11px;line-height:1.5;margin-bottom:12px">Rubik at 11px: This caption text needs to remain legible in compact ERP data views. Numbers: 1,234,567</div>
+  <div style="font-size:11px;line-height:1.5;margin-bottom:12px" dir="rtl" lang="ar">Rubik بحجم 11 بكسل: هذا النص يحتاج أن يبقى مقروءا في عروض البيانات المدمجة. أرقام: ١٢٣٤٥٦٧</div>
+
+  <div class="label" style="margin-top:16px">12px Label</div>
+  <div style="font-size:12px;font-weight:500;line-height:1.4;margin-bottom:12px">RUBIK AT 12PX: FORM LABELS AND TABLE HEADERS IN COMPACT MODE</div>
+  <div style="font-size:12px;font-weight:500;line-height:1.4" dir="rtl" lang="ar">تسميات النماذج ورؤوس الجداول في الوضع المدمج</div>
+
+  <div class="label" style="margin-top:16px">13px Body Small</div>
+  <div style="font-size:13px;line-height:1.5;margin-bottom:12px">Rubik at 13px: Secondary body text used in compact data tables and sidebars. The slightly rounded corners of Rubik maintain friendliness even at small sizes.</div>
+  <div style="font-size:13px;line-height:1.5" dir="rtl" lang="ar">النص الثانوي المستخدم في جداول البيانات المدمجة والأشرطة الجانبية. الزوايا المستديرة قليلا في خط Rubik تحافظ على الود حتى في الأحجام الصغيرة.</div>
+</div>
+
+<!-- Section 9: Italic Test -->
+<h2>9. Italic Support</h2>
+<div class="card">
+  <div style="font-size:0.875rem;line-height:1.6;margin-bottom:12px">
+    Regular: The design system uses <em>semantic tokens</em> that resolve per brand.
+  </div>
+  <div style="font-size:0.875rem;line-height:1.6;margin-bottom:12px;font-weight:500">
+    Medium: The design system uses <em>semantic tokens</em> that resolve per brand.
+  </div>
+  <div style="font-size:0.875rem;line-height:1.6">
+    SemiBold: <span style="font-weight:600">The design system uses <em>semantic tokens</em> that resolve per brand.</span>
+  </div>
+  <div class="note">Rubik has true italics (not slanted Roman). Arabic script does not use italics.</div>
+</div>
+
+<!-- Verdict -->
+<h2>10. Verdict</h2>
+
+<div class="verdict">
+  <h3>Rubik: Approved for DS v4</h3>
+  <p style="font-size:0.875rem;color:#d1fae5;line-height:1.6;margin-top:8px">
+    Rubik has native Arabic support with all 7 weights (300-900) including italics. The Arabic was professionally designed by Omaima Dajani using Naskh calligraphic style. It renders well at all sizes including 11px caption text. The slightly rounded corners give it a friendly, modern feel that matches the "Quiet Intelligence" aesthetic without being childish. Tabular numerals work correctly.
+  </p>
+</div>
+
+<div class="card" style="margin-top:16px">
+  <h3 style="margin-top:0;margin-bottom:12px">Mono Font Recommendation</h3>
+  <table style="width:100%;font-size:0.8125rem;border-collapse:collapse">
+    <tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 0;font-weight:600">JetBrains Mono</td>
+      <td style="padding:8px 0" class="pass">RECOMMENDED</td>
+      <td style="padding:8px 0;color:var(--fg2)">Taller x-height matches Rubik's proportions. Modern, designed for code readability. Optional ligatures. 400-700 weights.</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 0;font-weight:600">IBM Plex Mono</td>
+      <td style="padding:8px 0" class="pass">STRONG ALT</td>
+      <td style="padding:8px 0;color:var(--fg2)">More corporate/neutral tone. Excellent Unicode. Slightly smaller x-height. Good if you want mono to feel more subdued.</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 0;font-weight:600">Fira Code</td>
+      <td style="padding:8px 0" class="warn">GOOD</td>
+      <td style="padding:8px 0;color:var(--fg2)">Wider characters may cause layout issues in tight ERP tables. Strong ligatures add personality but can confuse non-developers.</td>
+    </tr>
+    <tr>
+      <td style="padding:8px 0;font-weight:600">Source Code Pro</td>
+      <td style="padding:8px 0" class="warn">GOOD</td>
+      <td style="padding:8px 0;color:var(--fg2)">Traditional feel, slightly narrower. Pairs better with humanist fonts than geometric ones like Rubik.</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card" style="margin-top:16px">
+  <h3 style="margin-top:0;margin-bottom:8px">Final Font Stack</h3>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:0.8125rem;line-height:1.8;color:var(--fg2)">
+    <div><span style="color:var(--fg)">--font-sans:</span> 'Rubik', system-ui, -apple-system, sans-serif;</div>
+    <div><span style="color:var(--fg)">--font-mono:</span> 'JetBrains Mono', 'Courier New', monospace;</div>
+  </div>
+  <div class="note" style="margin-top:12px">
+    Rubik handles both Arabic and Latin natively in a single font file (variable font). No need for a separate Arabic font. JetBrains Mono provides modern, readable code display with x-height proportions that harmonize with Rubik's geometry.
+  </div>
+</div>
+
+</body>
+</html>

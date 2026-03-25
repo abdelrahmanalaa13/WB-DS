@@ -1,0 +1,1536 @@
+{
+  "$schema": "ai-responsive-system/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "description": "Formal responsive system for the AI-native design system. Defines breakpoints, fluid layouts, container queries, content density, and per-component responsive rules.",
+  "breakpoints": {
+    "mobile": {
+      "label": "Mobile",
+      "minWidth": "320px",
+      "maxWidth": "767px",
+      "columns": 4,
+      "margin": "var(--space-4)",
+      "padding": "var(--space-4)",
+      "gutter": "var(--space-3)",
+      "description": "Small mobile devices from 320px to 767px wide"
+    },
+    "tablet": {
+      "label": "Tablet",
+      "minWidth": "768px",
+      "maxWidth": "1023px",
+      "columns": 8,
+      "margin": "var(--space-5)",
+      "padding": "var(--space-5)",
+      "gutter": "var(--space-4)",
+      "description": "Tablet devices from 768px to 1023px wide"
+    },
+    "desktop": {
+      "label": "Desktop",
+      "minWidth": "1024px",
+      "maxWidth": "1439px",
+      "columns": 12,
+      "margin": "var(--space-6)",
+      "padding": "var(--space-6)",
+      "gutter": "var(--space-5)",
+      "description": "Desktop computers from 1024px to 1439px wide"
+    },
+    "wide": {
+      "label": "Wide Desktop",
+      "minWidth": "1440px",
+      "columns": 12,
+      "margin": "auto",
+      "maxContentWidth": "1200px",
+      "padding": "var(--space-6)",
+      "gutter": "var(--space-6)",
+      "description": "Large desktop displays 1440px and wider with centered content"
+    }
+  },
+  "fluidTypography": {
+    "description": "Font sizes scale fluidly between mobile and desktop breakpoints using CSS clamp function",
+    "strategy": "Use CSS clamp(minimum, preferred, maximum) for smooth scaling without breakpoint jumps",
+    "scales": {
+      "display": {
+        "label": "Display",
+        "mobile": "28px",
+        "tablet": "32px",
+        "desktop": "40px",
+        "lineHeight": "var(--line-height-tight)",
+        "clampValue": "clamp(28px, 5vw, 40px)",
+        "usage": "Page titles and major section headings"
+      },
+      "heading-1": {
+        "label": "Heading 1",
+        "mobile": "24px",
+        "tablet": "28px",
+        "desktop": "32px",
+        "lineHeight": "var(--line-height-tight)",
+        "clampValue": "clamp(24px, 4vw, 32px)",
+        "usage": "Primary section headings"
+      },
+      "heading-2": {
+        "label": "Heading 2",
+        "mobile": "20px",
+        "tablet": "22px",
+        "desktop": "24px",
+        "lineHeight": "var(--line-height-snug)",
+        "clampValue": "clamp(20px, 3.5vw, 24px)",
+        "usage": "Secondary section headings and subsections"
+      },
+      "heading-3": {
+        "label": "Heading 3",
+        "mobile": "18px",
+        "tablet": "19px",
+        "desktop": "20px",
+        "lineHeight": "var(--line-height-snug)",
+        "clampValue": "clamp(18px, 2.5vw, 20px)",
+        "usage": "Tertiary headings and card titles"
+      },
+      "body-lg": {
+        "label": "Body Large",
+        "mobile": "16px",
+        "tablet": "16px",
+        "desktop": "16px",
+        "lineHeight": "var(--line-height-normal)",
+        "clampValue": "clamp(16px, 2vw, 16px)",
+        "usage": "Larger body text and lead paragraphs"
+      },
+      "body": {
+        "label": "Body",
+        "mobile": "14px",
+        "tablet": "14px",
+        "desktop": "14px",
+        "lineHeight": "var(--line-height-normal)",
+        "clampValue": "14px",
+        "usage": "Standard body text and content"
+      },
+      "body-sm": {
+        "label": "Body Small",
+        "mobile": "13px",
+        "tablet": "13px",
+        "desktop": "13px",
+        "lineHeight": "var(--line-height-normal)",
+        "clampValue": "13px",
+        "usage": "Secondary text and helper text"
+      },
+      "caption": {
+        "label": "Caption",
+        "mobile": "12px",
+        "tablet": "12px",
+        "desktop": "12px",
+        "lineHeight": "var(--line-height-normal)",
+        "clampValue": "12px",
+        "usage": "Captions, labels, and metadata"
+      }
+    }
+  },
+  "fluidSpacing": {
+    "description": "Spacing scales fluidly to maintain visual rhythm across breakpoints",
+    "strategy": "Use CSS clamp for spacing to avoid jarring jumps at breakpoints",
+    "scales": {
+      "space-1": {
+        "mobile": "4px",
+        "desktop": "4px",
+        "clampValue": "4px",
+        "usage": "Minimal spacing between closely related elements"
+      },
+      "space-2": {
+        "mobile": "8px",
+        "desktop": "8px",
+        "clampValue": "8px",
+        "usage": "Small spacing within components"
+      },
+      "space-3": {
+        "mobile": "12px",
+        "desktop": "12px",
+        "clampValue": "12px",
+        "usage": "Standard spacing within components"
+      },
+      "space-4": {
+        "mobile": "16px",
+        "desktop": "16px",
+        "clampValue": "16px",
+        "usage": "Default spacing between elements"
+      },
+      "space-5": {
+        "mobile": "20px",
+        "desktop": "24px",
+        "clampValue": "clamp(20px, 1vw, 24px)",
+        "usage": "Larger spacing between component sections"
+      },
+      "space-6": {
+        "mobile": "24px",
+        "desktop": "32px",
+        "clampValue": "clamp(24px, 1.5vw, 32px)",
+        "usage": "Major spacing between sections"
+      },
+      "space-7": {
+        "mobile": "32px",
+        "desktop": "40px",
+        "clampValue": "clamp(32px, 2vw, 40px)",
+        "usage": "Large spacing between major sections"
+      },
+      "space-8": {
+        "mobile": "40px",
+        "desktop": "48px",
+        "clampValue": "clamp(40px, 2.5vw, 48px)",
+        "usage": "Extra large spacing for page sections"
+      }
+    }
+  },
+  "containerQueries": {
+    "description": "Component-level responsive behavior using container query sizes",
+    "strategy": "Define container query sizes for common layout scenarios",
+    "sizes": {
+      "xs": {
+        "maxWidth": "300px",
+        "label": "Extra Small",
+        "description": "Compact container for narrow sidebars or mobile layouts"
+      },
+      "sm": {
+        "minWidth": "300px",
+        "maxWidth": "500px",
+        "label": "Small",
+        "description": "Small component container"
+      },
+      "md": {
+        "minWidth": "500px",
+        "maxWidth": "800px",
+        "label": "Medium",
+        "description": "Medium component container"
+      },
+      "lg": {
+        "minWidth": "800px",
+        "maxWidth": "1200px",
+        "label": "Large",
+        "description": "Large component container"
+      },
+      "xl": {
+        "minWidth": "1200px",
+        "label": "Extra Large",
+        "description": "Full width or maximized container"
+      }
+    },
+    "supportedComponents": [
+      {
+        "component": "card",
+        "containerName": "--ds-card",
+        "rules": [
+          {
+            "condition": "@container (max-width: 300px)",
+            "behavior": "Stack content vertically, hide secondary actions, single column layout",
+            "properties": {
+              "layout": "vertical",
+              "imagePosition": "top",
+              "actions": "hidden",
+              "columns": 1
+            }
+          },
+          {
+            "condition": "@container (min-width: 300px) and (max-width: 500px)",
+            "behavior": "Compact card layout with essential information visible",
+            "properties": {
+              "layout": "vertical",
+              "imagePosition": "top",
+              "actions": "compact",
+              "columns": 1
+            }
+          },
+          {
+            "condition": "@container (min-width: 500px) and (max-width: 800px)",
+            "behavior": "Side-by-side layout with image on inline-start",
+            "properties": {
+              "layout": "horizontal",
+              "imagePosition": "start",
+              "actions": "visible",
+              "columns": 2
+            }
+          },
+          {
+            "condition": "@container (min-width: 800px)",
+            "behavior": "Full featured card with all options visible",
+            "properties": {
+              "layout": "horizontal",
+              "imagePosition": "start",
+              "actions": "visible",
+              "columns": 2
+            }
+          }
+        ]
+      },
+      {
+        "component": "panel",
+        "containerName": "--ds-panel",
+        "rules": [
+          {
+            "condition": "@container (max-width: 400px)",
+            "behavior": "Single column layout, stacked footer buttons",
+            "properties": {
+              "layout": "vertical",
+              "footerLayout": "vertical",
+              "sidebarVisible": false
+            }
+          },
+          {
+            "condition": "@container (min-width: 400px) and (max-width: 800px)",
+            "behavior": "Content focused with optional sidebar",
+            "properties": {
+              "layout": "vertical",
+              "footerLayout": "horizontal",
+              "sidebarVisible": false
+            }
+          },
+          {
+            "condition": "@container (min-width: 800px)",
+            "behavior": "Full layout with sidebar, main content, and footer",
+            "properties": {
+              "layout": "horizontal",
+              "footerLayout": "horizontal",
+              "sidebarVisible": true
+            }
+          }
+        ]
+      },
+      {
+        "component": "data-grid",
+        "containerName": "--ds-data-grid",
+        "rules": [
+          {
+            "condition": "@container (max-width: 500px)",
+            "behavior": "Card view mode, one item per row",
+            "properties": {
+              "viewMode": "card",
+              "columns": 1,
+              "columnVisibility": "essential-only"
+            }
+          },
+          {
+            "condition": "@container (min-width: 500px) and (max-width: 1000px)",
+            "behavior": "Table mode with scrollable columns",
+            "properties": {
+              "viewMode": "table",
+              "columns": 3,
+              "columnVisibility": "responsive",
+              "horizontalScroll": true
+            }
+          },
+          {
+            "condition": "@container (min-width: 1000px)",
+            "behavior": "Full table mode with all columns visible",
+            "properties": {
+              "viewMode": "table",
+              "columns": 6,
+              "columnVisibility": "all",
+              "horizontalScroll": false
+            }
+          }
+        ]
+      },
+      {
+        "component": "ai-chat",
+        "containerName": "--ds-ai-chat",
+        "rules": [
+          {
+            "condition": "@container (max-width: 600px)",
+            "behavior": "Full width chat interface optimized for mobile",
+            "properties": {
+              "layout": "vertical",
+              "inputPosition": "bottom",
+              "actionButtons": "compact",
+              "sidepanel": false
+            }
+          },
+          {
+            "condition": "@container (min-width: 600px)",
+            "behavior": "Chat with expandable side panel for context",
+            "properties": {
+              "layout": "horizontal",
+              "inputPosition": "bottom",
+              "actionButtons": "visible",
+              "sidepanel": true
+            }
+          }
+        ]
+      },
+      {
+        "component": "dashboard-layout",
+        "containerName": "--ds-dashboard",
+        "rules": [
+          {
+            "condition": "@container (max-width: 768px)",
+            "behavior": "Stacked single column layout for mobile",
+            "properties": {
+              "layout": "vertical",
+              "sidebarPosition": "top",
+              "columns": 1,
+              "gridAuto": "rows"
+            }
+          },
+          {
+            "condition": "@container (min-width: 768px) and (max-width: 1200px)",
+            "behavior": "Two column layout with sidebar",
+            "properties": {
+              "layout": "horizontal",
+              "sidebarPosition": "left",
+              "columns": 2,
+              "gridAuto": "rows"
+            }
+          },
+          {
+            "condition": "@container (min-width: 1200px)",
+            "behavior": "Full three column layout with collapsible sidebar",
+            "properties": {
+              "layout": "horizontal",
+              "sidebarPosition": "left",
+              "columns": 3,
+              "gridAuto": "dense"
+            }
+          }
+        ]
+      },
+      {
+        "component": "form",
+        "containerName": "--ds-form",
+        "rules": [
+          {
+            "condition": "@container (max-width: 500px)",
+            "behavior": "Single column form layout for mobile",
+            "properties": {
+              "columns": 1,
+              "labelPosition": "top",
+              "buttonLayout": "vertical"
+            }
+          },
+          {
+            "condition": "@container (min-width: 500px) and (max-width: 800px)",
+            "behavior": "Two column form layout",
+            "properties": {
+              "columns": 2,
+              "labelPosition": "top",
+              "buttonLayout": "horizontal"
+            }
+          },
+          {
+            "condition": "@container (min-width: 800px)",
+            "behavior": "Full featured multi-column form",
+            "properties": {
+              "columns": 3,
+              "labelPosition": "left",
+              "buttonLayout": "horizontal"
+            }
+          }
+        ]
+      },
+      {
+        "component": "navigation",
+        "containerName": "--ds-navigation",
+        "rules": [
+          {
+            "condition": "@container (max-width: 600px)",
+            "behavior": "Mobile navigation with hamburger menu",
+            "properties": {
+              "type": "mobile-hamburger",
+              "itemsVisible": 3,
+              "overflowBehavior": "menu"
+            }
+          },
+          {
+            "condition": "@container (min-width: 600px) and (max-width: 1000px)",
+            "behavior": "Compact horizontal navigation with scroll",
+            "properties": {
+              "type": "horizontal-scroll",
+              "itemsVisible": 6,
+              "overflowBehavior": "scroll"
+            }
+          },
+          {
+            "condition": "@container (min-width: 1000px)",
+            "behavior": "Full horizontal navigation with all items visible",
+            "properties": {
+              "type": "horizontal-full",
+              "itemsVisible": "all",
+              "overflowBehavior": "none"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "contentDensity": {
+    "description": "Three levels of content density for different use cases and accessibility needs",
+    "levels": [
+      {
+        "id": "compact",
+        "label": "Compact",
+        "spacingScale": 0.75,
+        "fontSize": "body-sm",
+        "lineHeight": "var(--line-height-tight)",
+        "padding": "var(--space-2)",
+        "targetAudience": "Power users, admin interfaces, data-heavy applications",
+        "useCase": "When showing large datasets or dense information is priority",
+        "examples": ["Data grids with many rows", "Admin dashboards", "Developer tools"],
+        "accessibility": "Ensure sufficient touch target sizes (minimum 44px for interactive elements)",
+        "rules": {
+          "componentPadding": "4-8px",
+          "componentGap": "8-12px",
+          "minimumTouchTarget": "40px"
+        }
+      },
+      {
+        "id": "default",
+        "label": "Default",
+        "spacingScale": 1,
+        "fontSize": "body",
+        "lineHeight": "var(--line-height-normal)",
+        "padding": "var(--space-4)",
+        "targetAudience": "General use, standard applications",
+        "useCase": "Balanced between information density and readability",
+        "examples": ["Standard forms", "Content pages", "Most applications"],
+        "accessibility": "Meets WCAG 2.1 AA standards for all users",
+        "rules": {
+          "componentPadding": "16px",
+          "componentGap": "16px",
+          "minimumTouchTarget": "44px"
+        }
+      },
+      {
+        "id": "comfortable",
+        "label": "Comfortable",
+        "spacingScale": 1.25,
+        "fontSize": "body",
+        "lineHeight": "var(--line-height-relaxed)",
+        "padding": "var(--space-5)",
+        "targetAudience": "Consumer-facing products, accessibility, elderly users",
+        "useCase": "When readability and ease of use is priority",
+        "examples": ["Healthcare applications", "Educational platforms", "Accessible designs"],
+        "accessibility": "Enhanced accessibility with larger spacing and fonts",
+        "rules": {
+          "componentPadding": "20-24px",
+          "componentGap": "20-24px",
+          "minimumTouchTarget": "48px"
+        }
+      }
+    ]
+  },
+  "directionality": {
+    "description": "Support for left-to-right and right-to-left text direction",
+    "modes": [
+      {
+        "id": "ltr",
+        "label": "Left-to-Right",
+        "language": "English, French, Spanish, German, and most languages",
+        "brand": "Both consumer and enterprise",
+        "textAlign": "left",
+        "marginStart": "left",
+        "marginEnd": "right",
+        "paddingStart": "left",
+        "paddingEnd": "right",
+        "default": true
+      },
+      {
+        "id": "rtl",
+        "label": "Right-to-Left",
+        "language": "Arabic, Hebrew, Persian, Urdu, and other RTL languages",
+        "brand": "Both consumer and enterprise",
+        "textAlign": "right",
+        "marginStart": "right",
+        "marginEnd": "left",
+        "paddingStart": "right",
+        "paddingEnd": "left",
+        "mirrorRules": [
+          "Icons with directional meaning (arrows, triangles, pointers)",
+          "Progress indicators and progress bars",
+          "Navigation arrows and pagination controls",
+          "Text alignment and text direction",
+          "Transform and rotate values in animations",
+          "Margin and padding inline directions",
+          "Flex and grid direction properties",
+          "Logical properties for positioning"
+        ],
+        "specificRules": [
+          "Use logical CSS properties (margin-inline, padding-block, etc.) instead of physical properties (margin-left, padding-right)",
+          "Use start and end terminology instead of left and right in component props",
+          "Icons should be mirrored unless they have semantic meaning in specific direction",
+          "Text input should support native RTL input method editors",
+          "Form layout should adapt with labels on correct side per direction"
+        ]
+      }
+    ]
+  },
+  "componentResponsiveRules": [
+    {
+      "category": "General",
+      "components": [
+        {
+          "name": "button",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width or compact sizing",
+              "padding": "var(--space-3) var(--space-4)",
+              "minHeight": "44px",
+              "fontSize": "body",
+              "iconSize": "16px"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Standard sizing with flexible width",
+              "padding": "var(--space-4) var(--space-5)",
+              "minHeight": "44px",
+              "fontSize": "body",
+              "iconSize": "18px"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Standard sizing, can be grouped horizontally",
+              "padding": "var(--space-4) var(--space-6)",
+              "minHeight": "44px",
+              "fontSize": "body",
+              "iconSize": "20px"
+            }
+          ]
+        },
+        {
+          "name": "badge",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Compact sizing with reduced padding",
+              "padding": "2px 6px",
+              "fontSize": "caption",
+              "lineHeight": "var(--line-height-tight)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Standard sizing",
+              "padding": "4px 8px",
+              "fontSize": "caption",
+              "lineHeight": "var(--line-height-normal)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Standard sizing with standard spacing",
+              "padding": "4px 8px",
+              "fontSize": "caption",
+              "lineHeight": "var(--line-height-normal)"
+            }
+          ]
+        },
+        {
+          "name": "alert",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width alert with stacked action buttons",
+              "padding": "var(--space-4)",
+              "buttonLayout": "vertical",
+              "iconPosition": "top"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Full width with flexible button layout",
+              "padding": "var(--space-4)",
+              "buttonLayout": "horizontal",
+              "iconPosition": "left"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full width or contained with horizontal buttons",
+              "padding": "var(--space-4) var(--space-6)",
+              "buttonLayout": "horizontal",
+              "iconPosition": "left"
+            }
+          ]
+        },
+        {
+          "name": "tooltip",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Use modal or popover instead of tooltip on touch devices",
+              "visible": "on-tap",
+              "positioning": "adaptive",
+              "maxWidth": "280px"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Standard tooltip with adaptive positioning",
+              "visible": "on-hover",
+              "positioning": "adaptive",
+              "maxWidth": "320px"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Standard tooltip with precise positioning",
+              "visible": "on-hover",
+              "positioning": "standard",
+              "maxWidth": "320px"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Containers",
+      "components": [
+        {
+          "name": "card",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Single column, full width, vertical content stack",
+              "layout": "vertical",
+              "imagePosition": "top",
+              "padding": "var(--space-4)",
+              "margin": "var(--space-3) 0",
+              "width": "100%"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Flexible width with two-column option",
+              "layout": "vertical",
+              "imagePosition": "top",
+              "padding": "var(--space-5)",
+              "margin": "var(--space-4) 0",
+              "width": "100%",
+              "maxWidth": "600px"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Various layouts including side-by-side",
+              "layout": "horizontal",
+              "imagePosition": "start",
+              "padding": "var(--space-5)",
+              "margin": "var(--space-4) 0",
+              "width": "auto",
+              "maxWidth": "none"
+            }
+          ]
+        },
+        {
+          "name": "panel",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width stacked layout without sidebar",
+              "layout": "vertical",
+              "sidebarVisible": false,
+              "padding": "var(--space-4)",
+              "headerPosition": "top",
+              "footerPosition": "bottom"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Full width with optional sidebar beneath content",
+              "layout": "vertical",
+              "sidebarVisible": false,
+              "padding": "var(--space-5)",
+              "headerPosition": "top",
+              "footerPosition": "bottom"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Horizontal layout with sidebar and main content",
+              "layout": "horizontal",
+              "sidebarVisible": true,
+              "sidebarPosition": "left",
+              "padding": "var(--space-6)",
+              "headerPosition": "top",
+              "footerPosition": "bottom"
+            }
+          ]
+        },
+        {
+          "name": "modal",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full screen modal covering viewport",
+              "width": "100vw",
+              "height": "100vh",
+              "maxHeight": "100vh",
+              "borderRadius": "0",
+              "padding": "var(--space-4)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Centered modal with margins",
+              "width": "90vw",
+              "maxWidth": "600px",
+              "maxHeight": "90vh",
+              "borderRadius": "var(--radius-lg)",
+              "padding": "var(--space-5)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Centered modal with fixed width",
+              "width": "600px",
+              "maxWidth": "90vw",
+              "maxHeight": "90vh",
+              "borderRadius": "var(--radius-lg)",
+              "padding": "var(--space-6)"
+            }
+          ]
+        },
+        {
+          "name": "drawer",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full height slide-out drawer from side",
+              "width": "100vw",
+              "height": "100vh",
+              "direction": "from-end",
+              "animation": "slide"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Partial width drawer",
+              "width": "75vw",
+              "maxWidth": "400px",
+              "height": "100vh",
+              "direction": "from-end",
+              "animation": "slide"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Fixed width drawer",
+              "width": "400px",
+              "height": "100vh",
+              "direction": "from-end",
+              "animation": "slide"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Inputs",
+      "components": [
+        {
+          "name": "text-input",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width input with larger touch target",
+              "width": "100%",
+              "height": "44px",
+              "padding": "var(--space-3) var(--space-4)",
+              "fontSize": "16px",
+              "fontSize-note": "Use 16px to prevent auto-zoom on iOS"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Full width or constrained based on context",
+              "width": "100%",
+              "maxWidth": "none",
+              "height": "44px",
+              "padding": "var(--space-3) var(--space-4)",
+              "fontSize": "body"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full width or constrained width",
+              "width": "100%",
+              "maxWidth": "none",
+              "height": "40px",
+              "padding": "var(--space-2) var(--space-4)",
+              "fontSize": "body"
+            }
+          ]
+        },
+        {
+          "name": "select",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Native select picker for better mobile experience",
+              "width": "100%",
+              "height": "44px",
+              "appearance": "native",
+              "dropdown": "native"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Custom dropdown with mobile-optimized list",
+              "width": "100%",
+              "height": "44px",
+              "appearance": "custom",
+              "dropdown": "popover",
+              "itemHeight": "48px"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Custom dropdown with desktop-optimized list",
+              "width": "100%",
+              "height": "40px",
+              "appearance": "custom",
+              "dropdown": "popover",
+              "itemHeight": "36px"
+            }
+          ]
+        },
+        {
+          "name": "checkbox",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Large checkbox for touch interaction",
+              "size": "24px",
+              "touchTarget": "44px",
+              "spacing": "var(--space-4)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Standard checkbox",
+              "size": "20px",
+              "touchTarget": "44px",
+              "spacing": "var(--space-3)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Standard checkbox",
+              "size": "20px",
+              "touchTarget": "44px",
+              "spacing": "var(--space-3)"
+            }
+          ]
+        },
+        {
+          "name": "radio",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Large radio button for touch",
+              "size": "24px",
+              "touchTarget": "44px",
+              "spacing": "var(--space-4)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Standard radio button",
+              "size": "20px",
+              "touchTarget": "44px",
+              "spacing": "var(--space-3)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Standard radio button",
+              "size": "20px",
+              "touchTarget": "44px",
+              "spacing": "var(--space-3)"
+            }
+          ]
+        },
+        {
+          "name": "form-group",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Single column layout with labels on top",
+              "columns": 1,
+              "labelPosition": "top",
+              "spacing": "var(--space-5)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Two column layout with labels on top",
+              "columns": 2,
+              "labelPosition": "top",
+              "spacing": "var(--space-4)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Multi-column layout with flexible label positioning",
+              "columns": "auto",
+              "labelPosition": "left",
+              "spacing": "var(--space-4)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Navigation",
+      "components": [
+        {
+          "name": "navigation-bar",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Hamburger menu with bottom navigation bar",
+              "type": "mobile-hamburger",
+              "itemsVisible": 3,
+              "overflowBehavior": "menu",
+              "height": "56px",
+              "sideMenu": "slide-in"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Horizontal navigation with scroll for overflow",
+              "type": "horizontal-scroll",
+              "itemsVisible": 6,
+              "overflowBehavior": "scroll",
+              "height": "56px",
+              "sideMenu": "none"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full horizontal navigation with all items visible",
+              "type": "horizontal-full",
+              "itemsVisible": "all",
+              "overflowBehavior": "none",
+              "height": "64px",
+              "sideMenu": "none"
+            }
+          ]
+        },
+        {
+          "name": "breadcrumb",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Collapsed breadcrumb showing only current and parent",
+              "maxItems": 2,
+              "separator": "slash",
+              "fontSize": "caption",
+              "display": "single-line"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Truncated breadcrumb with ellipsis",
+              "maxItems": 4,
+              "separator": "slash",
+              "fontSize": "body-sm",
+              "display": "single-line"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full breadcrumb showing complete path",
+              "maxItems": "none",
+              "separator": "slash",
+              "fontSize": "body-sm",
+              "display": "single-line"
+            }
+          ]
+        },
+        {
+          "name": "pagination",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Previous and next buttons only",
+              "itemsVisible": "arrows-only",
+              "buttonSize": "40px",
+              "spacing": "var(--space-2)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Previous, next, and current page number",
+              "itemsVisible": 1,
+              "buttonSize": "36px",
+              "spacing": "var(--space-3)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full pagination with all page numbers",
+              "itemsVisible": "all",
+              "buttonSize": "36px",
+              "spacing": "var(--space-3)"
+            }
+          ]
+        },
+        {
+          "name": "sidebar",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Hidden by default, accessible via menu button",
+              "display": "none",
+              "position": "fixed",
+              "width": "100vw",
+              "maxWidth": "320px",
+              "zIndex": "overlay"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Collapsible sidebar",
+              "display": "block",
+              "position": "relative",
+              "width": "250px",
+              "collapsible": true,
+              "collapsedWidth": "64px"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Persistent sidebar with optional collapse",
+              "display": "block",
+              "position": "relative",
+              "width": "280px",
+              "collapsible": true,
+              "collapsedWidth": "64px"
+            }
+          ]
+        },
+        {
+          "name": "tabs",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Scrollable horizontal tabs with indicator",
+              "layout": "scrollable",
+              "tabWidth": "auto",
+              "minTabWidth": "80px",
+              "overflow": "scroll",
+              "indicatorPosition": "bottom"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Scrollable tabs with flexible width",
+              "layout": "scrollable",
+              "tabWidth": "auto",
+              "minTabWidth": "100px",
+              "overflow": "scroll",
+              "indicatorPosition": "bottom"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Non-scrollable tabs filling available width",
+              "layout": "fixed",
+              "tabWidth": "equal",
+              "overflow": "none",
+              "indicatorPosition": "bottom"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Data Display",
+      "components": [
+        {
+          "name": "data-grid",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Card view with one item per row",
+              "viewMode": "card",
+              "columns": 1,
+              "columnVisibility": "essential",
+              "horizontalScroll": false,
+              "cardLayout": "vertical",
+              "density": "comfortable"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Table mode with essential columns and horizontal scroll",
+              "viewMode": "table",
+              "columns": 3,
+              "columnVisibility": "responsive",
+              "horizontalScroll": true,
+              "density": "default",
+              "rowHeight": "48px"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full table mode with all columns",
+              "viewMode": "table",
+              "columns": 6,
+              "columnVisibility": "all",
+              "horizontalScroll": false,
+              "density": "default",
+              "rowHeight": "40px"
+            }
+          ]
+        },
+        {
+          "name": "table",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Stacked card view for table data",
+              "display": "stacked",
+              "columns": 1,
+              "padding": "var(--space-4)",
+              "fontSize": "body-sm",
+              "cellGap": "var(--space-3)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Scrollable table with reduced columns",
+              "display": "table",
+              "columns": 3,
+              "padding": "var(--space-3)",
+              "fontSize": "body-sm",
+              "overflowX": "scroll"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full featured table",
+              "display": "table",
+              "columns": "all",
+              "padding": "var(--space-4)",
+              "fontSize": "body",
+              "overflowX": "none"
+            }
+          ]
+        },
+        {
+          "name": "list",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width list items with generous padding",
+              "itemPadding": "var(--space-4)",
+              "itemHeight": "56px",
+              "iconSize": "24px",
+              "textSize": "body"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "List with standard padding",
+              "itemPadding": "var(--space-3)",
+              "itemHeight": "48px",
+              "iconSize": "20px",
+              "textSize": "body-sm"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "List with compact padding",
+              "itemPadding": "var(--space-3)",
+              "itemHeight": "40px",
+              "iconSize": "20px",
+              "textSize": "body-sm"
+            }
+          ]
+        },
+        {
+          "name": "chart",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width chart with vertical legend",
+              "width": "100%",
+              "height": "300px",
+              "legendPosition": "bottom",
+              "tooltips": "tap",
+              "interactive": true
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Flexible width chart with adaptive legend",
+              "width": "100%",
+              "height": "400px",
+              "legendPosition": "right",
+              "tooltips": "hover",
+              "interactive": true
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full featured chart with rich interactions",
+              "width": "100%",
+              "height": "500px",
+              "legendPosition": "right",
+              "tooltips": "hover",
+              "interactive": true
+            }
+          ]
+        },
+        {
+          "name": "timeline",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Vertical timeline with left-aligned content",
+              "orientation": "vertical",
+              "alignment": "left",
+              "contentPosition": "right",
+              "iconSize": "24px",
+              "spacing": "var(--space-4)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Vertical timeline with alternating content",
+              "orientation": "vertical",
+              "alignment": "alternate",
+              "contentPosition": "alternate",
+              "iconSize": "28px",
+              "spacing": "var(--space-5)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Vertical timeline with alternating content",
+              "orientation": "vertical",
+              "alignment": "alternate",
+              "contentPosition": "alternate",
+              "iconSize": "32px",
+              "spacing": "var(--space-6)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Composed",
+      "components": [
+        {
+          "name": "ai-chat",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width chat interface optimized for mobile",
+              "layout": "vertical",
+              "chatHeight": "calc(100vh - 120px)",
+              "inputPosition": "bottom",
+              "actionButtons": "compact",
+              "sidepanel": false,
+              "messageWidth": "100%"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Chat with optional side panel for context",
+              "layout": "horizontal",
+              "chatHeight": "calc(100vh - 120px)",
+              "inputPosition": "bottom",
+              "actionButtons": "visible",
+              "sidepanel": false,
+              "messageWidth": "100%"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full chat with expandable context panel",
+              "layout": "horizontal",
+              "chatHeight": "calc(100vh - 80px)",
+              "inputPosition": "bottom",
+              "actionButtons": "visible",
+              "sidepanel": true,
+              "sidepanelWidth": "320px",
+              "messageWidth": "calc(100% - 320px)"
+            }
+          ]
+        },
+        {
+          "name": "dashboard-layout",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Single column stacked layout without sidebar",
+              "layout": "vertical",
+              "columns": 1,
+              "sidebarVisible": false,
+              "headerPosition": "top",
+              "footerPosition": "bottom",
+              "gridAutoRows": "auto"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Two column layout with sidebar beneath",
+              "layout": "vertical",
+              "columns": 2,
+              "sidebarVisible": false,
+              "sidebarPosition": "bottom",
+              "headerPosition": "top",
+              "footerPosition": "bottom",
+              "gridAutoRows": "auto"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Three column layout with left sidebar",
+              "layout": "horizontal",
+              "columns": 3,
+              "sidebarVisible": true,
+              "sidebarPosition": "left",
+              "sidebarWidth": "280px",
+              "headerPosition": "top",
+              "footerPosition": "bottom",
+              "gridAutoRows": "dense"
+            }
+          ]
+        },
+        {
+          "name": "header",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Minimal header with hamburger menu",
+              "height": "56px",
+              "logoSize": "28px",
+              "actionButtons": "hamburger-only",
+              "titleVisible": false,
+              "padding": "var(--space-3)"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Standard header with some actions visible",
+              "height": "60px",
+              "logoSize": "32px",
+              "actionButtons": "compact",
+              "titleVisible": true,
+              "padding": "var(--space-4)"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Full header with all actions visible",
+              "height": "64px",
+              "logoSize": "36px",
+              "actionButtons": "all",
+              "titleVisible": true,
+              "padding": "var(--space-4) var(--space-6)"
+            }
+          ]
+        },
+        {
+          "name": "footer",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Single column stacked footer",
+              "layout": "vertical",
+              "columns": 1,
+              "padding": "var(--space-4)",
+              "spacing": "var(--space-4)",
+              "linkSize": "body-sm"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Two column footer layout",
+              "layout": "vertical",
+              "columns": 2,
+              "padding": "var(--space-5)",
+              "spacing": "var(--space-4)",
+              "linkSize": "body-sm"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Multi-column footer with organized sections",
+              "layout": "horizontal",
+              "columns": 4,
+              "padding": "var(--space-6)",
+              "spacing": "var(--space-5)",
+              "linkSize": "body-sm"
+            }
+          ]
+        },
+        {
+          "name": "form",
+          "containerQuery": true,
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Single column form layout",
+              "columns": 1,
+              "labelPosition": "top",
+              "labelFontSize": "body-sm",
+              "padding": "var(--space-4)",
+              "buttonLayout": "vertical",
+              "buttonWidth": "100%"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Two column form layout",
+              "columns": 2,
+              "labelPosition": "top",
+              "labelFontSize": "body-sm",
+              "padding": "var(--space-5)",
+              "buttonLayout": "horizontal",
+              "buttonWidth": "auto"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Multi-column form with flexible layout",
+              "columns": 3,
+              "labelPosition": "left",
+              "labelFontSize": "body",
+              "padding": "var(--space-6)",
+              "buttonLayout": "horizontal",
+              "buttonWidth": "auto"
+            }
+          ]
+        },
+        {
+          "name": "empty-state",
+          "rules": [
+            {
+              "breakpoint": "mobile",
+              "behavior": "Full width empty state with stacked content",
+              "imageSize": "120px",
+              "textAlign": "center",
+              "layout": "vertical",
+              "padding": "var(--space-6)",
+              "buttonLayout": "vertical"
+            },
+            {
+              "breakpoint": "tablet",
+              "behavior": "Centered empty state with moderate spacing",
+              "imageSize": "160px",
+              "textAlign": "center",
+              "layout": "vertical",
+              "padding": "var(--space-8)",
+              "buttonLayout": "horizontal"
+            },
+            {
+              "breakpoint": "desktop",
+              "behavior": "Centered empty state with generous spacing",
+              "imageSize": "200px",
+              "textAlign": "center",
+              "layout": "vertical",
+              "padding": "var(--space-10)",
+              "buttonLayout": "horizontal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mobileOptimizations": {
+    "touchTargets": {
+      "minimum": "44px",
+      "recommended": "48px",
+      "comfortable": "56px",
+      "spacing": "8px minimum between targets"
+    },
+    "inputOptimizations": {
+      "fontSize": "Use minimum 16px to prevent iOS auto-zoom",
+      "nativePickersPreferred": "Use native select/date/time pickers on mobile",
+      "keyboardType": "Match input type to keyboard (email, tel, number, url, etc)",
+      "autoComplete": "Enable browser autofill with proper autocomplete attributes"
+    },
+    "performanceConsiderations": {
+      "imageOptimization": "Load appropriately sized images for viewport width",
+      "lazyLoading": "Lazy load images and off-screen content",
+      "avoidHover": "Do not rely on hover states on touch devices",
+      "reduceAnimations": "Respect prefers-reduced-motion media query"
+    }
+  },
+  "accessibilityRequirements": {
+    "colorContrast": {
+      "normalText": "Minimum 4.5:1 ratio for WCAG AA",
+      "largeText": "Minimum 3:1 ratio for WCAG AA",
+      "uiComponents": "Minimum 3:1 ratio for WCAG AA"
+    },
+    "responsiveAccessibility": {
+      "focusManagement": "Ensure focus visible at all breakpoints",
+      "keyboardNavigation": "All interactive elements keyboard accessible",
+      "screenReaders": "Test with screen readers at different breakpoints",
+      "touchAlternatives": "Provide non-hover alternatives for all interactions"
+    },
+    "densityAccessibility": {
+      "compactDensity": "Ensure minimum 44px touch targets even in compact mode",
+      "fontSizes": "Do not reduce font size below 12px even in compact mode",
+      "lineHeight": "Maintain adequate line height for readability"
+    }
+  },
+  "testingGuidelines": {
+    "breakpointTesting": "Test every component at each defined breakpoint",
+    "containerQueryTesting": "Test container query components at multiple container sizes",
+    "orientationTesting": "Test on both portrait and landscape orientations",
+    "touchTesting": "Test touch interactions on actual devices or simulators",
+    "accessibilityTesting": "Run automated and manual accessibility tests at each breakpoint",
+    "performanceTesting": "Test load times and rendering performance on mobile devices"
+  }
+}

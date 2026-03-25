@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Rethink: Quiet Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090b;--bg-card:#111114;--bg-raised:#18181b;--bg-sunken:#060608;
+  --fg:#e4e4e7;--fg-2:rgba(228,228,231,0.6);--fg-3:rgba(228,228,231,0.38);
+  --fg-4:rgba(228,228,231,0.2);
+  --border:rgba(228,228,231,0.08);--border-2:rgba(228,228,231,0.14);
+  --accent:#FF5200;--accent-2:#3436E0;
+  --radius:12px;--radius-sm:8px;--radius-xs:4px;
+}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:'Rubik',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+
+/* Layout */
+.page{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+@media(max-width:900px){.page{grid-template-columns:1fr}.sidebar{display:none}}
+.sidebar{position:sticky;top:0;height:100vh;padding:32px 20px;border-right:1px solid var(--border);overflow-y:auto;background:var(--bg)}
+.sidebar h2{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--fg-3);margin-bottom:12px}
+.sidebar a{display:block;padding:6px 10px;border-radius:6px;font-size:0.8125rem;color:var(--fg-2);transition:all 0.15s}
+.sidebar a:hover{color:var(--fg);background:rgba(255,255,255,0.04)}
+.sidebar .logo-mark{width:32px;height:32px;margin-bottom:24px;opacity:0.7}
+.main{padding:48px 64px 96px;max-width:960px}
+@media(max-width:900px){.main{padding:32px 20px}}
+
+/* Typography */
+h1{font-size:2.5rem;font-weight:700;line-height:1.15;letter-spacing:-0.03em;margin-bottom:12px}
+h2{font-size:1.5rem;font-weight:600;line-height:1.25;letter-spacing:-0.02em;margin-top:64px;margin-bottom:8px;padding-top:32px;border-top:1px solid var(--border)}
+h3{font-size:1rem;font-weight:600;line-height:1.4;margin-top:32px;margin-bottom:8px}
+p{color:var(--fg-2);margin-bottom:16px;max-width:640px}
+.subtitle{font-size:1.125rem;color:var(--fg-2);line-height:1.5;margin-bottom:32px}
+.label{font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--fg-3)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* Cards */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:16px 0}
+.card-grid{display:grid;gap:16px;margin:16px 0}
+.card-grid-2{grid-template-columns:1fr 1fr}
+.card-grid-3{grid-template-columns:1fr 1fr 1fr}
+.card-grid-4{grid-template-columns:1fr 1fr 1fr 1fr}
+@media(max-width:700px){.card-grid-2,.card-grid-3,.card-grid-4{grid-template-columns:1fr}}
+
+/* Brand DNA */
+.brand-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center}
+.brand-card svg{max-width:180px;height:auto;margin-bottom:20px}
+.brand-card .personality{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.brand-card .tag{font-size:0.6875rem;font-weight:500;padding:4px 10px;border-radius:100px;border:1px solid var(--border-2);color:var(--fg-2)}
+
+/* Color swatches */
+.swatch-row{display:flex;gap:2px;border-radius:var(--radius-sm);overflow:hidden;margin:8px 0}
+.swatch{flex:1;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:0.625rem;font-weight:500;gap:2px;min-width:48px;position:relative}
+.swatch .hex{opacity:0.8;font-family:'JetBrains Mono',monospace;font-size:0.5625rem}
+.swatch-lg{height:80px;aspect-ratio:auto;border-radius:var(--radius-sm);flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;font-size:0.6875rem;font-weight:500}
+.swatch-lg .hex{font-family:'JetBrains Mono',monospace;font-size:0.625rem;opacity:0.7}
+.swatch-lg .cr{font-family:'JetBrains Mono',monospace;font-size:0.5625rem;opacity:0.6;margin-top:2px}
+
+/* Token emphasis */
+.emphasis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.emphasis-chip{border-radius:var(--radius-sm);padding:10px 14px;font-size:0.75rem;font-weight:500;text-align:center;display:flex;align-items:center;justify-content:center;min-height:40px}
+
+/* Surface demo */
+.surface-demo{border-radius:var(--radius);overflow:hidden;padding:20px;margin:12px 0}
+.surface-stack{display:flex;gap:12px;flex-wrap:wrap}
+.surface-chip{border-radius:var(--radius-sm);padding:16px 20px;font-size:0.75rem;font-weight:500;min-width:120px;border:1px solid rgba(128,128,128,0.15)}
+.surface-chip .name{font-weight:600;margin-bottom:4px}
+.surface-chip .hex{font-family:'JetBrains Mono',monospace;font-size:0.625rem;opacity:0.6}
+
+/* Type specimen */
+.type-row{display:flex;align-items:baseline;gap:24px;padding:12px 0;border-bottom:1px solid var(--border)}
+.type-row:last-child{border:none}
+.type-meta{min-width:120px;flex-shrink:0}
+.type-meta .name{font-size:0.75rem;font-weight:600;color:var(--fg)}
+.type-meta .spec{font-size:0.625rem;color:var(--fg-3);font-family:'JetBrains Mono',monospace}
+.type-sample{flex:1;color:var(--fg)}
+
+/* Spacing vis */
+.space-bar{height:12px;background:var(--accent);opacity:0.3;border-radius:2px;transition:all 0.2s}
+.space-row{display:flex;align-items:center;gap:12px;padding:4px 0}
+.space-row .name{font-size:0.6875rem;font-weight:500;min-width:80px;font-family:'JetBrains Mono',monospace;color:var(--fg-3)}
+.space-row .val{font-size:0.625rem;min-width:40px;color:var(--fg-3);font-family:'JetBrains Mono',monospace}
+
+/* Radius vis */
+.radius-demo{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}
+.radius-chip{width:64px;height:64px;background:var(--bg-raised);border:2px solid var(--fg-4);display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:0.5625rem;font-weight:500;color:var(--fg-3)}
+.radius-chip .name{margin-top:4px}
+
+/* Shadow vis */
+.shadow-demo{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}
+.shadow-chip{width:80px;height:80px;background:var(--bg-card);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:0.5625rem;font-weight:500;color:var(--fg-3)}
+
+/* Comparison table */
+table{width:100%;border-collapse:collapse;font-size:0.8125rem;margin:12px 0}
+th{text-align:left;padding:8px 12px;font-weight:600;font-size:0.6875rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--fg-3);border-bottom:1px solid var(--border-2)}
+td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--fg-2);vertical-align:top}
+td:first-child{color:var(--fg);font-weight:500}
+tr:last-child td{border:none}
+.old{color:#ef4444;font-family:'JetBrains Mono',monospace;font-size:0.75rem}
+.new{color:#22c55e;font-family:'JetBrains Mono',monospace;font-size:0.75rem}
+
+/* Code block */
+.code{background:var(--bg-sunken);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin:12px 0;font-family:'JetBrains Mono',monospace;font-size:0.75rem;line-height:1.7;color:var(--fg-2);overflow-x:auto;white-space:pre;max-height:500px;overflow-y:auto}
+.code .comment{color:var(--fg-3)}
+.code .prop{color:#93c5fd}
+.code .val{color:#86efac}
+.code .selector{color:#fbbf24}
+
+/* Principles */
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+@media(max-width:700px){.principles{grid-template-columns:1fr}}
+.principle{padding:24px;border:1px solid var(--border);border-radius:var(--radius);transition:border-color 0.2s}
+.principle:hover{border-color:var(--border-2)}
+.principle .num{font-size:0.625rem;font-weight:700;color:var(--accent);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.principle .title{font-size:0.875rem;font-weight:600;margin-bottom:6px}
+.principle .desc{font-size:0.75rem;color:var(--fg-3);line-height:1.5}
+
+/* Toggle */
+.toggle-bar{display:flex;gap:4px;background:var(--bg-sunken);border:1px solid var(--border);border-radius:8px;padding:3px;margin:16px 0;width:fit-content}
+.toggle-btn{padding:6px 16px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--fg-3);transition:all 0.15s}
+.toggle-btn.active{background:var(--bg-raised);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+
+/* Badge */
+.badge{display:inline-block;font-size:0.625rem;font-weight:600;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.05em}
+.badge-pass{background:rgba(34,197,94,0.15);color:#4ade80}
+.badge-fail{background:rgba(239,68,68,0.15);color:#f87171}
+.badge-new{background:rgba(59,130,246,0.15);color:#60a5fa}
+.badge-changed{background:rgba(251,191,36,0.15);color:#fbbf24}
+.badge-removed{background:rgba(239,68,68,0.1);color:#f87171}
+
+/* Motion vis */
+.motion-curve{width:100%;height:60px;background:var(--bg-sunken);border-radius:var(--radius-xs);margin:4px 0}
+
+/* Contrast matrix */
+.cr-cell{font-family:'JetBrains Mono',monospace;font-size:0.6875rem;font-weight:600;text-align:center;padding:6px}
+
+/* Inline flex helper */
+.flex{display:flex}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.gap-24{gap:24px}
+.items-center{align-items:center}.flex-wrap{flex-wrap:wrap}
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}.mt-32{margin-top:32px}
+.mb-8{margin-bottom:8px}.mb-16{margin-bottom:16px}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <svg class="logo-mark" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="rgba(228,228,231,0.2)" stroke-width="1.5"/><circle cx="16" cy="16" r="4" fill="rgba(228,228,231,0.3)"/></svg>
+  <h2>DS Rethink v1</h2>
+  <a href="#philosophy">Philosophy</a>
+  <a href="#brands">Brand DNA</a>
+  <a href="#architecture">Token Architecture</a>
+  <a href="#color">Color System</a>
+  <a href="#surfaces">Surfaces</a>
+  <a href="#content">Content Hierarchy</a>
+  <a href="#borders">Borders</a>
+  <a href="#brand-accents">Brand Accents</a>
+  <a href="#status">Status Colors</a>
+  <a href="#typography">Typography</a>
+  <a href="#spacing">Spacing</a>
+  <a href="#shape">Shape</a>
+  <a href="#elevation">Elevation</a>
+  <a href="#motion">Motion</a>
+  <a href="#interactions">Interactions</a>
+  <a href="#changes">What Changed</a>
+  <a href="#globals">globals.css</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+
+<!-- Hero -->
+<p class="label" style="margin-bottom:8px">Design System Rethink</p>
+<h1>Quiet Intelligence</h1>
+<p class="subtitle">A design system that feels like a calm, intelligent assistant. Not flashy. Not boring. Purposeful clarity for AI-native enterprise software.</p>
+
+<!-- Philosophy -->
+<h2 id="philosophy">Philosophy</h2>
+<p>The DS draws from Apple's clarity-deference-depth philosophy, the Linear aesthetic movement (monochromatic + single accent), and Dieter Rams' principle that good design is as little design as possible. Every visual decision earns its place.</p>
+
+<div class="principles">
+  <div class="principle"><div class="num">01</div><div class="title">Typography Creates Hierarchy</div><div class="desc">Size and weight establish structure. Color is reserved for meaning, not decoration. A page should be scannable in grayscale.</div></div>
+  <div class="principle"><div class="num">02</div><div class="title">Color Means Something</div><div class="desc">Brand accent for action. Red for danger. Green for success. Purple for AI. No color without semantic purpose. Surfaces stay neutral.</div></div>
+  <div class="principle"><div class="num">03</div><div class="title">Restraint Over Novelty</div><div class="desc">Each token earns its place. No "nudge" values, no variant explosion. If a token can't justify its existence, it doesn't exist.</div></div>
+  <div class="principle"><div class="num">04</div><div class="title">Content First, Chrome Never</div><div class="desc">UI elements recede. Data, conversations, and workflows are the foreground. The system defers to the content it presents.</div></div>
+  <div class="principle"><div class="num">05</div><div class="title">Density With Breathing Room</div><div class="desc">ERP demands density. AI demands space. Two density modes solve this: Comfortable for conversations, Compact for data tables.</div></div>
+  <div class="principle"><div class="num">06</div><div class="title">Motion With Purpose</div><div class="desc">Spring physics for natural feel. Every animation is interruptible. Reduced-motion always respected. If it doesn't aid comprehension, it doesn't move.</div></div>
+</div>
+
+<h3>Aesthetic Position</h3>
+<p>This DS sits at the intersection of three movements: <strong>Linear Aesthetic</strong> (dark-first, monochromatic surfaces, subdued chrome, content-forward), <strong>Apple Clarity</strong> (opacity-based hierarchy, concentric radius, spring motion, semantic color), and <strong>Bauhaus Function</strong> (form follows function, no decoration without purpose). The result is enterprise software that feels intelligent, not corporate.</p>
+
+<!-- Brand DNA -->
+<h2 id="brands">Brand DNA</h2>
+<p>Two brands, one component library. Tokens are the only differentiator. Each brand's personality informs its token values.</p>
+
+<div class="card-grid card-grid-2">
+  <div class="brand-card">
+    <svg width="180" height="60" viewBox="0 0 117 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14.9092 9.36646L16.5314 12.2981C17.0383 12.1491 17.5959 12 18.2042 11.9503C19.7249 11.7516 21.195 11.6522 22.665 11.6522H22.7157C24.2871 11.6522 25.8586 11.8012 27.3793 12.0497C29.9646 12.4969 31.2825 13.9379 31.4346 16.1242C31.536 17.5652 31.3839 19.0559 31.0291 20.4969C31.0291 20.4969 30.7249 21.6894 30.5729 22.236C29.1535 26.9565 27.1765 30.6335 27.1765 30.6335L25.5544 27.7019C25.0475 27.8509 24.4899 28 23.8816 28.0497C22.3609 28.2484 20.8908 28.3478 19.4208 28.3478H19.3701C17.7986 28.3478 16.2272 28.1988 14.7065 27.9503C12.1212 27.5031 10.8032 26.0621 10.6512 23.8758C10.5498 21.6398 10.9046 19.354 11.7157 17.0683C13.135 12.7453 14.9092 9.36646 14.9092 9.36646ZM14.6558 4L12.5267 7.92547C12.4254 8.07453 10.6512 11.4534 9.2318 15.9752C8.31936 18.559 7.91382 21.1429 8.01521 23.5776C8.21797 27.1553 10.7018 29.7391 14.6051 30.4348C16.2779 30.7329 18.0014 30.882 19.7756 30.882H19.8263C21.2963 30.882 22.8171 30.7826 24.3885 30.5838L24.8954 31.4783L27.3793 36L29.5083 32.0745C29.6097 31.9255 31.5867 28.1988 33.0567 23.3292C33.2595 22.6832 33.5636 21.5901 33.5636 21.441V21.3913V21.3416C33.9185 19.6522 34.0706 17.9627 33.9692 16.323C33.7664 12.7453 31.2825 10.1615 27.3793 9.46584C25.7065 9.1677 23.983 9.01863 22.2088 9.01863H22.1581C20.688 9.01863 19.1673 9.11801 17.6466 9.31677L17.1396 8.42236L14.6558 4Z" fill="#FF5200"/>
+      <path d="M24.1643 17.0545L21.0549 20.1289L24.0944 23.203L27.2038 20.1286L24.1643 17.0545Z" fill="#004A9B"/>
+      <path d="M18.1094 17.072L15 20.1464L18.0395 23.2205L21.1489 20.146L18.1094 17.072Z" fill="#004A9B"/>
+      <path d="M50.7869 16.3548C50.9807 16.9355 51.1745 17.5161 51.3684 18.0968C51.5622 18.6774 51.8206 19.3226 52.0145 19.9032C52.2729 20.4839 52.4667 21.129 52.7252 21.7097C52.9836 22.2903 53.1774 22.871 53.3713 23.3871C53.5651 22.8064 53.6943 22.2258 53.8881 21.5806C54.082 20.9355 54.2112 20.2258 54.405 19.5161C54.5988 18.8064 54.7281 18.0968 54.9219 17.3226C55.1157 16.5484 55.2449 15.8387 55.3742 15.129H57.7001C57.3124 17.0645 56.7956 18.9355 56.3433 20.7419C55.8264 22.5484 55.2449 24.2903 54.6635 25.9032H52.5313C51.6268 23.7742 50.7223 21.5161 49.8824 19.0645C49.4301 20.2903 48.9778 21.5161 48.5256 22.6774C48.0733 23.8387 47.621 24.9355 47.1688 25.9677H45.0367C44.3906 24.3548 43.8091 22.6129 43.3568 20.8064C42.8399 19 42.3877 17.129 42 15.1935H44.3906C44.5198 15.9032 44.7136 16.6129 44.8428 17.3871C44.972 18.0968 45.1659 18.871 45.3597 19.5806C45.5535 20.2903 45.6827 21 45.8766 21.6452C46.0704 22.2903 46.1996 22.9355 46.3934 23.5161C46.5873 23 46.8457 22.4194 47.1041 21.8387C47.3626 21.2581 47.5564 20.6774 47.8148 20.0323C48.0087 19.4516 48.2671 18.8064 48.4609 18.2258C48.6548 17.6452 48.8486 17.0645 49.0424 16.4839H50.7869V16.3548Z" fill="#004A9B"/>
+      <path d="M61.4474 15.3871C61.4474 15.7097 61.3182 16.0323 61.0598 16.2258C60.8013 16.4193 60.4783 16.5484 60.1552 16.5484C59.7676 16.5484 59.4445 16.4193 59.1861 16.2258C58.9277 16.0323 58.7984 15.7097 58.7984 15.3871C58.7984 15 58.9277 14.7419 59.1861 14.5484C59.4445 14.3548 59.7676 14.2258 60.1552 14.2258C60.4783 14.2258 60.8013 14.3548 61.0598 14.5484C61.3182 14.7419 61.4474 15.0645 61.4474 15.3871ZM61.2536 25.9677H59.1215V17.7742H61.2536V25.9677Z" fill="#004A9B"/>
+      <path d="M71.0742 25.7097C70.622 25.8387 70.1051 25.9032 69.459 26.0323C68.8129 26.0968 68.1668 26.1613 67.4561 26.1613C66.7454 26.1613 66.0347 26.0323 65.5178 25.8387C64.9363 25.6452 64.4195 25.3871 64.0318 25C63.6441 24.6129 63.3211 24.1613 63.0627 23.6452C62.8688 23.129 62.7396 22.5484 62.7396 21.9032C62.7396 21.2581 62.8042 20.6774 62.998 20.1613C63.1919 19.6452 63.4503 19.1935 63.7734 18.8064C64.0964 18.4194 64.5487 18.1613 65.0655 17.9677C65.5824 17.7742 66.1639 17.6452 66.81 17.6452C67.2623 17.6452 67.6499 17.7097 67.973 17.7742C68.296 17.8387 68.6191 17.9677 68.8775 18.0968V14.1613L71.0096 13.8387V25.7097H71.0742ZM64.9363 21.8387C64.9363 22.6774 65.1301 23.3226 65.5824 23.7742C66.0347 24.2258 66.6808 24.4839 67.4561 24.4839C67.7791 24.4839 68.1022 24.4839 68.3606 24.4194C68.6191 24.4194 68.8129 24.3548 68.9421 24.3548V19.7097C68.7483 19.5806 68.4898 19.5161 68.1668 19.3871C67.8437 19.2581 67.5207 19.2581 67.1977 19.2581C66.4223 19.2581 65.8408 19.5161 65.5178 19.9677C65.1301 20.4194 64.9363 21.0645 64.9363 21.8387Z" fill="#004A9B"/>
+      <path d="M72.6249 21.9032C72.6249 21.1935 72.7541 20.5484 73.0125 20.0323C73.2709 19.5161 73.594 19.0645 73.9817 18.6774C74.3693 18.2903 74.8216 18.0323 75.3385 17.8387C75.8553 17.6452 76.3722 17.5806 76.9537 17.5806C78.2459 17.5806 79.215 17.9032 79.9257 18.6129C80.6364 19.3226 81.0241 20.3548 81.0241 21.7097C81.0241 21.8387 81.0241 21.9032 81.0241 22.0323C81.0241 22.1613 81.0241 22.2903 81.0241 22.3548H74.8862C74.9508 23 75.2092 23.5161 75.6615 23.9032C76.1138 24.2903 76.8245 24.4194 77.6644 24.4194C78.1813 24.4194 78.6335 24.3548 79.0858 24.2903C79.5381 24.2258 79.8611 24.0968 80.1195 24.0323L80.378 25.5806C80.2488 25.6452 80.1196 25.7097 79.8611 25.7742C79.6673 25.8387 79.4088 25.9032 79.1504 25.9032C78.892 25.9677 78.5689 25.9677 78.3105 26.0323C77.9874 26.0323 77.6644 26.0968 77.3414 26.0968C76.5014 26.0968 75.7907 25.9677 75.2092 25.7742C74.6277 25.5806 74.1109 25.2581 73.7232 24.871C73.3356 24.4839 73.0125 24.0323 72.8833 23.5161C72.6895 23.0645 72.6249 22.5484 72.6249 21.9032ZM78.8274 21.0645C78.8274 20.8064 78.7627 20.5484 78.6981 20.3548C78.6335 20.0968 78.5043 19.9032 78.3105 19.7742C78.1813 19.5806 77.9874 19.4516 77.729 19.3871C77.4706 19.2581 77.2121 19.2581 76.8891 19.2581C76.566 19.2581 76.243 19.3226 76.0492 19.4516C75.7907 19.5806 75.5969 19.7097 75.4031 19.9032C75.2092 20.0968 75.08 20.2903 75.0154 20.4839C74.9508 20.7419 74.8862 20.9355 74.8216 21.1935H78.8274V21.0645Z" fill="#004A9B"/>
+      <path d="M86.3221 26.0968C85.676 26.0968 85.0299 26.0968 84.3838 26.0323C83.7377 25.9677 83.1562 25.9032 82.6393 25.7742V15.3226C82.8978 15.2581 83.1562 15.2581 83.4792 15.1935C83.8023 15.129 84.0607 15.129 84.3838 15.129C84.7068 15.129 84.9653 15.0645 85.2883 15.0645C85.6113 15.0645 85.8698 15.0645 86.1282 15.0645C86.9035 15.0645 87.5496 15.129 88.1957 15.1935C88.8418 15.3226 89.3587 15.4516 89.8756 15.7097C90.3278 15.9677 90.7155 16.2258 90.9739 16.6129C91.2324 17 91.3616 17.4516 91.3616 17.9677C91.3616 18.4839 91.2324 18.9355 90.9739 19.2581C90.7155 19.6452 90.3278 19.9032 89.811 20.1613C90.5863 20.3548 91.1032 20.6774 91.4908 21.129C91.8139 21.5806 92.0077 22.0968 92.0077 22.7419C92.0077 23.8387 91.5554 24.6774 90.6509 25.2581C89.6817 25.7742 88.2603 26.0968 86.3221 26.0968Z" fill="#004A9B"/>
+      <path d="M101.828 21.8387C101.828 22.4839 101.699 23.0645 101.505 23.5806C101.311 24.0968 100.988 24.5484 100.601 24.9355C100.213 25.3226 99.7608 25.5806 99.1793 25.8387C98.6624 26.0323 98.0164 26.1613 97.3703 26.1613C96.7242 26.1613 96.0781 26.0323 95.5612 25.8387C95.0443 25.6452 94.5275 25.3226 94.1398 24.9355C93.7521 24.5484 93.4291 24.0968 93.2353 23.5806C93.0414 23.0645 92.9122 22.4839 92.9122 21.8387C92.9122 21.1935 93.0414 20.6129 93.2353 20.0968C93.4291 19.5806 93.7521 19.129 94.1398 18.7419C94.5275 18.3548 94.9797 18.0968 95.5612 17.9032C96.0781 17.7097 96.7242 17.5806 97.3703 17.5806C98.0164 17.5806 98.5978 17.7097 99.1793 17.9032C99.6962 18.0968 100.213 18.4194 100.601 18.7419C100.988 19.129 101.311 19.5806 101.505 20.0968C101.764 20.6129 101.828 21.1935 101.828 21.8387Z" fill="#004A9B"/>
+      <path d="M103.25 15.6452L105.382 15.3226V17.7742H108.677V19.3226H105.382V22.6129C105.382 23.2581 105.511 23.7097 105.705 24.0323C105.963 24.2903 106.351 24.4839 106.932 24.4839C107.32 24.4839 107.643 24.4194 107.966 24.3548C108.289 24.2903 108.483 24.2258 108.677 24.1613L109 25.6452C108.742 25.7097 108.419 25.8387 108.031 25.9032C107.643 26.0323 107.126 26.0323 106.609 26.0323C105.963 26.0323 105.382 25.9677 104.93 25.7742C104.477 25.6452 104.154 25.3871 103.896 25.129C103.637 24.8065 103.444 24.4839 103.314 24.0323C103.185 23.5806 103.185 23.129 103.185 22.6129V15.6452H103.25Z" fill="#004A9B"/>
+    </svg>
+    <p class="label" style="margin-bottom:4px">Enterprise & Government</p>
+    <h3 style="margin-top:0">Commanding Precision</h3>
+    <p style="font-size:0.8125rem;color:var(--fg-3);max-width:none">Sharp geometry. Cool-tinted neutrals. The orange ignites action on a composed, authoritative canvas. WCAG AAA.</p>
+    <div class="flex gap-8" style="justify-content:center;margin-top:12px">
+      <div style="width:40px;height:40px;border-radius:8px;background:#FF5200" title="#FF5200"></div>
+      <div style="width:40px;height:40px;border-radius:8px;background:#004A9B" title="#004A9B"></div>
+    </div>
+    <div class="personality">
+      <span class="tag">Authoritative</span>
+      <span class="tag">Technical</span>
+      <span class="tag">Precise</span>
+      <span class="tag">Trustworthy</span>
+    </div>
+  </div>
+
+  <div class="brand-card">
+    <svg width="180" height="60" viewBox="0 0 144 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip_hulul)"><path d="M10 31.953L36.9999 16.4322C48.9894 9.51849 64 18.1724 64 31.953H52.9545V20.0067L32.1381 32H10V31.953Z" fill="#0002A1"/><path d="M62 8L34.9999 23.5614C23.0104 30.4932 8 21.8166 8 8H19.0454V20.0247L39.8618 8H62Z" fill="#06E58D"/></g>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M27.0683 19.4505C27.0683 21.9028 28.7614 23.7532 31.0051 23.7532H33.8934H33.9165V15.4084H30.9922C28.7925 15.4084 27.0683 17.1838 27.0683 19.4505ZM68.1157 12.9213C68.9133 13.1466 69.5988 13.5208 70.172 14.0429C70.746 14.5652 71.1935 15.2616 71.516 16.1323C71.8389 17.0027 72 18.0837 72 19.374C72 20.7462 71.9147 22.752 71.745 23.8993C71.5746 25.0463 71.4088 25.9784 71.2474 26.6954H56.7227H48.821C47.7189 26.6775 46.8048 26.5695 46.0789 26.3718C45.6892 26.2638 45.3444 26.1291 45.0398 25.9715C44.735 26.1291 44.3899 26.2638 44.0002 26.3718C43.2745 26.5695 42.3607 26.6775 41.2584 26.6954H37.6046C37.3745 30.1203 34.5275 32 30.3953 32C28.5051 32 27.1708 31.5031 25.3705 30.5857L25.1062 30.4508L25.4316 27.4955L25.9979 27.8246C27.3276 28.5976 28.9711 29.0577 30.3953 29.0577C32.6302 29.0577 33.7283 28.3251 33.8934 26.6954H30.4786C26.4886 26.6954 23.3633 23.4894 23.3633 19.398C23.3633 15.5768 26.477 12.5834 30.4521 12.5834H37.6215V23.7532H41.9976C42.6518 23.7532 43.1848 23.2181 43.1848 22.5571V8.00039L46.8899 8V22.5571C46.8899 23.2181 47.4231 23.7532 48.0817 23.7532H56.7227H67.9667C68.0204 23.5073 68.1923 21.6116 68.2276 21.1097C68.2639 20.6079 68.2815 20.1314 68.2815 19.6809C68.2815 18.4313 67.9591 17.5559 67.3137 17.054C66.6688 16.5521 65.5934 16.3013 64.0879 16.3013H56.7227V12.5834H65.495C66.4447 12.5834 67.3184 12.6957 68.1157 12.9213ZM16.4963 29.1134C16.9963 29.0778 17.369 29.0327 17.614 28.9786V8.00057L21.3186 8.00018V31.2447C20.6041 31.4067 19.6751 31.5731 18.5324 31.744C17.3892 31.9144 16.1338 32 14.7667 32C13.4808 32 12.4036 31.8383 11.5366 31.5143C10.6689 31.1906 9.97499 30.7415 9.45434 30.1655C8.93408 29.5903 8.56143 28.9023 8.33697 28.1018C8.11213 27.3017 8 26.4249 8 25.4718V20.1204H11.7049V24.9589C11.7049 26.4698 11.9547 27.549 12.4548 28.1963C12.955 28.8439 13.8273 29.1675 15.0725 29.1675C15.5214 29.1675 15.996 29.1498 16.4963 29.1134Z" fill="#0002A1"/>
+      <g clip-path="url(#clip_hulul2)"><path d="M82 31.953L109 16.4322C120.989 9.51849 136 18.1724 136 31.953H124.954V20.0067L104.138 32H82V31.953Z" fill="#0002A1"/><path d="M134 8L107 23.5614C95.0104 30.4932 80 21.8166 80 8H91.0454V20.0247L111.862 8H134Z" fill="#06E58D"/></g>
+      <defs><clipPath id="clip_hulul"><rect width="56" height="24" fill="white" transform="translate(8 8)"/></clipPath><clipPath id="clip_hulul2"><rect width="56" height="24" fill="white" transform="translate(80 8)"/></clipPath></defs>
+    </svg>
+    <p class="label" style="margin-bottom:4px">Small & Medium Business</p>
+    <h3 style="margin-top:0">Fluid Intelligence</h3>
+    <p style="font-size:0.8125rem;color:var(--fg-3);max-width:none">Softer geometry. Warm neutrals. Deep indigo conveys depth and reliability. Green accents signal growth. WCAG AA.</p>
+    <div class="flex gap-8" style="justify-content:center;margin-top:12px">
+      <div style="width:40px;height:40px;border-radius:12px;background:#0002A1" title="#0002A1"></div>
+      <div style="width:40px;height:40px;border-radius:12px;background:#06E58D" title="#06E58D"></div>
+    </div>
+    <div class="personality">
+      <span class="tag">Approachable</span>
+      <span class="tag">Efficient</span>
+      <span class="tag">Modern</span>
+      <span class="tag">Solution-Oriented</span>
+    </div>
+  </div>
+</div>
+
+<!-- Token Architecture -->
+<h2 id="architecture">Token Architecture</h2>
+<p>Three layers. Raw values flow upward through semantic naming to component-level usage. AI agents and Lovable consume the semantic layer. Humans never touch primitives directly.</p>
+
+<div class="card" style="text-align:center">
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <div style="padding:12px 24px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:8px;font-size:0.8125rem;font-weight:600;color:#a78bfa">Component Tokens</div>
+  </div>
+  <div style="color:var(--fg-4);margin:8px 0">&#8593; consumes</div>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <div style="padding:12px 24px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:8px;font-size:0.8125rem;font-weight:600;color:#60a5fa">Semantic Tokens</div>
+  </div>
+  <div style="color:var(--fg-4);margin:8px 0">&#8593; references</div>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+    <div style="padding:12px 24px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:8px;font-size:0.8125rem;font-weight:600;color:#4ade80">Primitive Tokens</div>
+  </div>
+  <p style="margin-top:16px;font-size:0.75rem;text-align:center;max-width:none">Primitives = raw values (scales, fonts, colors). Semantics = purpose-driven naming (surface, content, status). Components = scoped overrides. In globals.css for Lovable, all three layers are flattened to resolved hex values.</p>
+</div>
+
+<h3>New Token Categories</h3>
+<table>
+  <tr><th>Category</th><th>Scope</th><th>Status</th><th>Count</th></tr>
+  <tr><td>Surface Colors</td><td>Brand + Theme</td><td><span class="badge badge-changed">Expanded</span></td><td>5</td></tr>
+  <tr><td>Content Colors</td><td>Brand + Theme</td><td><span class="badge badge-changed">Renamed</span></td><td>5</td></tr>
+  <tr><td>Border Colors</td><td>Brand + Theme</td><td><span class="badge badge-new">New</span></td><td>3</td></tr>
+  <tr><td>Brand Accent</td><td>Brand + Theme</td><td>Kept</td><td>7</td></tr>
+  <tr><td>Status Colors (x5)</td><td>Brand + Theme</td><td>Kept</td><td>35</td></tr>
+  <tr><td>Typography</td><td>Global</td><td><span class="badge badge-new">New</span></td><td>18</td></tr>
+  <tr><td>Spacing</td><td>Global</td><td><span class="badge badge-changed">Fixed</span></td><td>22</td></tr>
+  <tr><td>Shape (Radius)</td><td>Brand</td><td><span class="badge badge-changed">Simplified</span></td><td>8</td></tr>
+  <tr><td>Elevation (Shadow)</td><td>Theme</td><td><span class="badge badge-new">New</span></td><td>5</td></tr>
+  <tr><td>Motion</td><td>Global</td><td>Kept</td><td>9</td></tr>
+  <tr><td>Z-Index</td><td>Global</td><td>Kept</td><td>9</td></tr>
+  <tr><td>Focus</td><td>Brand + Theme</td><td><span class="badge badge-new">New</span></td><td>2</td></tr>
+</table>
+
+<!-- Color System -->
+<h2 id="color">Color System</h2>
+<p>Color is earned, not given. Neutral surfaces dominate. Brand accent appears at moments of action. Status colors carry meaning. Content hierarchy is achieved through opacity-equivalent values, not hue.</p>
+
+<!-- Surfaces -->
+<h3 id="surfaces">Surface Hierarchy</h3>
+<p>Five surface levels replace the previous three. Each surface has a clear use case. In dark mode, raised surfaces get lighter (not darker) to simulate elevation toward a light source.</p>
+
+<div class="toggle-bar" id="surfaceToggle">
+  <button class="toggle-btn active" onclick="toggleSurface('widebot-light')">WideBot Light</button>
+  <button class="toggle-btn" onclick="toggleSurface('widebot-dark')">WideBot Dark</button>
+  <button class="toggle-btn" onclick="toggleSurface('hulul-light')">Hulul Light</button>
+  <button class="toggle-btn" onclick="toggleSurface('hulul-dark')">Hulul Dark</button>
+</div>
+
+<div id="surfaceDemo" class="surface-demo" style="background:#f6f8fa">
+  <!-- filled by JS -->
+</div>
+
+<!-- Content Hierarchy -->
+<h3 id="content">Content Hierarchy</h3>
+<p>Inspired by Apple's opacity-based label system. Four levels of text emphasis, all contrast-verified against their surface. Naming shifts from "on-surface" (M3 jargon) to "content" (plain English).</p>
+
+<div id="contentDemo" class="card">
+  <!-- filled by JS -->
+</div>
+
+<!-- Borders -->
+<h3 id="borders">Borders</h3>
+<p>Three border levels. Subtle for dividers, default for containers, strong for emphasis. All derived from content colors at reduced opacity equivalents.</p>
+
+<div id="borderDemo" class="card" style="display:flex;gap:12px;flex-wrap:wrap">
+  <!-- filled by JS -->
+</div>
+
+<!-- Brand Accents -->
+<h3 id="brand-accents">Brand Accent</h3>
+<p>The logo color expressed across four emphasis levels: filled (bold actions), tonal (secondary actions), outlined (tertiary), text (minimal). WideBot uses orange. Hulul uses indigo blue.</p>
+
+<div class="toggle-bar" id="accentToggle">
+  <button class="toggle-btn active" onclick="toggleAccent('widebot-light')">WideBot Light</button>
+  <button class="toggle-btn" onclick="toggleAccent('widebot-dark')">WideBot Dark</button>
+  <button class="toggle-btn" onclick="toggleAccent('hulul-light')">Hulul Light</button>
+  <button class="toggle-btn" onclick="toggleAccent('hulul-dark')">Hulul Dark</button>
+</div>
+<div id="accentDemo" class="emphasis-grid">
+  <!-- filled by JS -->
+</div>
+
+<!-- Status Colors -->
+<h3 id="status">Status Colors</h3>
+<p>Five semantic roles (danger, warning, success, neutral, ai) each with four emphasis levels. Always paired with icons per DS_RULES.md Section 9. Status colors are tuned per brand to meet their respective WCAG target.</p>
+
+<div class="toggle-bar" id="statusToggle">
+  <button class="toggle-btn active" onclick="toggleStatus('widebot-light')">WideBot Light</button>
+  <button class="toggle-btn" onclick="toggleStatus('widebot-dark')">WideBot Dark</button>
+  <button class="toggle-btn" onclick="toggleStatus('hulul-light')">Hulul Light</button>
+  <button class="toggle-btn" onclick="toggleStatus('hulul-dark')">Hulul Dark</button>
+</div>
+<div id="statusDemo">
+  <!-- filled by JS -->
+</div>
+
+<!-- Typography -->
+<h2 id="typography">Typography</h2>
+<p>The biggest gap in the previous system. A complete type scale based on Rubik (Latin + Arabic natively in one font), with 14px body text as baseline. Negative letter-spacing at body sizes, positive at display (Apple HIG technique). JetBrains Mono for code and data.</p>
+
+<div class="card">
+  <div class="label mb-8">Font Stack</div>
+  <p class="mono" style="font-size:0.8125rem;color:var(--fg)">--font-sans: 'Rubik', system-ui, -apple-system, sans-serif</p>
+  <p class="mono" style="font-size:0.8125rem;color:var(--fg)">--font-mono: 'JetBrains Mono', 'Courier New', monospace</p>
+</div>
+
+<div class="card" style="padding:0">
+  <div style="padding:16px 24px;border-bottom:1px solid var(--border)"><span class="label">Type Scale</span></div>
+  <div style="padding:12px 24px">
+    <div class="type-row"><div class="type-meta"><div class="name">Display L</div><div class="spec">48 / 700 / 1.17 / +0.02em</div></div><div class="type-sample" style="font-size:3rem;font-weight:700;line-height:1.17;letter-spacing:0.02em">Quiet Intelligence</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Display</div><div class="spec">40 / 700 / 1.2 / +0.01em</div></div><div class="type-sample" style="font-size:2.5rem;font-weight:700;line-height:1.2;letter-spacing:0.01em">Quiet Intelligence</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Display S</div><div class="spec">32 / 700 / 1.25 / 0</div></div><div class="type-sample" style="font-size:2rem;font-weight:700;line-height:1.25">Quiet Intelligence</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Headline L</div><div class="spec">28 / 600 / 1.29 / -0.01em</div></div><div class="type-sample" style="font-size:1.75rem;font-weight:600;line-height:1.29;letter-spacing:-0.01em">Quiet Intelligence</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Headline</div><div class="spec">24 / 600 / 1.33 / -0.01em</div></div><div class="type-sample" style="font-size:1.5rem;font-weight:600;line-height:1.33;letter-spacing:-0.01em">Quiet Intelligence</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Headline S</div><div class="spec">20 / 600 / 1.4 / -0.01em</div></div><div class="type-sample" style="font-size:1.25rem;font-weight:600;line-height:1.4;letter-spacing:-0.01em">Quiet Intelligence</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Title L</div><div class="spec">18 / 600 / 1.33 / -0.01em</div></div><div class="type-sample" style="font-size:1.125rem;font-weight:600;line-height:1.33;letter-spacing:-0.01em">AI-native enterprise design</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Title</div><div class="spec">16 / 600 / 1.5 / -0.006em</div></div><div class="type-sample" style="font-size:1rem;font-weight:600;line-height:1.5;letter-spacing:-0.006em">AI-native enterprise design</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Title S</div><div class="spec">14 / 600 / 1.43 / -0.006em</div></div><div class="type-sample" style="font-size:0.875rem;font-weight:600;line-height:1.43;letter-spacing:-0.006em">AI-native enterprise design</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Body L</div><div class="spec">16 / 400 / 1.5 / -0.006em</div></div><div class="type-sample" style="font-size:1rem;font-weight:400;line-height:1.5;letter-spacing:-0.006em">Components consume semantic tokens that resolve per brand and theme.</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Body</div><div class="spec">14 / 400 / 1.5 / -0.006em</div></div><div class="type-sample" style="font-size:0.875rem;font-weight:400;line-height:1.5;letter-spacing:-0.006em">Components consume semantic tokens that resolve per brand and theme.</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Body S</div><div class="spec">13 / 400 / 1.54 / 0</div></div><div class="type-sample" style="font-size:0.8125rem;font-weight:400;line-height:1.54">Components consume semantic tokens that resolve per brand and theme.</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Label L</div><div class="spec">14 / 500 / 1.43 / 0</div></div><div class="type-sample" style="font-size:0.875rem;font-weight:500;line-height:1.43">BUTTON LABEL</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Label</div><div class="spec">13 / 500 / 1.23 / 0.01em</div></div><div class="type-sample" style="font-size:0.8125rem;font-weight:500;line-height:1.23;letter-spacing:0.01em">FORM LABEL</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Label S</div><div class="spec">12 / 500 / 1.33 / 0.02em</div></div><div class="type-sample" style="font-size:0.75rem;font-weight:500;line-height:1.33;letter-spacing:0.02em">BADGE TEXT</div></div>
+    <div class="type-row"><div class="type-meta"><div class="name">Caption</div><div class="spec">11 / 400 / 1.45 / 0.02em</div></div><div class="type-sample" style="font-size:0.6875rem;font-weight:400;line-height:1.45;letter-spacing:0.02em;color:var(--fg-3)">Helper text, timestamps, meta information</div></div>
+  </div>
+</div>
+
+<!-- Spacing -->
+<h2 id="spacing">Spacing</h2>
+<p>4px base grid, Tailwind-inspired naming (no commas in token names). Half-steps use dash notation: --space-0-5, --space-1-5, etc.</p>
+
+<div class="card" id="spacingDemo">
+  <!-- filled by JS -->
+</div>
+
+<!-- Shape -->
+<h2 id="shape">Shape</h2>
+<p>Simplified from 11 confusing tokens to 8 clean ones. WideBot uses sharper radii (enterprise authority). Hulul uses rounder radii (approachable). Both follow the concentric radius rule: inner = outer - padding.</p>
+
+<div class="card-grid card-grid-2">
+  <div class="card">
+    <div class="label mb-8">WideBot (Sharper)</div>
+    <div class="radius-demo" id="radiusWidebot"></div>
+  </div>
+  <div class="card">
+    <div class="label mb-8">Hulul (Rounder)</div>
+    <div class="radius-demo" id="radiusHulul"></div>
+  </div>
+</div>
+
+<!-- Elevation -->
+<h2 id="elevation">Elevation</h2>
+<p>Five shadow levels. Light mode uses traditional drop shadows. Dark mode uses subtle border-light (rgba white) to simulate elevation. The modern approach: depth is felt, not shouted.</p>
+
+<div class="card-grid card-grid-2">
+  <div class="card">
+    <div class="label mb-8">Light Mode Shadows</div>
+    <div class="shadow-demo">
+      <div class="shadow-chip" style="box-shadow:0 1px 2px rgba(0,0,0,0.05)">xs</div>
+      <div class="shadow-chip" style="box-shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04)">sm</div>
+      <div class="shadow-chip" style="box-shadow:0 4px 8px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.04)">md</div>
+      <div class="shadow-chip" style="box-shadow:0 10px 20px rgba(0,0,0,0.08),0 4px 8px rgba(0,0,0,0.03)">lg</div>
+      <div class="shadow-chip" style="box-shadow:0 20px 40px rgba(0,0,0,0.10),0 8px 16px rgba(0,0,0,0.04)">xl</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="label mb-8">Dark Mode (Border-Light)</div>
+    <div class="shadow-demo">
+      <div class="shadow-chip" style="box-shadow:0 1px 2px rgba(0,0,0,0.4),inset 0 0 0 1px rgba(255,255,255,0.03)">xs</div>
+      <div class="shadow-chip" style="box-shadow:0 2px 4px rgba(0,0,0,0.5),inset 0 0 0 1px rgba(255,255,255,0.04)">sm</div>
+      <div class="shadow-chip" style="box-shadow:0 4px 8px rgba(0,0,0,0.5),inset 0 0 0 1px rgba(255,255,255,0.05)">md</div>
+      <div class="shadow-chip" style="box-shadow:0 8px 16px rgba(0,0,0,0.6),inset 0 0 0 1px rgba(255,255,255,0.06)">lg</div>
+      <div class="shadow-chip" style="box-shadow:0 16px 32px rgba(0,0,0,0.7),inset 0 0 0 1px rgba(255,255,255,0.07)">xl</div>
+    </div>
+  </div>
+</div>
+
+<!-- Motion -->
+<h2 id="motion">Motion</h2>
+<p>Spring physics as the default model (Apple HIG). Cubic-bezier easing provided as CSS fallback. All animations must be interruptible and respect prefers-reduced-motion.</p>
+
+<table>
+  <tr><th>Token</th><th>Value</th><th>Use Case</th></tr>
+  <tr><td class="mono">--motion-instant</td><td class="mono">100ms</td><td>Opacity toggles, checkbox ticks</td></tr>
+  <tr><td class="mono">--motion-fast</td><td class="mono">150ms</td><td>Hover, focus, small feedback</td></tr>
+  <tr><td class="mono">--motion-normal</td><td class="mono">250ms</td><td>Modal open, drawer slide, tab switch</td></tr>
+  <tr><td class="mono">--motion-slow</td><td class="mono">400ms</td><td>Page transitions, layout shifts</td></tr>
+  <tr><td class="mono">--motion-slowest</td><td class="mono">600ms</td><td>Skeleton shimmer, loading loops</td></tr>
+  <tr><td class="mono">--ease-standard</td><td class="mono">cubic-bezier(0.2, 0, 0, 1)</td><td>General purpose, most transitions</td></tr>
+  <tr><td class="mono">--ease-enter</td><td class="mono">cubic-bezier(0, 0, 0, 1)</td><td>Elements entering view (decelerate in)</td></tr>
+  <tr><td class="mono">--ease-exit</td><td class="mono">cubic-bezier(0.3, 0, 1, 1)</td><td>Elements leaving view (accelerate out)</td></tr>
+  <tr><td class="mono">--ease-spring</td><td class="mono">cubic-bezier(0.175, 0.885, 0.32, 1.275)</td><td>Bouncy feedback, FAB, toasts</td></tr>
+</table>
+
+<!-- Interactions -->
+<h2 id="interactions">Interactions</h2>
+
+<h3>Focus Ring</h3>
+<p>2px ring with 2px offset from the element, using the brand primary color. Visible on :focus-visible only (keyboard navigation), never on mouse click.</p>
+<div class="card" style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+  <button style="padding:10px 24px;background:#FF5200;color:white;border:none;border-radius:8px;font-size:0.875rem;font-weight:500;cursor:pointer;outline:2px solid #FF5200;outline-offset:2px;font-family:inherit">WideBot Focus</button>
+  <button style="padding:10px 24px;background:#1A1CB8;color:white;border:none;border-radius:12px;font-size:0.875rem;font-weight:500;cursor:pointer;outline:2px solid #1A1CB8;outline-offset:2px;font-family:inherit">Hulul Focus</button>
+</div>
+
+<h3>State Layers (Kept from v2)</h3>
+<table>
+  <tr><th>State</th><th>Opacity</th><th>Method</th></tr>
+  <tr><td>Hover</td><td class="mono">0.08</td><td>currentColor overlay via ::before pseudo</td></tr>
+  <tr><td>Focus</td><td class="mono">0.12</td><td>currentColor overlay via ::before pseudo</td></tr>
+  <tr><td>Pressed</td><td class="mono">0.12</td><td>currentColor overlay via ::before pseudo</td></tr>
+  <tr><td>Dragged</td><td class="mono">0.16</td><td>currentColor overlay via ::before pseudo</td></tr>
+  <tr><td>Disabled (container)</td><td class="mono">0.12</td><td>Reduced container opacity</td></tr>
+  <tr><td>Disabled (content)</td><td class="mono">0.38</td><td>Reduced content opacity</td></tr>
+</table>
+
+<h3>Touch Targets</h3>
+<p>Minimum 44x44px tap area (WCAG AAA). Visual element can be smaller. The invisible tap zone extends via padding or negative margin. This is non-negotiable for both brands.</p>
+
+<!-- What Changed -->
+<h2 id="changes">What Changed</h2>
+<p>A summary of every naming and structural change from the previous globals.css.</p>
+
+<table>
+  <tr><th>Area</th><th>Old</th><th>New</th><th>Why</th></tr>
+  <tr><td>Surfaces</td><td class="old">--surface, --surface-dim, --surface-container</td><td class="new">--surface-ground, --surface-default, --surface-raised, --surface-sunken, --surface-overlay</td><td>Clearer naming, added raised/sunken/overlay for real layouts</td></tr>
+  <tr><td>Content</td><td class="old">--on-surface, --on-surface-muted, --on-surface-variant</td><td class="new">--content-primary, --content-secondary, --content-tertiary, --content-disabled, --content-inverse</td><td>Apple-inspired opacity hierarchy; plain English naming</td></tr>
+  <tr><td>Borders</td><td class="old">(none)</td><td class="new">--border-default, --border-subtle, --border-strong</td><td>Every UI needs borders. Previously undefined.</td></tr>
+  <tr><td>Focus</td><td class="old">(none)</td><td class="new">--focus-ring-color, --focus-ring</td><td>Accessibility requires visible focus. Previously undefined.</td></tr>
+  <tr><td>Typography</td><td class="old">(none)</td><td class="new">--font-sans, --font-mono, --font-size-*, --font-weight-*, --line-height-*, --tracking-*</td><td>Biggest gap in old system. Type drives hierarchy.</td></tr>
+  <tr><td>Shadows</td><td class="old">(none)</td><td class="new">--shadow-xs through --shadow-xl</td><td>Raised surfaces need depth definition</td></tr>
+  <tr><td>Spacing</td><td class="old">--spacing-0,5 (comma)</td><td class="new">--space-0-5 (dash)</td><td>Commas in CSS var names cause parsing issues</td></tr>
+  <tr><td>Radius</td><td class="old">11 tokens incl. "nudge"</td><td class="new">8 tokens: none, xs, sm, md, lg, xl, 2xl, full</td><td>Simpler, no ambiguous "nudge" values</td></tr>
+  <tr><td>Brand accent</td><td class="old">--primary-*</td><td class="new">--primary-* (kept)</td><td>Standard naming, no change needed</td></tr>
+  <tr><td>Motion easing</td><td class="old">--ease-decel, --ease-accel</td><td class="new">--ease-enter, --ease-exit</td><td>Purpose-named (what you're doing, not the physics term)</td></tr>
+</table>
+
+<!-- Full globals.css -->
+<h2 id="globals">globals.css (New)</h2>
+<p>The complete new token file. Ready for Lovable. All values fully resolved.</p>
+
+<div id="globalsCode" class="code">
+<!-- filled by JS -->
+</div>
+
+</main>
+</div>
+
+<script>
+// === Color Data ===
+const tokens = {
+  'widebot-light': {
+    label: 'WideBot Light (AAA)',
+    surfaceBg: '#f6f8fa',
+    surfaces: {
+      ground:  { hex: '#f6f8fa', label: 'Ground', desc: 'Page background' },
+      default: { hex: '#ffffff', label: 'Default', desc: 'Cards, containers' },
+      raised:  { hex: '#ffffff', label: 'Raised', desc: 'Dropdowns, modals (+shadow)' },
+      sunken:  { hex: '#eef2f5', label: 'Sunken', desc: 'Inputs, wells' },
+      overlay: { hex: 'rgba(15,30,33,0.5)', label: 'Overlay', desc: 'Modal backdrop' }
+    },
+    content: [
+      { name: 'content-primary',   hex: '#0f1e21', cr: '16.4', bg: '#ffffff' },
+      { name: 'content-secondary', hex: '#3d4f52', cr: '8.1',  bg: '#ffffff' },
+      { name: 'content-tertiary',  hex: '#637174', cr: '5.1',  bg: '#ffffff' },
+      { name: 'content-disabled',  hex: '#a4b0b3', cr: '2.5',  bg: '#ffffff' },
+      { name: 'content-inverse',   hex: '#f1f6f9', cr: '15.8', bg: '#0f1e21' }
+    ],
+    borders: [
+      { name: 'border-subtle',  hex: '#e4e9ec' },
+      { name: 'border-default', hex: '#c7ced0' },
+      { name: 'border-strong',  hex: '#8c999c' }
+    ],
+    primary: {
+      filled: { bg: '#8c2b00', fg: '#f6fbfd', cr: '9.1' },
+      tonal:  { bg: '#fceae3', fg: '#6b2100', cr: '9.8' },
+      outline:{ fg: '#822d03', border: '#ff6822', cr: '8.7' },
+      text:   { fg: '#822d03', cr: '8.7' }
+    },
+    danger: {
+      filled: { bg: '#ab021e', fg: '#f6fbfd', cr: '7.8' },
+      tonal:  { bg: '#fce3e7', fg: '#820318', cr: '10.6' },
+      outline:{ fg: '#820318', border: '#ff2247', cr: '10.6' },
+      text:   { fg: '#820318', cr: '10.6' }
+    },
+    warning: {
+      filled: { bg: '#ff9244', fg: '#0f1e21', cr: '7.7' },
+      tonal:  { bg: '#fcede3', fg: '#823803', cr: '8.3' },
+      outline:{ fg: '#823803', border: '#ff7e22', cr: '8.3' },
+      text:   { fg: '#823803', cr: '8.3' }
+    },
+    success: {
+      filled: { bg: '#045930', fg: '#f6fbfd', cr: '8.1' },
+      tonal:  { bg: '#e5fceb', fg: '#04381f', cr: '13.2' },
+      outline:{ fg: '#04381f', border: '#0a824a', cr: '13.2' },
+      text:   { fg: '#04381f', cr: '13.2' }
+    },
+    neutral: {
+      filled: { bg: '#29373a', fg: '#f6fbfd', cr: '11.8' },
+      tonal:  { bg: '#f1f6f9', fg: '#29373a', cr: '11.3' },
+      outline:{ fg: '#29373a', border: '#c7ced0', cr: '12.3' },
+      text:   { fg: '#425052', cr: '8.4' }
+    },
+    ai: {
+      filled: { bg: '#6B21A8', fg: '#f6fbfd', cr: '8.4' },
+      tonal:  { bg: '#F3E8FF', fg: '#581C87', cr: '9.2' },
+      outline:{ fg: '#6B21A8', border: '#A855F7', cr: '8.4' },
+      text:   { fg: '#6B21A8', cr: '8.4' }
+    }
+  },
+  'widebot-dark': {
+    label: 'WideBot Dark (AAA)',
+    surfaceBg: '#0f1e21',
+    surfaces: {
+      ground:  { hex: '#0b1416', label: 'Ground', desc: 'Page background' },
+      default: { hex: '#0f1e21', label: 'Default', desc: 'Cards, containers' },
+      raised:  { hex: '#172a2e', label: 'Raised', desc: 'Dropdowns, modals' },
+      sunken:  { hex: '#080f11', label: 'Sunken', desc: 'Inputs, wells' },
+      overlay: { hex: 'rgba(0,0,0,0.6)', label: 'Overlay', desc: 'Modal backdrop' }
+    },
+    content: [
+      { name: 'content-primary',   hex: '#e8eef0', cr: '13.2', bg: '#0f1e21' },
+      { name: 'content-secondary', hex: '#a0adb0', cr: '7.3',  bg: '#0f1e21' },
+      { name: 'content-tertiary',  hex: '#7e9092', cr: '5.1',  bg: '#0f1e21' },
+      { name: 'content-disabled',  hex: '#3d5052', cr: '2.2',  bg: '#0f1e21' },
+      { name: 'content-inverse',   hex: '#0f1e21', cr: '13.2', bg: '#e8eef0' }
+    ],
+    borders: [
+      { name: 'border-subtle',  hex: '#1d3033' },
+      { name: 'border-default', hex: '#2b4245' },
+      { name: 'border-strong',  hex: '#4a6265' }
+    ],
+    primary: {
+      filled: { bg: '#fe9566', fg: '#0f1e21', cr: '7.6' },
+      tonal:  { bg: '#312622', fg: '#febfa3', cr: '9.2' },
+      outline:{ fg: '#febfa3', border: '#d07c57', cr: '10.7' },
+      text:   { fg: '#febfa3', cr: '10.7' }
+    },
+    danger: {
+      filled: { bg: '#fe9ba4', fg: '#0f1e21', cr: '8.5' },
+      tonal:  { bg: '#312022', fg: '#fe9ba4', cr: '7.7' },
+      outline:{ fg: '#fe9ba4', border: '#d04c58', cr: '8.5' },
+      text:   { fg: '#fe9ba4', cr: '8.5' }
+    },
+    warning: {
+      filled: { bg: '#ffc194', fg: '#0f1e21', cr: '10.8' },
+      tonal:  { bg: '#31271f', fg: '#ffc194', cr: '9.2' },
+      outline:{ fg: '#ffc194', border: '#d17e43', cr: '10.8' },
+      text:   { fg: '#ffc194', cr: '10.8' }
+    },
+    success: {
+      filled: { bg: '#50d195', fg: '#0f1e21', cr: '8.9' },
+      tonal:  { bg: '#1b2b24', fg: '#7cddb0', cr: '9.0' },
+      outline:{ fg: '#7cddb0', border: '#22a468', cr: '10.4' },
+      text:   { fg: '#7cddb0', cr: '10.4' }
+    },
+    neutral: {
+      filled: { bg: '#c7ced0', fg: '#0f1e21', cr: '10.7' },
+      tonal:  { bg: '#1e2d30', fg: '#e1e8ea', cr: '11.5' },
+      outline:{ fg: '#e1e8ea', border: '#425052', cr: '13.8' },
+      text:   { fg: '#c7ced0', cr: '10.7' }
+    },
+    ai: {
+      filled: { bg: '#D8B4FE', fg: '#0f1e21', cr: '9.7' },
+      tonal:  { bg: '#2D1F3D', fg: '#D8B4FE', cr: '8.6' },
+      outline:{ fg: '#D8B4FE', border: '#BB93F9', cr: '9.7' },
+      text:   { fg: '#D8B4FE', cr: '9.7' }
+    }
+  },
+  'hulul-light': {
+    label: 'Hulul Light (AA)',
+    surfaceBg: '#f7f7fb',
+    surfaces: {
+      ground:  { hex: '#f7f7fb', label: 'Ground', desc: 'Page background' },
+      default: { hex: '#ffffff', label: 'Default', desc: 'Cards, containers' },
+      raised:  { hex: '#ffffff', label: 'Raised', desc: 'Dropdowns, modals (+shadow)' },
+      sunken:  { hex: '#eeeef4', label: 'Sunken', desc: 'Inputs, wells' },
+      overlay: { hex: 'rgba(20,20,40,0.5)', label: 'Overlay', desc: 'Modal backdrop' }
+    },
+    content: [
+      { name: 'content-primary',   hex: '#1a1a2e', cr: '14.8', bg: '#ffffff' },
+      { name: 'content-secondary', hex: '#5c5c70', cr: '5.5',  bg: '#ffffff' },
+      { name: 'content-tertiary',  hex: '#8e8e9e', cr: '3.3',  bg: '#ffffff' },
+      { name: 'content-disabled',  hex: '#b5b5c0', cr: '2.2',  bg: '#ffffff' },
+      { name: 'content-inverse',   hex: '#f5f5f9', cr: '14.2', bg: '#141428' }
+    ],
+    borders: [
+      { name: 'border-subtle',  hex: '#e6e6ee' },
+      { name: 'border-default', hex: '#ccccda' },
+      { name: 'border-strong',  hex: '#9494a8' }
+    ],
+    primary: {
+      filled: { bg: '#1A1CB8', fg: '#fafafa', cr: '8.9' },
+      tonal:  { bg: '#ebebfc', fg: '#0f0fff', cr: '7.0' },
+      outline:{ fg: '#0f0fff', border: '#4f4fff', cr: '8.3' },
+      text:   { fg: '#0f0fff', cr: '8.3' }
+    },
+    danger: {
+      filled: { bg: '#d13029', fg: '#fafafa', cr: '4.8' },
+      tonal:  { bg: '#faeae7', fg: '#b12a23', cr: '5.6' },
+      outline:{ fg: '#b12a23', border: '#da4d43', cr: '6.5' },
+      text:   { fg: '#b12a23', cr: '6.5' }
+    },
+    warning: {
+      filled: { bg: '#c05119', fg: '#fafafa', cr: '4.5' },
+      tonal:  { bg: '#fcebe3', fg: '#a24313', cr: '5.4' },
+      outline:{ fg: '#a24313', border: '#e67339', cr: '6.0' },
+      text:   { fg: '#c05119', cr: '4.9' }
+    },
+    success: {
+      filled: { bg: '#0c824a', fg: '#fafafa', cr: '4.7' },
+      tonal:  { bg: '#d0f9e1', fg: '#0a6c3e', cr: '5.7' },
+      outline:{ fg: '#0a6c3e', border: '#0e9757', cr: '6.5' },
+      text:   { fg: '#0a6c3e', cr: '6.5' }
+    },
+    neutral: {
+      filled: { bg: '#333345', fg: '#fafafa', cr: '10.4' },
+      tonal:  { bg: '#f5f5f8', fg: '#333345', cr: '10.0' },
+      outline:{ fg: '#333345', border: '#ccccda', cr: '10.4' },
+      text:   { fg: '#4c4c5e', cr: '7.3' }
+    },
+    ai: {
+      filled: { bg: '#6B21A8', fg: '#fafafa', cr: '8.4' },
+      tonal:  { bg: '#F3E8FF', fg: '#581C87', cr: '9.2' },
+      outline:{ fg: '#6B21A8', border: '#A855F7', cr: '8.4' },
+      text:   { fg: '#6B21A8', cr: '8.4' }
+    }
+  },
+  'hulul-dark': {
+    label: 'Hulul Dark (AA)',
+    surfaceBg: '#111118',
+    surfaces: {
+      ground:  { hex: '#0e0e18', label: 'Ground', desc: 'Page background' },
+      default: { hex: '#141420', label: 'Default', desc: 'Cards, containers' },
+      raised:  { hex: '#1c1c2c', label: 'Raised', desc: 'Dropdowns, modals' },
+      sunken:  { hex: '#0a0a12', label: 'Sunken', desc: 'Inputs, wells' },
+      overlay: { hex: 'rgba(0,0,0,0.6)', label: 'Overlay', desc: 'Modal backdrop' }
+    },
+    content: [
+      { name: 'content-primary',   hex: '#e8e8f0', cr: '12.8', bg: '#141420' },
+      { name: 'content-secondary', hex: '#a0a0b8', cr: '6.2',  bg: '#141420' },
+      { name: 'content-tertiary',  hex: '#6e6e85', cr: '3.5',  bg: '#141420' },
+      { name: 'content-disabled',  hex: '#3e3e52', cr: '1.8',  bg: '#141420' },
+      { name: 'content-inverse',   hex: '#141420', cr: '12.8', bg: '#e8e8f0' }
+    ],
+    borders: [
+      { name: 'border-subtle',  hex: '#1e1e30' },
+      { name: 'border-default', hex: '#2c2c42' },
+      { name: 'border-strong',  hex: '#4a4a65' }
+    ],
+    primary: {
+      filled: { bg: '#bfa1ff', fg: '#141420', cr: '8.1' },
+      tonal:  { bg: '#1e1e31', fg: '#b9b9ff', cr: '7.8' },
+      outline:{ fg: '#b9b9ff', border: '#7474d1', cr: '9.5' },
+      text:   { fg: '#b9b9ff', cr: '9.5' }
+    },
+    danger: {
+      filled: { bg: '#ff8383', fg: '#141420', cr: '6.6' },
+      tonal:  { bg: '#281818', fg: '#ffa2a2', cr: '8.0' },
+      outline:{ fg: '#ffa2a2', border: '#d15555', cr: '9.1' },
+      text:   { fg: '#ffa2a2', cr: '9.1' }
+    },
+    warning: {
+      filled: { bg: '#f19f75', fg: '#141420', cr: '7.4' },
+      tonal:  { bg: '#261e18', fg: '#f5b798', cr: '8.6' },
+      outline:{ fg: '#f5b798', border: '#c47148', cr: '10.0' },
+      text:   { fg: '#f5b798', cr: '10.0' }
+    },
+    success: {
+      filled: { bg: '#5ce093', fg: '#141420', cr: '9.5' },
+      tonal:  { bg: '#162218', fg: '#85e8ae', cr: '9.7' },
+      outline:{ fg: '#85e8ae', border: '#2eb265', cr: '11.7' },
+      text:   { fg: '#85e8ae', cr: '11.7' }
+    },
+    neutral: {
+      filled: { bg: '#ccccdd', fg: '#141420', cr: '10.6' },
+      tonal:  { bg: '#1c1c2a', fg: '#e0e0ee', cr: '11.0' },
+      outline:{ fg: '#e0e0ee', border: '#4a4a62', cr: '13.2' },
+      text:   { fg: '#ccccdd', cr: '10.6' }
+    },
+    ai: {
+      filled: { bg: '#BB93F9', fg: '#141420', cr: '6.8' },
+      tonal:  { bg: '#221838', fg: '#C084FC', cr: '5.8' },
+      outline:{ fg: '#C084FC', border: '#7C3AED', cr: '6.6' },
+      text:   { fg: '#C084FC', cr: '6.6' }
+    }
+  }
+};
+
+// === Render functions ===
+function renderSurfaces(key) {
+  const t = tokens[key];
+  const el = document.getElementById('surfaceDemo');
+  el.style.background = t.surfaces.ground.hex;
+  const isOverlayRgba = t.surfaces.overlay.hex.startsWith('rgba');
+  let html = '<div class="surface-stack">';
+  for (const [k, v] of Object.entries(t.surfaces)) {
+    if (k === 'overlay') continue;
+    const isDark = key.includes('dark');
+    const textColor = isDark ? '#e8e8f0' : '#1a1a2e';
+    html += `<div class="surface-chip" style="background:${v.hex};color:${textColor}">
+      <div class="name">${v.label}</div>
+      <div style="font-size:0.6875rem;opacity:0.7;margin-bottom:4px">${v.desc}</div>
+      <div class="hex">${v.hex}</div>
+    </div>`;
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderContent(key) {
+  const t = tokens[key];
+  const el = document.getElementById('contentDemo');
+  const isDark = key.includes('dark');
+  const bg = isDark ? t.surfaces.default.hex : '#ffffff';
+  let html = `<div style="background:${bg};border-radius:8px;padding:16px">`;
+  for (const c of t.content) {
+    const target = key.includes('widebot') ? '7.0' : '4.5';
+    const pass = parseFloat(c.cr) >= parseFloat(target);
+    const note = c.name === 'content-disabled' ? '(exempt)' :
+                 c.name === 'content-tertiary' ? '(large text)' : '';
+    html += `<div style="display:flex;align-items:center;gap:16px;padding:8px 0;border-bottom:1px solid ${isDark?'rgba(255,255,255,0.06)':'rgba(0,0,0,0.06)'}">
+      <div style="width:32px;height:32px;border-radius:6px;background:${c.hex};flex-shrink:0"></div>
+      <div style="flex:1;color:${c.hex};font-size:0.875rem;font-weight:500">${c.name}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6875rem;color:${c.hex}">${c.hex}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.6875rem;color:${c.hex}">${c.cr}:1</div>
+      <span class="badge ${pass || c.name.includes('disabled') ? 'badge-pass' : c.name.includes('tertiary') ? 'badge-pass' : 'badge-fail'}">${pass ? 'PASS' : note || 'FAIL'}</span>
+    </div>`;
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderBorders(key) {
+  const t = tokens[key];
+  const el = document.getElementById('borderDemo');
+  const isDark = key.includes('dark');
+  const bg = isDark ? t.surfaces.default.hex : '#ffffff';
+  const fg = isDark ? '#e8e8f0' : '#1a1a2e';
+  let html = '';
+  for (const b of t.borders) {
+    html += `<div style="flex:1;min-width:140px;padding:16px;border:2px solid ${b.hex};border-radius:8px;background:${bg}">
+      <div style="font-size:0.75rem;font-weight:600;color:${fg}">${b.name}</div>
+      <div style="font-size:0.625rem;font-family:'JetBrains Mono',monospace;color:${fg};opacity:0.5;margin-top:4px">${b.hex}</div>
+    </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderAccent(key) {
+  const t = tokens[key];
+  const el = document.getElementById('accentDemo');
+  const isDark = key.includes('dark');
+  const surfBg = isDark ? t.surfaces.default.hex : '#ffffff';
+  const p = t.primary;
+  el.innerHTML = `
+    <div class="emphasis-chip" style="background:${p.filled.bg};color:${p.filled.fg}">Filled ${p.filled.cr}:1</div>
+    <div class="emphasis-chip" style="background:${p.tonal.bg};color:${p.tonal.fg}">Tonal ${p.tonal.cr}:1</div>
+    <div class="emphasis-chip" style="background:${surfBg};color:${p.outline.fg};border:1.5px solid ${p.outline.border}">Outlined ${p.outline.cr}:1</div>
+    <div class="emphasis-chip" style="background:transparent;color:${p.text.fg}">Text ${p.text.cr}:1</div>
+  `;
+}
+
+function renderStatus(key) {
+  const t = tokens[key];
+  const el = document.getElementById('statusDemo');
+  const isDark = key.includes('dark');
+  const surfBg = isDark ? t.surfaces.default.hex : '#ffffff';
+  const roles = ['danger','warning','success','neutral','ai'];
+  let html = '';
+  for (const role of roles) {
+    const r = t[role];
+    html += `<div style="margin:12px 0"><div class="label mb-8">${role.toUpperCase()}</div><div class="emphasis-grid">
+      <div class="emphasis-chip" style="background:${r.filled.bg};color:${r.filled.fg}">Filled ${r.filled.cr}:1</div>
+      <div class="emphasis-chip" style="background:${r.tonal.bg};color:${r.tonal.fg}">Tonal ${r.tonal.cr}:1</div>
+      <div class="emphasis-chip" style="background:${surfBg};color:${r.outline.fg};border:1.5px solid ${r.outline.border}">Outlined</div>
+      <div class="emphasis-chip" style="background:transparent;color:${r.text.fg}">Text ${r.text.cr}:1</div>
+    </div></div>`;
+  }
+  el.innerHTML = html;
+}
+
+// === Toggle handlers ===
+function setActiveToggle(barId, btn) {
+  document.querySelectorAll(`#${barId} .toggle-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function toggleSurface(key) {
+  setActiveToggle('surfaceToggle', event.target);
+  renderSurfaces(key);
+  renderContent(key);
+  renderBorders(key);
+}
+
+function toggleAccent(key) {
+  setActiveToggle('accentToggle', event.target);
+  renderAccent(key);
+}
+
+function toggleStatus(key) {
+  setActiveToggle('statusToggle', event.target);
+  renderStatus(key);
+}
+
+// === Spacing ===
+function renderSpacing() {
+  const spaces = [
+    ['--space-0','0px',0],['--space-px','1px',1],['--space-0-5','2px',2],
+    ['--space-1','4px',4],['--space-1-5','6px',6],['--space-2','8px',8],
+    ['--space-2-5','10px',10],['--space-3','12px',12],['--space-3-5','14px',14],
+    ['--space-4','16px',16],['--space-5','20px',20],['--space-6','24px',24],
+    ['--space-7','28px',28],['--space-8','32px',32],['--space-9','36px',36],
+    ['--space-10','40px',40],['--space-11','44px',44],['--space-12','48px',48],
+    ['--space-14','56px',56],['--space-16','64px',64],['--space-20','80px',80],
+    ['--space-24','96px',96]
+  ];
+  let html = '';
+  for (const [name, val, px] of spaces) {
+    html += `<div class="space-row">
+      <span class="name">${name}</span>
+      <span class="val">${val}</span>
+      <div class="space-bar" style="width:${Math.max(px, 1)}px"></div>
+    </div>`;
+  }
+  document.getElementById('spacingDemo').innerHTML = html;
+}
+
+// === Radius ===
+function renderRadius() {
+  const wb = [
+    ['none','0',0],['xs','2px',2],['sm','4px',4],['md','8px',8],
+    ['lg','12px',12],['xl','16px',16],['2xl','20px',20],['full','9999px',32]
+  ];
+  const hu = [
+    ['none','0',0],['xs','4px',4],['sm','8px',8],['md','12px',12],
+    ['lg','16px',16],['xl','20px',20],['2xl','28px',28],['full','9999px',32]
+  ];
+  let wbHtml = '', huHtml = '';
+  for (const [name, val, r] of wb) {
+    wbHtml += `<div class="radius-chip" style="border-radius:${r}px"><span>${val}</span><span class="name">${name}</span></div>`;
+  }
+  for (const [name, val, r] of hu) {
+    huHtml += `<div class="radius-chip" style="border-radius:${r}px"><span>${val}</span><span class="name">${name}</span></div>`;
+  }
+  document.getElementById('radiusWidebot').innerHTML = wbHtml;
+  document.getElementById('radiusHulul').innerHTML = huHtml;
+}
+
+// === globals.css generator ===
+function renderGlobals() {
+  const css = `/* ============================================
+   DESIGN SYSTEM TOKENS v4 - "Quiet Intelligence"
+   AI ERP Design System
+   Hulul = WCAG AA (4.5:1) | WideBot = WCAG AAA (7:1)
+   All values fully resolved - no references
+   ============================================ */
+
+:root {
+  /* TYPOGRAPHY */
+  --font-sans: 'Rubik', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --font-size-xs: 0.6875rem;   /* 11px */
+  --font-size-sm: 0.8125rem;   /* 13px */
+  --font-size-base: 0.875rem;  /* 14px */
+  --font-size-lg: 1rem;        /* 16px */
+  --font-size-xl: 1.125rem;    /* 18px */
+  --font-size-2xl: 1.25rem;    /* 20px */
+  --font-size-3xl: 1.5rem;     /* 24px */
+  --font-size-4xl: 1.75rem;    /* 28px */
+  --font-size-5xl: 2rem;       /* 32px */
+  --font-size-6xl: 2.5rem;     /* 40px */
+  --font-size-7xl: 3rem;       /* 48px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.33;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.01em;
+  --tracking-wider: 0.02em;
+
+  /* SPACING (4px base) */
+  --space-0: 0px;
+  --space-px: 1px;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 36px;
+  --space-10: 40px;
+  --space-11: 44px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* MOTION */
+  --motion-instant: 100ms;
+  --motion-fast: 150ms;
+  --motion-normal: 250ms;
+  --motion-slow: 400ms;
+  --motion-slowest: 600ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Z-INDEX */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-drawer: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-toast: 1070;
+  --z-tooltip: 1080;
+  --z-fab: 1090;
+
+  /* STATE LAYERS */
+  --state-hover: 0.08;
+  --state-focus: 0.12;
+  --state-pressed: 0.12;
+  --state-dragged: 0.16;
+  --state-disabled-container: 0.12;
+  --state-disabled-content: 0.38;
+}
+
+/* ---- HULUL (Blue, WCAG AA, Rounder) ---- */
+[data-brand="hulul"] {
+  --radius-none: 0px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+}
+
+/* ---- WIDEBOT (Orange, WCAG AAA, Sharper) ---- */
+[data-brand="widebot"] {
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* ============================================
+   HULUL + LIGHT (target: WCAG AA = 4.5:1)
+   ============================================ */
+[data-brand="hulul"][data-theme="light"] {
+  /* Surface Hierarchy */
+  --surface-ground: #f7f7fb;
+  --surface-default: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eeeef4;
+  --surface-overlay: rgba(20, 20, 40, 0.5);
+
+  /* Content Hierarchy (opacity-equivalent, resolved) */
+  --content-primary: #1a1a2e;     /* 14.8:1 on default */
+  --content-secondary: #5c5c70;   /* 5.5:1  on default */
+  --content-tertiary: #8e8e9e;    /* 3.3:1  large text only */
+  --content-disabled: #b5b5c0;    /* exempt */
+  --content-inverse: #f5f5f9;
+
+  /* Borders */
+  --border-subtle: #e6e6ee;
+  --border-default: #ccccda;
+  --border-strong: #9494a8;
+
+  /* Focus */
+  --focus-ring-color: #3436E0;
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #3436E0;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 20px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.03);
+  --shadow-xl: 0 20px 40px rgba(0,0,0,0.10), 0 8px 16px rgba(0,0,0,0.04);
+
+  /* Primary (Brand Blue) */
+  /* filled 8.9:1 | tonal 7.0:1 | outlined 8.3:1 */
+  --primary-filled-bg: #1A1CB8;
+  --primary-filled-fg: #fafafa;
+  --primary-tonal-bg: #ebebfc;
+  --primary-tonal-fg: #0f0fff;
+  --primary-outline-fg: #0f0fff;
+  --primary-outline-border: #4f4fff;
+  --primary-ghost-fg: #0f0fff;
+
+  /* Danger */
+  /* filled 4.8:1 | tonal 5.6:1 | outlined 6.5:1 */
+  --danger-filled-bg: #d13029;
+  --danger-filled-fg: #fafafa;
+  --danger-tonal-bg: #faeae7;
+  --danger-tonal-fg: #b12a23;
+  --danger-outline-fg: #b12a23;
+  --danger-outline-border: #da4d43;
+  --danger-ghost-fg: #b12a23;
+
+  /* Warning */
+  /* filled 4.5:1 | tonal 5.4:1 | outlined 6.0:1 */
+  --warning-filled-bg: #c05119;
+  --warning-filled-fg: #fafafa;
+  --warning-tonal-bg: #fcebe3;
+  --warning-tonal-fg: #a24313;
+  --warning-outline-fg: #a24313;
+  --warning-outline-border: #e67339;
+  --warning-ghost-fg: #c05119;
+
+  /* Success */
+  /* filled 4.7:1 | tonal 5.7:1 | outlined 6.5:1 */
+  --success-filled-bg: #0c824a;
+  --success-filled-fg: #fafafa;
+  --success-tonal-bg: #d0f9e1;
+  --success-tonal-fg: #0a6c3e;
+  --success-outline-fg: #0a6c3e;
+  --success-outline-border: #0e9757;
+  --success-ghost-fg: #0a6c3e;
+
+  /* Neutral */
+  /* filled 10.4:1 | tonal 10.0:1 | outlined 10.4:1 */
+  --neutral-filled-bg: #333345;
+  --neutral-filled-fg: #fafafa;
+  --neutral-tonal-bg: #f5f5f8;
+  --neutral-tonal-fg: #333345;
+  --neutral-outline-fg: #333345;
+  --neutral-outline-border: #ccccda;
+  --neutral-ghost-fg: #4c4c5e;
+
+  /* AI */
+  /* filled 8.4:1 | tonal 9.2:1 | outlined 8.4:1 */
+  --ai-filled-bg: #6B21A8;
+  --ai-filled-fg: #fafafa;
+  --ai-tonal-bg: #F3E8FF;
+  --ai-tonal-fg: #581C87;
+  --ai-outline-fg: #6B21A8;
+  --ai-outline-border: #A855F7;
+  --ai-ghost-fg: #6B21A8;
+}
+
+/* ============================================
+   HULUL + DARK (target: WCAG AA = 4.5:1)
+   ============================================ */
+[data-brand="hulul"][data-theme="dark"] {
+  /* Surface Hierarchy */
+  --surface-ground: #0e0e18;
+  --surface-default: #141420;
+  --surface-raised: #1c1c2c;
+  --surface-sunken: #0a0a12;
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+
+  /* Content Hierarchy */
+  --content-primary: #e8e8f0;     /* 12.8:1 on default */
+  --content-secondary: #a0a0b8;   /* 6.2:1  on default */
+  --content-tertiary: #6e6e85;    /* 3.5:1  large text */
+  --content-disabled: #3e3e52;    /* exempt */
+  --content-inverse: #141420;
+
+  /* Borders */
+  --border-subtle: #1e1e30;
+  --border-default: #2c2c42;
+  --border-strong: #4a4a65;
+
+  /* Focus */
+  --focus-ring-color: #8b8bff;
+  --focus-ring: 0 0 0 2px #141420, 0 0 0 4px #8b8bff;
+
+  /* Elevation (dark: border-light approach) */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.03);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06);
+  --shadow-xl: 0 16px 32px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.07);
+
+  /* Primary (Brand Blue) */
+  /* filled 8.1:1 | tonal 7.8:1 | outlined 9.5:1 */
+  --primary-filled-bg: #bfa1ff;
+  --primary-filled-fg: #141420;
+  --primary-tonal-bg: #1e1e31;
+  --primary-tonal-fg: #b9b9ff;
+  --primary-outline-fg: #b9b9ff;
+  --primary-outline-border: #7474d1;
+  --primary-ghost-fg: #b9b9ff;
+
+  /* Danger */
+  /* filled 6.6:1 | tonal 8.0:1 | outlined 9.1:1 */
+  --danger-filled-bg: #ff8383;
+  --danger-filled-fg: #141420;
+  --danger-tonal-bg: #281818;
+  --danger-tonal-fg: #ffa2a2;
+  --danger-outline-fg: #ffa2a2;
+  --danger-outline-border: #d15555;
+  --danger-ghost-fg: #ffa2a2;
+
+  /* Warning */
+  /* filled 7.4:1 | tonal 8.6:1 | outlined 10.0:1 */
+  --warning-filled-bg: #f19f75;
+  --warning-filled-fg: #141420;
+  --warning-tonal-bg: #261e18;
+  --warning-tonal-fg: #f5b798;
+  --warning-outline-fg: #f5b798;
+  --warning-outline-border: #c47148;
+  --warning-ghost-fg: #f5b798;
+
+  /* Success */
+  /* filled 9.5:1 | tonal 9.7:1 | outlined 11.7:1 */
+  --success-filled-bg: #5ce093;
+  --success-filled-fg: #141420;
+  --success-tonal-bg: #162218;
+  --success-tonal-fg: #85e8ae;
+  --success-outline-fg: #85e8ae;
+  --success-outline-border: #2eb265;
+  --success-ghost-fg: #85e8ae;
+
+  /* Neutral */
+  /* filled 10.6:1 | tonal 11.0:1 | outlined 13.2:1 */
+  --neutral-filled-bg: #ccccdd;
+  --neutral-filled-fg: #141420;
+  --neutral-tonal-bg: #1c1c2a;
+  --neutral-tonal-fg: #e0e0ee;
+  --neutral-outline-fg: #e0e0ee;
+  --neutral-outline-border: #4a4a62;
+  --neutral-ghost-fg: #ccccdd;
+
+  /* AI */
+  /* filled 6.8:1 | tonal 5.8:1 | outlined 6.6:1 */
+  --ai-filled-bg: #BB93F9;
+  --ai-filled-fg: #141420;
+  --ai-tonal-bg: #221838;
+  --ai-tonal-fg: #C084FC;
+  --ai-outline-fg: #C084FC;
+  --ai-outline-border: #7C3AED;
+  --ai-ghost-fg: #C084FC;
+}
+
+/* ============================================
+   WIDEBOT + LIGHT (target: WCAG AAA = 7.0:1)
+   ============================================ */
+[data-brand="widebot"][data-theme="light"] {
+  /* Surface Hierarchy */
+  --surface-ground: #f6f8fa;
+  --surface-default: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef2f5;
+  --surface-overlay: rgba(15, 30, 33, 0.5);
+
+  /* Content Hierarchy */
+  --content-primary: #0f1e21;     /* 16.4:1 on default */
+  --content-secondary: #3d4f52;   /* 8.1:1  on default */
+  --content-tertiary: #637174;    /* 5.1:1  large text */
+  --content-disabled: #a4b0b3;    /* exempt */
+  --content-inverse: #f1f6f9;
+
+  /* Borders */
+  --border-subtle: #e4e9ec;
+  --border-default: #c7ced0;
+  --border-strong: #8c999c;
+
+  /* Focus */
+  --focus-ring-color: #FF5200;
+  --focus-ring: 0 0 0 2px #ffffff, 0 0 0 4px #FF5200;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 20px rgba(0,0,0,0.08), 0 4px 8px rgba(0,0,0,0.03);
+  --shadow-xl: 0 20px 40px rgba(0,0,0,0.10), 0 8px 16px rgba(0,0,0,0.04);
+
+  /* Primary (Brand Orange) */
+  /* filled 9.1:1 | tonal 9.8:1 | outlined 8.7:1 */
+  --primary-filled-bg: #8c2b00;
+  --primary-filled-fg: #f6fbfd;
+  --primary-tonal-bg: #fceae3;
+  --primary-tonal-fg: #6b2100;
+  --primary-outline-fg: #822d03;
+  --primary-outline-border: #ff6822;
+  --primary-ghost-fg: #822d03;
+
+  /* Danger */
+  /* filled 7.8:1 | tonal 10.6:1 | outlined 10.6:1 */
+  --danger-filled-bg: #ab021e;
+  --danger-filled-fg: #f6fbfd;
+  --danger-tonal-bg: #fce3e7;
+  --danger-tonal-fg: #820318;
+  --danger-outline-fg: #820318;
+  --danger-outline-border: #ff2247;
+  --danger-ghost-fg: #820318;
+
+  /* Warning */
+  /* filled 7.7:1 | tonal 8.3:1 | outlined 8.3:1 */
+  --warning-filled-bg: #ff9244;
+  --warning-filled-fg: #0f1e21;
+  --warning-tonal-bg: #fcede3;
+  --warning-tonal-fg: #823803;
+  --warning-outline-fg: #823803;
+  --warning-outline-border: #ff7e22;
+  --warning-ghost-fg: #823803;
+
+  /* Success */
+  /* filled 8.1:1 | tonal 13.2:1 | outlined 13.2:1 */
+  --success-filled-bg: #045930;
+  --success-filled-fg: #f6fbfd;
+  --success-tonal-bg: #e5fceb;
+  --success-tonal-fg: #04381f;
+  --success-outline-fg: #04381f;
+  --success-outline-border: #0a824a;
+  --success-ghost-fg: #04381f;
+
+  /* Neutral */
+  /* filled 11.8:1 | tonal 11.3:1 | outlined 12.3:1 */
+  --neutral-filled-bg: #29373a;
+  --neutral-filled-fg: #f6fbfd;
+  --neutral-tonal-bg: #f1f6f9;
+  --neutral-tonal-fg: #29373a;
+  --neutral-outline-fg: #29373a;
+  --neutral-outline-border: #c7ced0;
+  --neutral-ghost-fg: #425052;
+
+  /* AI */
+  /* filled 8.4:1 | tonal 9.2:1 | outlined 8.4:1 */
+  --ai-filled-bg: #6B21A8;
+  --ai-filled-fg: #f6fbfd;
+  --ai-tonal-bg: #F3E8FF;
+  --ai-tonal-fg: #581C87;
+  --ai-outline-fg: #6B21A8;
+  --ai-outline-border: #A855F7;
+  --ai-ghost-fg: #6B21A8;
+}
+
+/* ============================================
+   WIDEBOT + DARK (target: WCAG AAA = 7.0:1)
+   ============================================ */
+[data-brand="widebot"][data-theme="dark"] {
+  /* Surface Hierarchy */
+  --surface-ground: #0b1416;
+  --surface-default: #0f1e21;
+  --surface-raised: #172a2e;
+  --surface-sunken: #080f11;
+  --surface-overlay: rgba(0, 0, 0, 0.6);
+
+  /* Content Hierarchy */
+  --content-primary: #e8eef0;     /* 13.2:1 on default */
+  --content-secondary: #a0adb0;   /* 7.3:1  on default */
+  --content-tertiary: #7e9092;    /* 5.1:1  large text */
+  --content-disabled: #3d5052;    /* exempt */
+  --content-inverse: #0f1e21;
+
+  /* Borders */
+  --border-subtle: #1d3033;
+  --border-default: #2b4245;
+  --border-strong: #4a6265;
+
+  /* Focus */
+  --focus-ring-color: #ff8040;
+  --focus-ring: 0 0 0 2px #0f1e21, 0 0 0 4px #ff8040;
+
+  /* Elevation (dark: border-light approach) */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.03);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06);
+  --shadow-xl: 0 16px 32px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.07);
+
+  /* Primary (Brand Orange) */
+  /* filled 7.6:1 | tonal 9.2:1 | outlined 10.7:1 */
+  --primary-filled-bg: #fe9566;
+  --primary-filled-fg: #0f1e21;
+  --primary-tonal-bg: #312622;
+  --primary-tonal-fg: #febfa3;
+  --primary-outline-fg: #febfa3;
+  --primary-outline-border: #d07c57;
+  --primary-ghost-fg: #febfa3;
+
+  /* Danger */
+  /* filled 8.5:1 | tonal 7.7:1 | outlined 8.5:1 */
+  --danger-filled-bg: #fe9ba4;
+  --danger-filled-fg: #0f1e21;
+  --danger-tonal-bg: #312022;
+  --danger-tonal-fg: #fe9ba4;
+  --danger-outline-fg: #fe9ba4;
+  --danger-outline-border: #d04c58;
+  --danger-ghost-fg: #fe9ba4;
+
+  /* Warning */
+  /* filled 10.8:1 | tonal 9.2:1 | outlined 10.8:1 */
+  --warning-filled-bg: #ffc194;
+  --warning-filled-fg: #0f1e21;
+  --warning-tonal-bg: #31271f;
+  --warning-tonal-fg: #ffc194;
+  --warning-outline-fg: #ffc194;
+  --warning-outline-border: #d17e43;
+  --warning-ghost-fg: #ffc194;
+
+  /* Success */
+  /* filled 8.9:1 | tonal 9.0:1 | outlined 10.4:1 */
+  --success-filled-bg: #50d195;
+  --success-filled-fg: #0f1e21;
+  --success-tonal-bg: #1b2b24;
+  --success-tonal-fg: #7cddb0;
+  --success-outline-fg: #7cddb0;
+  --success-outline-border: #22a468;
+  --success-ghost-fg: #7cddb0;
+
+  /* Neutral */
+  /* filled 10.7:1 | tonal 11.5:1 | outlined 13.8:1 */
+  --neutral-filled-bg: #c7ced0;
+  --neutral-filled-fg: #0f1e21;
+  --neutral-tonal-bg: #1e2d30;
+  --neutral-tonal-fg: #e1e8ea;
+  --neutral-outline-fg: #e1e8ea;
+  --neutral-outline-border: #425052;
+  --neutral-ghost-fg: #c7ced0;
+
+  /* AI */
+  /* filled 9.7:1 | tonal 8.6:1 | outlined 9.7:1 */
+  --ai-filled-bg: #D8B4FE;
+  --ai-filled-fg: #0f1e21;
+  --ai-tonal-bg: #2D1F3D;
+  --ai-tonal-fg: #D8B4FE;
+  --ai-outline-fg: #D8B4FE;
+  --ai-outline-border: #BB93F9;
+  --ai-ghost-fg: #D8B4FE;
+}`;
+
+  document.getElementById('globalsCode').textContent = css;
+}
+
+// === Init ===
+renderSurfaces('widebot-light');
+renderContent('widebot-light');
+renderBorders('widebot-light');
+renderAccent('widebot-light');
+renderStatus('widebot-light');
+renderSpacing();
+renderRadius();
+renderGlobals();
+</script>
+</body>
+</html>

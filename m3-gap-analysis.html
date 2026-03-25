@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M3 Kit Gap Analysis & Stitch vs Lovable</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: #333;
+    --text: #e5e5e5;
+    --text-muted: #999;
+    --primary: #f97316;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 40px 20px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 600; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 16px; font-weight: 600; margin: 24px 0 12px; color: var(--primary); }
+  p { margin-bottom: 12px; color: var(--text-muted); }
+  .subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; }
+  th { background: var(--surface2); text-align: left; padding: 10px 12px; font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: var(--surface); }
+
+  /* Tags */
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tag-clone { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag-adapt { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .tag-build { background: rgba(168,85,247,0.15); color: var(--purple); }
+  .tag-skip { background: rgba(153,153,153,0.15); color: var(--text-muted); }
+  .tag-missing { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag-exists { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag-partial { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .tag-winner { background: rgba(249,115,22,0.15); color: var(--primary); }
+  .tag-slot { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .card-header { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+
+  /* Verdict box */
+  .verdict { background: var(--surface); border-left: 3px solid var(--primary); padding: 16px 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+  .verdict-title { font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 8px; }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Comparison bars */
+  .compare-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+  .compare-label { width: 140px; font-size: 13px; flex-shrink: 0; }
+  .compare-bar { flex: 1; height: 24px; border-radius: 4px; position: relative; overflow: hidden; }
+  .compare-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; }
+  .fill-stitch { background: var(--blue); }
+  .fill-lovable { background: var(--purple); }
+  .fill-neither { background: var(--border); }
+  .compare-bar-bg { background: var(--surface2); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>M3 Kit Gap Analysis + Stitch vs Lovable</h1>
+<p class="subtitle">Design System (Claude Inspection) vs Material 3 Design Kit (Community) | March 23, 2026</p>
+
+<!-- ============================================ -->
+<h2>1. Component Inventory Comparison</h2>
+
+<p>Your current DS has 48 pages across Foundation, Atoms, and Molecules layers. The M3 Kit has 24 component pages. Here is the full mapping:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>M3 Kit Component</th>
+      <th>Sets</th>
+      <th>Your DS Equivalent</th>
+      <th>Sets</th>
+      <th>Strategy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Buttons</td>
+      <td>38</td>
+      <td>Buttons + Button group</td>
+      <td>6</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>App bars (Top + Bottom)</td>
+      <td>9</td>
+      <td>Page Header + Section Header</td>
+      <td>7</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Badges</td>
+      <td>1</td>
+      <td>Badges</td>
+      <td>3</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Cards</td>
+      <td>5</td>
+      <td>Card</td>
+      <td>1</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Carousel</td>
+      <td>2</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Checkboxes</td>
+      <td>1</td>
+      <td>Checkbox, Radio, Toggle (shared page)</td>
+      <td>4</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Chips</td>
+      <td>5</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Date & time pickers</td>
+      <td>14</td>
+      <td>Date picker</td>
+      <td>3</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Dialogs</td>
+      <td>4</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Dividers</td>
+      <td>7*</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone</span></td>
+    </tr>
+    <tr>
+      <td>Lists</td>
+      <td>12</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Loading & progress</td>
+      <td>7</td>
+      <td>Loaders</td>
+      <td>3</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Menu</td>
+      <td>13</td>
+      <td>Dropdowns</td>
+      <td>10</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Navigation (rail, drawer, bar)</td>
+      <td>13</td>
+      <td>Sidebar Navigation</td>
+      <td>7</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Radio button</td>
+      <td>1</td>
+      <td>Checkbox, Radio, Toggle (shared page)</td>
+      <td>(shared)</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Search</td>
+      <td>5</td>
+      <td>Search bar</td>
+      <td>0*</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Sheets (bottom + side)</td>
+      <td>4</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Sliders</td>
+      <td>3</td>
+      <td>Slider</td>
+      <td>2</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Snackbar</td>
+      <td>3</td>
+      <td>Alert</td>
+      <td>1</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Switch</td>
+      <td>1</td>
+      <td>Checkbox, Radio, Toggle (shared page)</td>
+      <td>(shared)</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Tabs</td>
+      <td>6</td>
+      <td>Tabs</td>
+      <td>3</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Text fields</td>
+      <td>1</td>
+      <td>Inputs</td>
+      <td>7</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+    <tr>
+      <td>Toolbars</td>
+      <td>17</td>
+      <td>--</td>
+      <td>0</td>
+      <td><span class="tag tag-clone">Clone + Adapt</span></td>
+    </tr>
+    <tr>
+      <td>Tooltips</td>
+      <td>1</td>
+      <td>Tooltip</td>
+      <td>2</td>
+      <td><span class="tag tag-adapt">Adapt Structure</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<p style="font-size: 12px; color: var(--text-muted);">* Dividers = standalone components, not sets. Search bar page has 0 component sets (may use frames instead).</p>
+
+<!-- ============================================ -->
+<h2>2. Components in Your DS Not Covered by M3 Kit</h2>
+
+<p>These are components you already have that the M3 Kit does not provide. They must be built or retained as-is:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Your DS Component</th>
+      <th>Sets</th>
+      <th>M3 Equivalent</th>
+      <th>Strategy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Avatar</td>
+      <td>4</td>
+      <td>M3 has "3D Avatars" (decorative only)</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Tables</td>
+      <td>3</td>
+      <td>None (M3 doesn't cover data tables)</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Filter</td>
+      <td>5</td>
+      <td>None</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Breadcrumbs</td>
+      <td>2</td>
+      <td>None</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Pagination</td>
+      <td>3</td>
+      <td>None</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Messages / Messages Types</td>
+      <td>3</td>
+      <td>None (AI chat is custom)</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Accordion</td>
+      <td>2</td>
+      <td>None (use Lists with expand?)</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Footer</td>
+      <td>1</td>
+      <td>None</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Install card (App Store)</td>
+      <td>1</td>
+      <td>None (domain-specific)</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+    <tr>
+      <td>Solt</td>
+      <td>1</td>
+      <td>None</td>
+      <td><span class="tag tag-build">Build / Keep</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<h2>3. Components Missing from Both (ERP/AI Gaps)</h2>
+
+<p>Neither your current DS nor the M3 Kit provides these. They are critical for an AI ERP platform and must be designed from scratch:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Use Case</th>
+      <th>Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>AI Chat / Conversation Panel</td><td>Core AI assistant UX</td><td><span class="tag tag-missing">Critical</span></td></tr>
+    <tr><td>AI Streaming Indicator</td><td>Token-by-token response rendering</td><td><span class="tag tag-missing">Critical</span></td></tr>
+    <tr><td>Command Palette</td><td>Quick actions, search, AI invoke</td><td><span class="tag tag-missing">Critical</span></td></tr>
+    <tr><td>Data Grid (advanced)</td><td>ERP data tables with inline edit, sort, filter, virtualization</td><td><span class="tag tag-missing">Critical</span></td></tr>
+    <tr><td>Form Builder / Dynamic Forms</td><td>ERP workflow forms</td><td><span class="tag tag-missing">Critical</span></td></tr>
+    <tr><td>Kanban Board</td><td>Task/ticket management</td><td><span class="tag tag-partial">High</span></td></tr>
+    <tr><td>Timeline / Activity Log</td><td>Audit trail, conversation history</td><td><span class="tag tag-partial">High</span></td></tr>
+    <tr><td>Approval Workflow</td><td>Multi-step approval chains</td><td><span class="tag tag-partial">High</span></td></tr>
+    <tr><td>Notification Center</td><td>Real-time alerts panel</td><td><span class="tag tag-partial">High</span></td></tr>
+    <tr><td>Analytics Dashboard Widgets</td><td>KPIs, charts, sparklines</td><td><span class="tag tag-partial">High</span></td></tr>
+    <tr><td>Empty States</td><td>Zero-data / onboarding UX</td><td><span class="tag tag-partial">High</span></td></tr>
+    <tr><td>Stepper / Wizard</td><td>Multi-step flows (onboarding, setup)</td><td><span class="tag tag-partial">Medium</span></td></tr>
+    <tr><td>File Upload / Drag-Drop Zone</td><td>Document attachment</td><td><span class="tag tag-partial">Medium</span></td></tr>
+    <tr><td>Rich Text Editor</td><td>Content authoring, notes</td><td><span class="tag tag-partial">Medium</span></td></tr>
+    <tr><td>Tag / Token Input</td><td>Multi-value inputs</td><td><span class="tag tag-partial">Medium</span></td></tr>
+    <tr><td>Tree View</td><td>Hierarchical data (org charts, categories)</td><td><span class="tag tag-partial">Medium</span></td></tr>
+    <tr><td>Web Chat FAB Widget</td><td>Floating chat launcher for customer-facing pages</td><td><span class="tag tag-partial">High</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<h2>4. XSmall Size: Slot Usage in Compound Components</h2>
+
+<p>The M3 Kit provides XSmall across Buttons and Icon Buttons. XSmall should NOT be used as a standalone CTA but IS valuable as a nested element inside larger compounds:</p>
+
+<table>
+  <thead>
+    <tr><th>Compound Component</th><th>XSmall Slot Usage</th><th>Example</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cards</td>
+      <td><span class="tag tag-slot">Action Slot</span></td>
+      <td>Overflow menu trigger, quick-action icon buttons in card headers</td>
+    </tr>
+    <tr>
+      <td>App Bars / Headers</td>
+      <td><span class="tag tag-slot">Trailing Actions</span></td>
+      <td>Notification bell, settings gear, user menu trigger</td>
+    </tr>
+    <tr>
+      <td>Table Rows</td>
+      <td><span class="tag tag-slot">Inline Actions</span></td>
+      <td>Edit, delete, expand row actions</td>
+    </tr>
+    <tr>
+      <td>List Items</td>
+      <td><span class="tag tag-slot">Trailing Icon</span></td>
+      <td>Favorite toggle, status indicator, action trigger</td>
+    </tr>
+    <tr>
+      <td>Chat Messages</td>
+      <td><span class="tag tag-slot">Reaction Bar</span></td>
+      <td>Emoji reactions, copy, retry, thumbs up/down</td>
+    </tr>
+    <tr>
+      <td>Chips</td>
+      <td><span class="tag tag-slot">Remove Action</span></td>
+      <td>X button to dismiss a chip/tag</td>
+    </tr>
+    <tr>
+      <td>Tabs / Toolbar</td>
+      <td><span class="tag tag-slot">Dense Controls</span></td>
+      <td>Close tab button, toolbar toggle icons</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="verdict">
+  <div class="verdict-title">XSmall Verdict</div>
+  <p style="color: var(--text); margin: 0;">Keep XSmall exclusively for Icon Buttons (not text buttons). Map its touch target to minimum 32x32px for accessibility. In your token system, define <code>--button-icon-xs-size: 24px</code> with <code>--button-icon-xs-touch-target: 32px</code>. Never expose XSmall as a standalone button option to product teams.</p>
+</div>
+
+<!-- ============================================ -->
+<h2>5. Generation Pipeline</h2>
+
+<div class="card">
+  <p style="color: var(--text); margin: 0; font-family: monospace; font-size: 13px; line-height: 2;">
+    <strong style="color: var(--blue);">ONE-TIME</strong> Upload globals.css + DS_RULES.md to Lovable project<br><br>
+    <strong style="color: var(--primary);">1.</strong> Claude generates strict Lovable prompt (per wave)<br>
+    &nbsp;&nbsp;&darr; human reviews prompt (~1 min)<br>
+    <strong style="color: var(--purple);">2.</strong> Human sends prompt to Lovable (1-shot generation)<br>
+    &nbsp;&nbsp;&darr; human reviews visually (~2-5 min)<br>
+    <strong style="color: var(--green);">3.</strong> Human approves, Claude generates MDs + Figma sync<br>
+    &nbsp;&nbsp;&darr; human reviews (~2-5 min)<br>
+    <strong style="color: var(--text-muted);">4.</strong> Next component
+  </p>
+</div>
+
+<div class="verdict">
+  <div class="verdict-title">Lovable Kit</div>
+  <p style="color: var(--text); margin: 0;">Three files power the pipeline: <code>globals.css</code> (all DS tokens as CSS vars, 2100+ lines), <code>DS_RULES.md</code> (component architecture, state layers, motion, responsive rules, mobile adaptations, accessibility, RTL, AI patterns), and <code>LOVABLE_PROMPT.md</code> (master prompt covering all 30+ component pages across 5 waves with exact variant specifications). Claude accesses Lovable output via GitHub sync (Lovable pushes to GitHub, Claude reads the repo) or the community lovable-mcp-server (read-only component analysis).</p>
+</div>
+
+<!-- ============================================ -->
+<h2>6. Clone-and-Adapt Priority Plan (AI-Accelerated)</h2>
+
+<p>Since the M3 Kit file is your copy to edit, here is the execution order. Each wave uses the AI pipeline: Claude generates specs + tokens (minutes per component), ui-feature-builder produces MDs, preview validates, figma-md-sync pushes to Figma. The only human bottleneck is your review/approval.</p>
+
+<h3>Wave 1: Core Interactions (Day 1-2)</h3>
+<table>
+  <thead><tr><th>Component</th><th>M3 Sets</th><th>Adaptation Needed</th></tr></thead>
+  <tbody>
+    <tr><td>Buttons (incl. FAB for web chat, Icon buttons, Split)</td><td>38</td><td>Add color roles (danger/warning/success/ai), brand tokens, RTL, remove Elevated</td></tr>
+    <tr><td>Text fields / Inputs</td><td>1</td><td>Add validation states, helper text patterns, brand tokens</td></tr>
+    <tr><td>Checkboxes + Radio + Switch</td><td>3</td><td>Unify into Selection Controls, add brand tokens</td></tr>
+    <tr><td>Chips</td><td>5</td><td>Add filter chip patterns for ERP, brand tokens</td></tr>
+  </tbody>
+</table>
+
+<h3>Wave 2: Layout & Navigation (Day 3-4)</h3>
+<table>
+  <thead><tr><th>Component</th><th>M3 Sets</th><th>Adaptation Needed</th></tr></thead>
+  <tbody>
+    <tr><td>Navigation (rail, drawer, bottom bar)</td><td>13</td><td>Add ERP sidebar patterns, RTL mirroring, brand tokens</td></tr>
+    <tr><td>App bars</td><td>9</td><td>Merge with your Page/Section headers, add breadcrumb slot</td></tr>
+    <tr><td>Tabs</td><td>6</td><td>Add scrollable tab overflow, brand tokens</td></tr>
+    <tr><td>Toolbars</td><td>17</td><td>Add dense ERP toolbar pattern, action grouping</td></tr>
+    <tr><td>Lists</td><td>12</td><td>Add multi-select, drag reorder for ERP workflows</td></tr>
+  </tbody>
+</table>
+
+<h3>Wave 3: Feedback & Overlays (Day 5-6)</h3>
+<table>
+  <thead><tr><th>Component</th><th>M3 Sets</th><th>Adaptation Needed</th></tr></thead>
+  <tbody>
+    <tr><td>Dialogs</td><td>4</td><td>Add confirmation, form dialog, destructive action patterns</td></tr>
+    <tr><td>Sheets (bottom + side)</td><td>4</td><td>Add mobile touch model, side sheet for detail panels</td></tr>
+    <tr><td>Snackbar</td><td>3</td><td>Map to your Alert, add severity colors</td></tr>
+    <tr><td>Menu</td><td>13</td><td>Merge with Dropdowns, add cascading menu for ERP</td></tr>
+    <tr><td>Tooltips</td><td>1</td><td>Add rich tooltip with action buttons</td></tr>
+    <tr><td>Search</td><td>5</td><td>Add command palette pattern, AI search suggestions</td></tr>
+    <tr><td>Loading & progress</td><td>7</td><td>Add AI streaming skeleton, shimmer patterns</td></tr>
+  </tbody>
+</table>
+
+<h3>Wave 4: Data & Complex (Day 7-8)</h3>
+<table>
+  <thead><tr><th>Component</th><th>M3 Sets</th><th>Adaptation Needed</th></tr></thead>
+  <tbody>
+    <tr><td>Cards</td><td>5</td><td>Add ERP card variants (stat card, entity card, install card)</td></tr>
+    <tr><td>Date & time pickers</td><td>14</td><td>Add range picker, relative date selector</td></tr>
+    <tr><td>Carousel</td><td>2</td><td>Adapt for onboarding flows, feature tours</td></tr>
+    <tr><td>Sliders</td><td>3</td><td>Add range slider, labeled marks</td></tr>
+    <tr><td>Dividers</td><td>7</td><td>Minimal adaptation needed</td></tr>
+    <tr><td>Badges</td><td>1</td><td>Add severity variants (your current 3 sets may already cover this)</td></tr>
+  </tbody>
+</table>
+
+<h3>Wave 5: ERP-Specific (Build from Scratch, Day 9-12)</h3>
+<table>
+  <thead><tr><th>Component</th><th>Priority</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Data Grid (advanced tables)</td><td>Critical</td><td>Virtual scroll, inline edit, column resize, sort, filter</td></tr>
+    <tr><td>AI Chat Panel</td><td>Critical</td><td>Conversation timeline, streaming, actions, reactions</td></tr>
+    <tr><td>Command Palette</td><td>Critical</td><td>Fuzzy search, AI suggestions, keyboard nav</td></tr>
+    <tr><td>Form Builder</td><td>Critical</td><td>Dynamic field types, conditional logic, validation</td></tr>
+    <tr><td>Kanban Board</td><td>High</td><td>Drag-drop columns, swimlanes</td></tr>
+    <tr><td>Timeline / Activity Log</td><td>High</td><td>Filterable events, AI action annotations</td></tr>
+    <tr><td>Notification Center</td><td>High</td><td>Real-time panel, mark read, action buttons</td></tr>
+    <tr><td>Web Chat FAB Widget</td><td>High</td><td>Clone M3 FAB, add chat panel expand animation</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================================ -->
+<h2>7. Summary Numbers</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">Current DS</div>
+    <table style="margin: 4px 0;">
+      <tr><td>Component sets</td><td style="text-align:right; font-weight:600;">~87</td></tr>
+      <tr><td>Foundation pages</td><td style="text-align:right;">10</td></tr>
+      <tr><td>Atom pages</td><td style="text-align:right;">14</td></tr>
+      <tr><td>Molecule pages</td><td style="text-align:right;">12</td></tr>
+      <tr><td>ERP-specific components</td><td style="text-align:right;">0</td></tr>
+      <tr><td>AI-specific components</td><td style="text-align:right;">0</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-header">M3 Kit (Your Copy)</div>
+    <table style="margin: 4px 0;">
+      <tr><td>Component sets</td><td style="text-align:right; font-weight:600;">166</td></tr>
+      <tr><td>Component pages</td><td style="text-align:right;">24</td></tr>
+      <tr><td>Covered by your DS</td><td style="text-align:right;">15 of 24</td></tr>
+      <tr><td>New for you (clone)</td><td style="text-align:right;">9 pages</td></tr>
+      <tr><td>Uses state layers (not variants)</td><td style="text-align:right; color: var(--green);">Yes</td></tr>
+      <tr><td>M3 token architecture</td><td style="text-align:right; color: var(--green);">Yes</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-title">Bottom Line</div>
+  <p style="color: var(--text); margin: 0;">
+    The M3 Kit gives you 166 well-structured component sets with proper state layer architecture. Cloning and adapting it saves significant effort compared to building from scratch. You gain 9 component categories you don't have today (Chips, Dialogs, Lists, Sheets, Carousel, Dividers, Toolbars, Search patterns, Snackbar). With the AI pipeline (Claude + ui-feature-builder + figma-md-sync), each component takes minutes to spec and push, not days. Total estimated timeline: ~12 working days across 5 waves, bottlenecked by your review/approval, not by generation. Wave 5 (ERP/AI-specific components) takes slightly longer since there is no M3 base to clone.
+  </p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apple HIG Deep Dive - Design System Learning Index</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: #09090b; color: #d4d4d8; line-height: 1.7; }
+
+  .nav { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: #0a0a0c; border-right: 1px solid #1f1f23; padding: 24px 16px; overflow-y: auto; z-index: 100; }
+  .nav .brand { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .nav .subtitle { font-size: 11px; color: #52525b; margin-bottom: 16px; }
+  .nav h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #3f3f46; margin: 16px 0 6px; }
+  .nav a { display: block; padding: 5px 12px; color: #71717a; font-size: 13px; text-decoration: none; border-radius: 6px; margin: 1px 0; transition: all 0.15s; }
+  .nav a:hover { color: #e4e4e7; background: #18181b; }
+
+  .main { margin-left: 260px; padding: 48px 64px; max-width: 1100px; }
+  h1 { font-size: 36px; font-weight: 800; color: #fafafa; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .hero-sub { font-size: 16px; color: #71717a; margin-bottom: 48px; }
+  h2 { font-size: 24px; font-weight: 700; color: #fafafa; margin: 56px 0 20px; padding-top: 24px; border-top: 1px solid #1f1f23; letter-spacing: -0.3px; }
+  h2:first-of-type { border-top: none; }
+  h3 { font-size: 17px; font-weight: 600; color: #e4e4e7; margin: 28px 0 12px; }
+  h4 { font-size: 14px; font-weight: 600; color: #a1a1aa; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #a1a1aa; font-size: 15px; }
+  strong { color: #e4e4e7; font-weight: 600; }
+
+  .card { background: #111113; border: 1px solid #1f1f23; border-radius: 12px; padding: 24px; margin: 16px 0; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 16px 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: #111113; color: #a1a1aa; font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 2px solid #1f1f23; }
+  td { padding: 8px 12px; border-bottom: 1px solid #18181b; color: #a1a1aa; vertical-align: top; }
+  tr:hover { background: #111113; }
+
+  .swatch { display: inline-block; width: 28px; height: 20px; border-radius: 4px; vertical-align: middle; margin-right: 8px; border: 1px solid rgba(255,255,255,0.08); }
+  .mono { font-family: 'SF Mono', 'JetBrains Mono', monospace; font-size: 12px; color: #71717a; }
+
+  .ds-apply { background: #0a1a0a; border-left: 3px solid #4ade80; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .ds-apply p { color: #bbf7d0; margin: 0; }
+  .ds-apply strong { color: #4ade80; }
+  .insight { background: #0f0f2a; border-left: 3px solid #818cf8; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .insight p { color: #c7d2fe; margin: 0; }
+  .warning-block { background: #1a1400; border-left: 3px solid #facc15; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .warning-block p { color: #fef08a; margin: 0; }
+
+  .principle-box { background: #111113; border: 1px solid #1f1f23; border-radius: 12px; padding: 20px; position: relative; overflow: hidden; }
+  .principle-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .principle-box.p1::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .principle-box.p2::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+  .principle-box.p3::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+  .color-row { display: flex; gap: 2px; margin: 8px 0; }
+  .color-chip { flex: 1; height: 40px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .tag-green { background: #052e16; color: #4ade80; }
+  .tag-blue { background: #172554; color: #60a5fa; }
+  .tag-purple { background: #1e1b4b; color: #a5b4fc; }
+  .tag-amber { background: #422006; color: #fbbf24; }
+
+  @media (max-width: 900px) {
+    .nav { display: none; }
+    .main { margin-left: 0; padding: 24px; }
+    .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">Apple HIG</div>
+  <div class="subtitle">Deep Dive + DS Index</div>
+
+  <h3>Philosophy</h3>
+  <a href="#principles">3 Core Principles</a>
+  <a href="#liquid-glass">Liquid Glass (2025)</a>
+  <a href="#why-appealing">Why Apple Design Feels Good</a>
+
+  <h3>Color</h3>
+  <a href="#color-system">Semantic Color Architecture</a>
+  <a href="#color-values">System Colors (Hex)</a>
+  <a href="#color-adaptation">Light/Dark/HC Adaptation</a>
+  <a href="#color-usage">Color Usage Rules</a>
+
+  <h3>Typography</h3>
+  <a href="#type-scale">iOS Type Scale</a>
+  <a href="#sf-font">SF Pro Font System</a>
+  <a href="#dynamic-type">Dynamic Type</a>
+  <a href="#type-rules">Typography Rules</a>
+
+  <h3>Shapes & Depth</h3>
+  <a href="#shape-language">Shape Language</a>
+  <a href="#materials">Materials & Vibrancy</a>
+  <a href="#elevation">Elevation & Shadows</a>
+  <a href="#concentric">Concentric Radius</a>
+
+  <h3>Motion</h3>
+  <a href="#spring">Spring Animations</a>
+  <a href="#motion-principles">Motion Principles</a>
+  <a href="#gesture-driven">Gesture-Driven Motion</a>
+
+  <h3>DS Application</h3>
+  <a href="#index">Learning Index</a>
+  <a href="#takeaways">Actionable Takeaways</a>
+</nav>
+
+<div class="main">
+
+<h1>Apple HIG Deep Dive</h1>
+<p class="hero-sub">What makes Apple design feel premium, accessible, and timeless. Distilled from the Human Interface Guidelines, WWDC sessions, and Apple's design philosophy into an indexed reference for our design system.</p>
+
+<!-- ============ PHILOSOPHY ============ -->
+<h2 id="principles">Apple's Core Design Principles</h2>
+
+<p>Apple's design philosophy has evolved through two eras. The original three principles (iOS 7 through iOS 25) and the new three (iOS 26 / Liquid Glass onward). Both remain relevant because the originals describe the "what" while the new ones describe the "how."</p>
+
+<div class="card-grid-3">
+  <div class="principle-box p1">
+    <h4>Clarity (Original)</h4>
+    <p>Every element must be easy to understand. Clean text, sharp icons, strong visual hierarchy, focus on the most important elements. Clarity is not minimalism for its own sake. It is the elimination of ambiguity. A user should never wonder "what does this do?" or "where am I?"</p>
+  </div>
+  <div class="principle-box p2">
+    <h4>Deference (Original)</h4>
+    <p>The UI should step back and let user content take center stage. Interface elements should never compete with the user's content for attention. Translucent elements, subtle borders, and fluid motion help the chrome recede. The interface is a frame, not the painting.</p>
+  </div>
+  <div class="principle-box p3">
+    <h4>Depth (Original)</h4>
+    <p>Layers, shadows, and motion create spatial relationships that help users understand hierarchy and navigation. Where am I? Where did I come from? Where can I go? Depth answers these questions visually, without text.</p>
+  </div>
+</div>
+
+<div class="card-grid-3" style="margin-top:8px;">
+  <div class="principle-box p1">
+    <h4>Hierarchy (Liquid Glass)</h4>
+    <p>Dynamic visual hierarchy where controls elevate and distinguish content beneath them. Unlike static approaches, hierarchy adapts based on user actions and context. Related actions group together. The interface prioritizes, conceals, or simplifies elements intelligently.</p>
+  </div>
+  <div class="principle-box p2">
+    <h4>Harmony (Liquid Glass)</h4>
+    <p>Software aligns with the physical and contextual realities of each device. Glass effects blend with content and hardware. Materials and shapes adapt to form factors. Touch interactions remain unobstructed. Apps reshape themselves contextually across multitasking.</p>
+  </div>
+  <div class="principle-box p3">
+    <h4>Consistency (Liquid Glass)</h4>
+    <p>Consistent design that continuously adapts across window sizes and displays. Not rigid uniformity but fluid coherence. The same component anatomy adapts meaningfully to device context without requiring complete redesigns. Single anatomy, platform expressions.</p>
+  </div>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> Our DS already embodies Clarity (token-driven, documented), Deference (surface hierarchy, content-first), and Depth (elevation, materials). The Liquid Glass principles add: dynamic Hierarchy (our responsive system + progressive disclosure), Harmony (brand-specific radius/color tuning), and Consistency (multi-brand multi-platform from one component registry). These are not new concepts for us but new names for patterns we are building.</p>
+</div>
+
+<!-- ============ LIQUID GLASS ============ -->
+<h2 id="liquid-glass">Liquid Glass (WWDC 2025)</h2>
+
+<p>Apple's most comprehensive design overhaul since iOS 7. Liquid Glass is a translucent material that behaves like physical glass: it refracts background content, responds to light with specular highlights, and dynamically adapts to context. It is rendered in real time on the GPU.</p>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Visual Properties</h4>
+    <p><strong>Translucency:</strong> Background content refracts through glass surfaces, creating a physical connection between layers.</p>
+    <p><strong>Specular highlights:</strong> Light sources move through space as users interact. Locking/unlocking causes light to travel around the material, defining silhouettes.</p>
+    <p><strong>Color sampling:</strong> Glass tints itself based on background content, creating harmony without explicit color matching.</p>
+    <p><strong>Real-time rendering:</strong> All effects are GPU-computed per frame, not baked textures.</p>
+  </div>
+  <div class="card">
+    <h4>Shape Archetypes</h4>
+    <p><strong>Fixed shapes:</strong> Constant corner radii independent of container size. Predictable geometry for layouts.</p>
+    <p><strong>Capsules:</strong> Radius = half container height. Apple's primary approach for all interactive touch elements on iOS/iPadOS.</p>
+    <p><strong>Concentric shapes:</strong> Inner radii = parent radius minus padding. Automatic nesting that prevents corners from appearing "pinched" or "flared."</p>
+  </div>
+</div>
+
+<div class="card">
+  <h4>What Other Design Systems Can Learn</h4>
+  <p><strong>1. Systematic shape language:</strong> 2-3 core shape archetypes create coherence across thousands of components while remaining mathematically simple.</p>
+  <p><strong>2. Content-first layering:</strong> UI elements should enhance rather than obscure content. Layering systems benefit from clear material hierarchies.</p>
+  <p><strong>3. Eliminate decorative elements:</strong> Remove manual emphasis, backgrounds, and borders when system appearance communicates hierarchy. Reduces complexity and improves maintainability.</p>
+  <p><strong>4. Source-connected interactions:</strong> Action sheets spawning from triggering elements clarify causation and improve spatial understanding.</p>
+  <p><strong>5. Platform-sensitive defaults:</strong> Same component anatomy adapts meaningfully to device context without complete redesigns.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> The concentric radius principle is directly applicable. When a card (--radius-medium: 16px for Hulul) contains a button, the button's radius should be card-radius minus card-padding. If card padding is 12px, button radius should be 4px, not the button's default radius. This prevents the "pinched corner" problem. We should add a --radius-inner token or computation rule to DS_RULES.md.</p>
+</div>
+
+<!-- ============ WHY APPEALING ============ -->
+<h2 id="why-appealing">Why Apple Design Feels Good</h2>
+
+<p>Apple's design appeal is not one thing. It is the compounding effect of many small decisions that individually seem insignificant but collectively create an unmistakable quality signal. Here are the real mechanisms:</p>
+
+<div class="card">
+  <h4>1. Optical Adjustments Over Mathematical Precision</h4>
+  <p>Apple's SF Pro font uses optical sizing. At small sizes, letterforms are wider with more open apertures and heavier strokes. At large sizes, they become more refined with tighter spacing. This is not a single font at different sizes. It is a different design for each optical size. The result: text always looks "right" even though the metrics change.</p>
+  <p>Similarly, Apple adjusts tracking (letter-spacing) per size: -2.5% at 17pt body, -1.6% at 15pt, -0.61% at 13pt. Tighter tracking at larger sizes prevents letters from appearing to float apart. Looser tracking at small sizes prevents letters from colliding. This single detail is why Apple text feels more polished than most web typography.</p>
+</div>
+
+<div class="card">
+  <h4>2. Semantic Color Eliminates Decision Fatigue</h4>
+  <p>Developers never pick colors. They pick roles. "label" not "#000000". "systemBackground" not "#FFFFFF". This means every color decision is already made optimally for light mode, dark mode, light high-contrast, and dark high-contrast. One semantic choice resolves to four optimized values. This eliminates the class of bugs where "dark mode looks wrong" because the system prevents it structurally.</p>
+</div>
+
+<div class="card">
+  <h4>3. Spring Animation as Default, Not Option</h4>
+  <p>Apple replaced ease-based curves with spring physics as the default animation model. Springs are defined by mass, stiffness, and damping rather than duration and bezier curves. The key advantage: springs naturally absorb gesture velocity. When a user flicks a sheet, the spring picks up the gesture velocity and decelerates naturally. Ease-based animations cannot do this; they have a fixed duration regardless of initial velocity. This is why Apple interactions feel "connected to your finger" and most web UIs feel "separate from your input."</p>
+</div>
+
+<div class="card">
+  <h4>4. Materials Create Spatial Context</h4>
+  <p>When a modal appears over content, the background is not just dimmed. It is blurred through a material layer that samples the underlying colors and creates a translucent surface. This does two things: it communicates depth (the modal is "above" the content) and it maintains visual connection (you can still see the content beneath, ghosted). This is why Apple modals feel like they are floating in space rather than pasted on top.</p>
+</div>
+
+<div class="card">
+  <h4>5. Consistency Through Constraint</h4>
+  <p>Apple provides exactly 11 text styles, 9 system tint colors, 6 gray levels, and 3 background hierarchy levels. Not more. This extreme constraint means that any two iOS apps that follow HIG look harmonious together. Consistency is not achieved by guidelines. It is achieved by limiting the palette so thoroughly that inconsistency becomes structurally impossible.</p>
+</div>
+
+<!-- ============ COLOR SYSTEM ============ -->
+<h2 id="color-system">Color: Semantic Architecture</h2>
+
+<p>Apple's color system is built on <strong>semantic naming</strong>. Colors are defined by their purpose, not their appearance. This single decision is the foundation of their entire theming and accessibility system.</p>
+
+<h3>The Four-Variant Model</h3>
+<p>Every color in iOS resolves to four values: light mode, dark mode, light mode + high contrast, dark mode + high contrast. When a developer uses <code>.label</code>, the system automatically selects from these four values based on the user's settings. This is not opt-in. It is the only way to use color correctly.</p>
+
+<h3>Semantic Color Hierarchy</h3>
+
+<div class="card">
+  <h4>Labels (Text Colors)</h4>
+  <table>
+    <tr><th>Token</th><th>Light</th><th>Dark</th><th>Purpose</th></tr>
+    <tr><td>label (primary)</td><td><span class="swatch" style="background:#000"></span><span class="mono">#000000</span></td><td><span class="swatch" style="background:#fff"></span><span class="mono">#FFFFFF</span></td><td>Primary text. Highest contrast.</td></tr>
+    <tr><td>secondaryLabel</td><td><span class="mono">#3C3C43 @ 60%</span></td><td><span class="mono">#EBEBF5 @ 60%</span></td><td>Subtitles, secondary info.</td></tr>
+    <tr><td>tertiaryLabel</td><td><span class="mono">#3C3C43 @ 30%</span></td><td><span class="mono">#EBEBF5 @ 30%</span></td><td>Disabled text, placeholder-adjacent.</td></tr>
+    <tr><td>quaternaryLabel</td><td><span class="mono">#3C3C43 @ 18%</span></td><td><span class="mono">#EBEBF5 @ 18%</span></td><td>Watermark-level text.</td></tr>
+  </table>
+  <p style="margin-top:8px;font-size:13px;"><strong>Key insight:</strong> Apple uses opacity-based variation, not separate hex values. Secondary is 60% of primary. This means all label colors automatically harmonize with any background because they are derived from the same base with transparency. This is more maintainable than separate hex values for each level.</p>
+</div>
+
+<div class="card">
+  <h4>Backgrounds (3-Level Hierarchy)</h4>
+  <table>
+    <tr><th>Set</th><th>Level</th><th>Light</th><th>Dark</th></tr>
+    <tr><td rowspan="3">System</td><td>Primary</td><td><span class="swatch" style="background:#fff"></span>#FFFFFF</td><td><span class="swatch" style="background:#000"></span>#000000</td></tr>
+    <tr><td>Secondary</td><td><span class="swatch" style="background:#F2F2F7"></span>#F2F2F7</td><td><span class="swatch" style="background:#1C1C1E"></span>#1C1C1E</td></tr>
+    <tr><td>Tertiary</td><td><span class="swatch" style="background:#fff"></span>#FFFFFF</td><td><span class="swatch" style="background:#2C2C2E"></span>#2C2C2E</td></tr>
+    <tr><td rowspan="3">Grouped</td><td>Primary</td><td><span class="swatch" style="background:#F2F2F7"></span>#F2F2F7</td><td><span class="swatch" style="background:#000"></span>#000000</td></tr>
+    <tr><td>Secondary</td><td><span class="swatch" style="background:#fff"></span>#FFFFFF</td><td><span class="swatch" style="background:#1C1C1E"></span>#1C1C1E</td></tr>
+    <tr><td>Tertiary</td><td><span class="swatch" style="background:#F2F2F7"></span>#F2F2F7</td><td><span class="swatch" style="background:#2C2C2E"></span>#2C2C2E</td></tr>
+  </table>
+  <p style="margin-top:8px;font-size:13px;"><strong>Key insight:</strong> Apple provides TWO background sets (System + Grouped) with different primary levels. System starts at white (#FFF), Grouped starts at gray (#F2F2F7). This allows table views and settings screens to have a different visual weight than content screens, without any custom color work.</p>
+</div>
+
+<!-- ============ COLOR VALUES ============ -->
+<h2 id="color-values">System Tint Colors (Complete Hex Reference)</h2>
+
+<table>
+  <tr><th>Color</th><th>Light Mode</th><th>Dark Mode</th><th>Hue Shift</th><th>Usage</th></tr>
+  <tr><td><span class="swatch" style="background:#FF3B30"></span>Red</td><td class="mono">#FF3B30</td><td class="mono">#FF453A</td><td>+2deg, +4% lum</td><td>Destructive actions, errors</td></tr>
+  <tr><td><span class="swatch" style="background:#FF9500"></span>Orange</td><td class="mono">#FF9500</td><td class="mono">#FF9F0A</td><td>+3deg, +4% lum</td><td>Warnings, attention</td></tr>
+  <tr><td><span class="swatch" style="background:#FFCC00"></span>Yellow</td><td class="mono">#FFCC00</td><td class="mono">#FFD60A</td><td>+2deg, +3% lum</td><td>Stars, highlights</td></tr>
+  <tr><td><span class="swatch" style="background:#34C759"></span>Green</td><td class="mono">#34C759</td><td class="mono">#30D158</td><td>-1deg, +3% lum</td><td>Success, positive</td></tr>
+  <tr><td><span class="swatch" style="background:#5AC8FA"></span>Teal</td><td class="mono">#5AC8FA</td><td class="mono">#64D2FF</td><td>+1deg, +5% lum</td><td>Communication</td></tr>
+  <tr><td><span class="swatch" style="background:#007AFF"></span>Blue</td><td class="mono">#007AFF</td><td class="mono">#0A84FF</td><td>+1deg, +4% lum</td><td>Primary interactive, links</td></tr>
+  <tr><td><span class="swatch" style="background:#5856D6"></span>Indigo</td><td class="mono">#5856D6</td><td class="mono">#5E5CE6</td><td>+1deg, +3% lum</td><td>Secondary brand</td></tr>
+  <tr><td><span class="swatch" style="background:#AF52DE"></span>Purple</td><td class="mono">#AF52DE</td><td class="mono">#BF5AF2</td><td>+2deg, +5% lum</td><td>Creativity, AI (emerging)</td></tr>
+  <tr><td><span class="swatch" style="background:#FF2D55"></span>Pink</td><td class="mono">#FF2D55</td><td class="mono">#FF375F</td><td>+2deg, +3% lum</td><td>Social, affective</td></tr>
+  <tr><td><span class="swatch" style="background:#8E8E93"></span>Gray</td><td class="mono">#8E8E93</td><td class="mono">#8E8E93</td><td>None</td><td>Neutral, disabled</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>Pattern: Dark mode colors are slightly lighter AND slightly more saturated.</strong> Apple does not simply lighten. They also shift hue by 1-3 degrees and increase chroma. This prevents dark mode colors from looking washed out. The shift is subtle (3-5% luminance increase) but enough to maintain vibrancy against dark backgrounds. This matches the M3 tone-shift approach (tone 40 light to tone 80 dark) and our own approach of using lighter, brighter variants in dark mode.</p>
+</div>
+
+<!-- ============ COLOR ADAPTATION ============ -->
+<h2 id="color-adaptation">Color Adaptation: Light / Dark / High Contrast</h2>
+
+<div class="card">
+  <h4>The Adaptation Matrix</h4>
+  <p>Apple's color system adapts across two axes: <strong>appearance</strong> (light/dark) and <strong>accessibility</strong> (standard/increased contrast). This creates a 2x2 matrix where every color has four resolved values.</p>
+  <table>
+    <tr><th></th><th>Standard</th><th>Increased Contrast</th></tr>
+    <tr><td><strong>Light</strong></td><td>Base value</td><td>Darker, more saturated</td></tr>
+    <tr><td><strong>Dark</strong></td><td>Lighter, slightly more saturated</td><td>Even lighter, maximum contrast</td></tr>
+  </table>
+  <p>When users enable "Increase Contrast" in Accessibility settings, colors shift to provide stronger differentiation. Borders become more visible. Fills become more opaque. Text colors become more saturated.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> We currently support a 2x2 matrix (2 brands x 2 themes). Apple's model suggests a 2x2x2 matrix (2 brands x 2 themes x 2 contrast levels). For WideBot (AAA), increased contrast mode would push to even higher ratios. For Hulul (AA), increased contrast mode would push from AA to AAA. This is a future enhancement worth planning for in our token architecture. The globals.css structure already supports it through nested data attributes.</p>
+</div>
+
+<!-- ============ COLOR USAGE ============ -->
+<h2 id="color-usage">Color Usage Rules</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Apple's Color Rules</h4>
+    <p><strong>Use color sparingly.</strong> If everything is colorful, nothing stands out. Color should direct attention, not decorate.</p>
+    <p><strong>Use complementary colors across light/dark.</strong> Not the same color dimmed. A color rebalanced for the new context.</p>
+    <p><strong>Test under all appearances.</strong> Colors must work in light, dark, and both high-contrast modes.</p>
+    <p><strong>Never rely on color alone.</strong> Always pair with shape, icon, or text label for accessibility.</p>
+    <p><strong>Use semantic names.</strong> "label" not "black." "systemBackground" not "white." The name encodes purpose, not appearance.</p>
+  </div>
+  <div class="card">
+    <h4>Gray Scale as Information Architecture</h4>
+    <p>Apple provides 6 system grays. These are not decoration. They are structural:</p>
+    <p><strong>Gray 1</strong> (#8E8E93 / #8E8E93): Disabled states, inactive icons.</p>
+    <p><strong>Gray 2</strong> (#AEAEB2 / #636366): Secondary borders, dividers.</p>
+    <p><strong>Gray 3</strong> (#C7C7CC / #48484A): Tertiary surfaces.</p>
+    <p><strong>Gray 4</strong> (#D1D1D6 / #3A3A3C): Subtle backgrounds.</p>
+    <p><strong>Gray 5</strong> (#E5E5EA / #2C2C2E): Grouped list backgrounds.</p>
+    <p><strong>Gray 6</strong> (#F2F2F7 / #1C1C1E): Page-level backgrounds.</p>
+    <p style="font-size:13px;">Note how in dark mode, the grays INVERT their order. Gray 6 (lightest in light) becomes the darkest usable surface in dark mode. The semantic meaning stays constant even as the values flip.</p>
+  </div>
+</div>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<h2 id="type-scale">Typography: The iOS Type Scale</h2>
+
+<p>Apple's type scale is not based on a mathematical ratio like modular scales. It is hand-tuned for each text style to optimize for readability at that specific size and weight combination. The sizes are pragmatic, not algorithmic.</p>
+
+<table>
+  <tr><th>Text Style</th><th>Size (pt)</th><th>Weight</th><th>Tracking</th><th>Purpose</th></tr>
+  <tr><td>Extra Large Title</td><td>36</td><td>Bold</td><td>~0.4px</td><td>Hero content, onboarding</td></tr>
+  <tr><td>Large Title</td><td>34</td><td>Regular</td><td>~0.4px</td><td>Screen titles (expanded nav)</td></tr>
+  <tr><td>Title 1</td><td>28</td><td>Regular</td><td>~0.4px</td><td>Section headers</td></tr>
+  <tr><td>Title 2</td><td>22</td><td>Regular</td><td>~0.4px</td><td>Subsection headers</td></tr>
+  <tr><td>Title 3</td><td>20</td><td>Regular</td><td>~0.4px</td><td>Card titles</td></tr>
+  <tr><td>Headline</td><td>17</td><td><strong>Semibold</strong></td><td>-0.43px</td><td>Emphasized body. Same size as body but bolder.</td></tr>
+  <tr><td>Body</td><td>17</td><td>Regular</td><td>-0.43px</td><td>Default reading text. The anchor of the system.</td></tr>
+  <tr><td>Callout</td><td>16</td><td>Regular</td><td>-0.3px</td><td>Supporting text, slightly smaller than body.</td></tr>
+  <tr><td>Subheadline</td><td>15</td><td>Regular</td><td>-0.24px</td><td>Secondary text, descriptions.</td></tr>
+  <tr><td>Footnote</td><td>13</td><td>Regular</td><td>-0.08px</td><td>Metadata, timestamps, captions.</td></tr>
+  <tr><td>Caption 1</td><td>12</td><td>Regular</td><td>~0px</td><td>Image captions, annotations.</td></tr>
+  <tr><td>Caption 2</td><td>11</td><td>Regular</td><td>~0.1px</td><td>Legal text, tab bar labels.</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>Critical insight: Body and Headline share the same 17pt size.</strong> The only difference is weight (Regular vs Semibold). This is a deliberate design decision. It means emphasized text does not disrupt the vertical rhythm of body text. The line height stays constant. Only the visual weight changes. This is far more elegant than making headlines larger, which forces different line heights and breaks the flow.</p>
+</div>
+
+<div class="insight">
+  <p><strong>Negative tracking at body sizes, positive at display sizes.</strong> At 17pt, Apple uses -0.43px tracking (letters slightly closer together). At 34pt, tracking is positive (letters slightly further apart). This inversion is counterintuitive but optically correct. At small sizes, tighter tracking improves word-shape recognition. At large sizes, looser tracking prevents the "wall of text" feeling and adds elegance.</p>
+</div>
+
+<!-- ============ SF FONT ============ -->
+<h2 id="sf-font">SF Pro: The Font System</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Font Variants</h4>
+    <p><strong>SF Pro Display:</strong> Optimized for sizes 20pt and above. Thinner strokes, tighter metrics, refined details.</p>
+    <p><strong>SF Pro Text:</strong> Optimized for sizes below 20pt. Wider letterforms, more open apertures, heavier strokes for legibility.</p>
+    <p><strong>SF Pro Rounded:</strong> Same metrics as SF Pro but with rounded stroke terminals. Used for playful/friendly contexts (Shortcuts, Activity rings).</p>
+    <p><strong>SF Mono:</strong> Monospaced variant. Used for code, data tables where column alignment matters.</p>
+    <p><strong>New York:</strong> Serif companion. Used for long-form reading (Books, News). Provides contrast when paired with SF Pro.</p>
+  </div>
+  <div class="card">
+    <h4>9 Weights</h4>
+    <p>Ultralight, Thin, Light, Regular, Medium, Semibold, Bold, Heavy, Black.</p>
+    <p><strong>Apple's practical usage:</strong></p>
+    <p>Regular (400): Body text, most UI.</p>
+    <p>Medium (500): Subtle emphasis, navigation items.</p>
+    <p>Semibold (600): Headlines, buttons, emphasized labels.</p>
+    <p>Bold (700): Large titles, hero text.</p>
+    <p>Heavy/Black: Marketing only. Never in product UI.</p>
+    <p>Ultralight/Thin/Light: Decorative large display text only. Never for functional UI.</p>
+  </div>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> Apple's 4-weight practical range (Regular, Medium, Semibold, Bold) maps well to our needs. For the ERP: Regular for body/data, Medium for labels and navigation, Semibold for buttons and emphasis, Bold for page titles. The optical size concept (Display vs Text) is handled by Inter's variable font optical sizing. We should ensure our Inter usage leverages optical sizing rather than using a single static weight file.</p>
+</div>
+
+<!-- ============ DYNAMIC TYPE ============ -->
+<h2 id="dynamic-type">Dynamic Type: Scaling for Accessibility</h2>
+
+<p>Dynamic Type is Apple's system for scaling all text based on user preference. It ensures that users who need larger text get it, and the interface adapts gracefully. The system defines 12 size categories from xSmall to AX5 (accessibility extra extra extra large).</p>
+
+<div class="card">
+  <h4>How Body Text Scales</h4>
+  <p>At the default "Large" setting, body is 17pt. At "Extra Small," it drops to 14pt. At the largest accessibility size (AX5), it grows to 53pt. The scale is not linear. It uses a curve that grows faster at accessibility sizes to ensure readability for users with severe vision impairments.</p>
+  <p><strong>Key rule:</strong> Text styles do not all scale at the same rate. Large Title scales from 31pt (xS) to 40pt (XXXL) but does NOT scale into accessibility sizes. Body text DOES scale into accessibility sizes. This prevents Large Title from becoming absurdly large while ensuring body text remains readable at any preference.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> For web/Angular, Dynamic Type maps to CSS clamp() with rem-based scaling. Our DS should define a type scale that responds to the browser's font-size setting (which users can adjust in OS settings). The formula: font-size: clamp(min, preferred, max) where preferred is rem-based. This gives us the same accessibility benefit as Dynamic Type on the web.</p>
+</div>
+
+<!-- ============ TYPE RULES ============ -->
+<h2 id="type-rules">Typography Rules</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Apple's Typography Rules</h4>
+    <p><strong>Use built-in text styles.</strong> Don't invent new sizes. Use the 11 provided styles.</p>
+    <p><strong>Use Dynamic Type.</strong> Never hard-code font sizes. Always allow scaling.</p>
+    <p><strong>Prioritize readability.</strong> Use minimum 11pt for any functional text. Decorative text can go smaller.</p>
+    <p><strong>Maintain line length.</strong> Optimal reading width is 50-70 characters per line. Use layout constraints to prevent lines from becoming too wide.</p>
+    <p><strong>Use weight for hierarchy, not size alone.</strong> Headline (17pt Semibold) and Body (17pt Regular) are the same size. Weight creates the distinction.</p>
+  </div>
+  <div class="card">
+    <h4>Tracking Adjustments</h4>
+    <p>Apple varies tracking (letter-spacing) per font size:</p>
+    <table>
+      <tr><th>Size</th><th>Tracking</th><th>%</th></tr>
+      <tr><td>34pt (Large Title)</td><td>+0.4px</td><td>+1.2%</td></tr>
+      <tr><td>22pt (Title 2)</td><td>+0.4px</td><td>+1.8%</td></tr>
+      <tr><td>17pt (Body)</td><td>-0.43px</td><td>-2.5%</td></tr>
+      <tr><td>15pt (Subheadline)</td><td>-0.24px</td><td>-1.6%</td></tr>
+      <tr><td>13pt (Footnote)</td><td>-0.08px</td><td>-0.6%</td></tr>
+      <tr><td>11pt (Caption 2)</td><td>+0.07px</td><td>+0.6%</td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:13px;">Notice: tracking is negative in the 13-17pt range (tightened for word-shape recognition) but positive at both extremes (loosened at large sizes for elegance, loosened at tiny sizes to prevent collision).</p>
+  </div>
+</div>
+
+<!-- ============ SHAPES ============ -->
+<h2 id="shape-language">Shape Language</h2>
+
+<div class="card">
+  <h4>Apple's Shape Philosophy</h4>
+  <p>Apple uses rounded rectangles as the universal shape primitive. Not circles, not sharp rectangles. The "squircle" (continuous-curvature rounded rectangle) is Apple's signature shape. Unlike CSS border-radius which creates circular arc corners, Apple's curves use a superellipse formula that creates smoother transitions between the straight edges and curves.</p>
+  <p><strong>The squircle matters because:</strong> A standard border-radius creates a visible "kink" where the straight edge meets the curve. A superellipse/squircle has continuous curvature, meaning the curve starts before the mathematical corner point, creating a smoother visual transition. This is why Apple's app icons look "softer" than CSS-radius icons even at the same nominal radius.</p>
+</div>
+
+<div class="card">
+  <h4 id="concentric">Concentric Radius Rule</h4>
+  <p>When elements are nested (button inside a card, icon inside a button), the inner element's radius must be calculated as:</p>
+  <p style="font-size:16px;color:#e4e4e7;font-weight:600;text-align:center;margin:16px 0;">Inner Radius = Outer Radius - Padding Between Them</p>
+  <p>If the outer card has radius 16px and padding 12px, the inner button should have radius 4px (16 - 12 = 4). If the inner element would have a negative radius, use 0 (sharp corner).</p>
+  <p><strong>Why this matters:</strong> Without concentric radii, nested rounded rectangles create visual tension. The inner element's curve appears to "fight" the outer element's curve. With concentric radii, the curves flow in parallel, creating visual harmony.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> Add concentric radius calculation to our component system. For each container component (Card, Sheet, Dialog), document the expected inner radius for child interactive elements. Hulul card (radius 16px, padding 12px) produces inner radius 4px. WideBot card (radius 10px, padding 12px) produces inner radius 0px (sharp). This actually reinforces WideBot's sharper brand personality as a natural consequence of the math.</p>
+</div>
+
+<!-- ============ MATERIALS ============ -->
+<h2 id="materials">Materials and Vibrancy</h2>
+
+<div class="card">
+  <h4>Material Types</h4>
+  <p>Materials in Apple's system are translucent layers that blur background content to create depth separation. They range from ultra-thin (barely visible, maximum background passthrough) to ultra-thick (heavy blur, near-opaque).</p>
+  <table>
+    <tr><th>Material</th><th>Blur</th><th>Opacity</th><th>Usage</th></tr>
+    <tr><td>Ultra Thin</td><td>Minimal</td><td>~10-20%</td><td>Background overlays, subtle depth</td></tr>
+    <tr><td>Thin</td><td>Light</td><td>~30-40%</td><td>Sidebar backgrounds, secondary surfaces</td></tr>
+    <tr><td>Regular</td><td>Medium</td><td>~50-60%</td><td>Navigation bars, toolbars, sheets</td></tr>
+    <tr><td>Thick</td><td>Heavy</td><td>~70-80%</td><td>Modal backgrounds, system surfaces</td></tr>
+    <tr><td>Chrome</td><td>Full</td><td>~90%+</td><td>System chrome, tab bars</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h4>Vibrancy: Pulling Color Forward</h4>
+  <p>Vibrancy is an effect applied to foreground content (text, icons, fills) that sits on top of a material. It blends the foreground with sampled background color, making the foreground feel like part of the environment rather than pasted on top.</p>
+  <p>Apple provides vibrancy levels for labels, fills, and separators, each with default (highest contrast), secondary, tertiary, and quaternary variants. The key principle: vibrancy increases the sense of depth without requiring explicit shadow or border. Content appears "in" the material rather than "on" it.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> For web, backdrop-filter: blur() approximates Apple's materials. Our command palette and AI suggestion panel should use: background: rgba(var(--surface-rgb), 0.7); backdrop-filter: blur(20px). This creates the material effect while maintaining text contrast. The --surface-dim token provides the fallback for browsers that do not support backdrop-filter.</p>
+</div>
+
+<!-- ============ ELEVATION ============ -->
+<h2 id="elevation">Elevation and Shadows</h2>
+
+<div class="card">
+  <h4>Apple vs Material Design Shadows</h4>
+  <p>Apple's shadow philosophy differs from Material Design. Material uses explicit shadow to communicate z-index (elevation 1 = small shadow, elevation 24 = large shadow). Apple uses <strong>materials and blur as the primary depth cue, with shadow as a secondary reinforcement.</strong></p>
+  <p>Apple shadows are softer, more diffused, and lower contrast than Material shadows. A card in iOS has a barely perceptible shadow compared to a Material Design card. The depth is communicated primarily through the translucent material background, not the shadow.</p>
+  <p><strong>The lesson:</strong> Excessive shadow looks dated. Modern depth comes from material contrast (slightly different background), subtle blur, and motion (elements that animate differently feel like they are at different depths).</p>
+</div>
+
+<!-- ============ SPRING ANIMATIONS ============ -->
+<h2 id="spring">Spring Animations</h2>
+
+<div class="card">
+  <h4>Why Springs, Not Ease Curves</h4>
+  <p>Apple's motion system is built on spring physics. A spring animation is defined by three physical properties:</p>
+  <p><strong>Mass:</strong> Heavier objects take longer to accelerate and decelerate. Controls the "weight" of the motion.</p>
+  <p><strong>Stiffness:</strong> Stiffer springs move faster to their target. Controls the "snappiness."</p>
+  <p><strong>Damping:</strong> Higher damping reduces oscillation (bouncing). Critically damped (damping ratio = 1.0) means no bounce, just smooth deceleration.</p>
+
+  <p style="margin-top:16px;">The critical advantage of springs over ease curves:</p>
+  <p><strong>Springs accept initial velocity.</strong> When a user releases a gesture (like flicking a sheet), the spring animation starts with the gesture's velocity and decelerates naturally. An ease-based animation would ignore the gesture velocity and play at a fixed duration, creating a disconnect between the user's input and the result.</p>
+  <p><strong>Springs have no fixed duration.</strong> They settle when the animation reaches equilibrium. Fast flicks settle in ~200ms. Slow drags settle in ~400ms. The duration is a consequence of physics, not an arbitrary value.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> Our current motion tokens use CSS cubic-bezier curves (--ease-standard, --ease-spring). CSS cannot do true spring physics. However, CSS spring() is proposed and may ship soon. In the meantime, our --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275) approximates a bouncy spring. For Angular, WAAPI (Web Animations API) supports spring-like easing through KeyframeEffect. For gesture-driven interactions (drag sheets, swipe actions), we should use JavaScript-driven springs rather than CSS transitions to capture gesture velocity.</p>
+</div>
+
+<!-- ============ MOTION PRINCIPLES ============ -->
+<h2 id="motion-principles">Motion Design Principles</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Apple's Motion Rules</h4>
+    <p><strong>Motion must reinforce spatial relationships.</strong> When you tap an item in a list and a detail view appears, the list item should expand into the detail view. The user sees the spatial connection: "the detail came FROM that item."</p>
+    <p><strong>Motion must respect physics.</strong> Objects don't teleport. They accelerate, decelerate, and respond to forces. Motion that defies physical laws (like instant teleportation or linear constant-speed movement) feels wrong even if users can't articulate why.</p>
+    <p><strong>Motion must be fast.</strong> Most iOS transitions are 250-350ms. Navigation pushes are ~350ms. Sheet presentations are ~300ms. Anything over 500ms feels sluggish.</p>
+  </div>
+  <div class="card">
+    <h4 id="gesture-driven">Gesture-Driven Motion</h4>
+    <p><strong>Interaction continuity:</strong> When a user starts dragging a sheet, the sheet should track the finger 1:1. When released, the spring animation picks up the gesture velocity. The transition from direct manipulation to animation must be seamless.</p>
+    <p><strong>Interruptibility:</strong> Every animation must be interruptible. If a user taps during a transition, the transition should immediately begin responding to the new input. Non-interruptible animations feel broken.</p>
+    <p><strong>Rubber-banding:</strong> When a user drags beyond a boundary (like overscrolling), the element should resist with increasing force. This rubber-band effect communicates "you've reached the edge" without an abrupt stop.</p>
+  </div>
+</div>
+
+<!-- ============ LEARNING INDEX ============ -->
+<h2 id="index">Learning Index: What to Study Later</h2>
+
+<p>The following topics from Apple HIG deserve deeper exploration. Each links to the authoritative source for future reference.</p>
+
+<table>
+  <tr><th>Topic</th><th>Source</th><th>Priority</th><th>Why It Matters for Our DS</th></tr>
+  <tr>
+    <td><strong>Accessibility: Dynamic Type</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/typography" style="color:#60a5fa;">HIG Typography</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Our DS needs rem-based type scaling. Apple's approach to capping title scaling while allowing body scaling is directly applicable.</td>
+  </tr>
+  <tr>
+    <td><strong>Color: Increased Contrast Mode</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/color" style="color:#60a5fa;">HIG Color</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Adding a high-contrast variant layer to our token system (especially for Hulul AA pushing to AAA in high-contrast mode).</td>
+  </tr>
+  <tr>
+    <td><strong>Liquid Glass: Concentric Radius</strong></td>
+    <td><a href="https://www.createwithswift.com/liquid-glass-redefining-design-through-hierarchy-harmony-and-consistency/" style="color:#60a5fa;">Liquid Glass Analysis</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Implementing inner-radius = outer-radius - padding for all nested container/interactive element pairs.</td>
+  </tr>
+  <tr>
+    <td><strong>Spring Animations for Sheets</strong></td>
+    <td><a href="https://developer.apple.com/videos/play/wwdc2023/10158/" style="color:#60a5fa;">WWDC23: Animate with Springs</a></td>
+    <td><span class="tag tag-purple">Medium</span></td>
+    <td>Our bottom sheets and modals should use spring-based animation with gesture velocity transfer for mobile.</td>
+  </tr>
+  <tr>
+    <td><strong>SF Pro Optical Sizing</strong></td>
+    <td><a href="https://developer.apple.com/videos/play/wwdc2020/10175/" style="color:#60a5fa;">WWDC20: Details of UI Typography</a></td>
+    <td><span class="tag tag-purple">Medium</span></td>
+    <td>Ensure Inter variable font optical sizing is enabled in our CSS. Different optical sizes for headings vs body text.</td>
+  </tr>
+  <tr>
+    <td><strong>Materials for Overlays</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/materials" style="color:#60a5fa;">HIG Materials</a></td>
+    <td><span class="tag tag-purple">Medium</span></td>
+    <td>Defining backdrop-filter material tokens for command palette, search overlay, AI panel.</td>
+  </tr>
+  <tr>
+    <td><strong>Vibrancy for Labels on Materials</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/materials" style="color:#60a5fa;">HIG Materials</a></td>
+    <td><span class="tag tag-amber">Lower</span></td>
+    <td>Labels on material surfaces should use slightly adjusted colors. Future enhancement after core system is stable.</td>
+  </tr>
+  <tr>
+    <td><strong>Rubber-band Physics</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/motion" style="color:#60a5fa;">HIG Motion</a></td>
+    <td><span class="tag tag-amber">Lower</span></td>
+    <td>Edge resistance for scrollable containers and drag-to-dismiss sheets. Enhances tactile feel.</td>
+  </tr>
+  <tr>
+    <td><strong>Grouped Background Pattern</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/color" style="color:#60a5fa;">HIG Color</a></td>
+    <td><span class="tag tag-amber">Lower</span></td>
+    <td>Two background sets (system vs grouped) for different page types. Settings pages vs content pages could benefit.</td>
+  </tr>
+  <tr>
+    <td><strong>Squircle / Continuous Curvature</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/" style="color:#60a5fa;">HIG General</a></td>
+    <td><span class="tag tag-amber">Lower</span></td>
+    <td>CSS cannot natively do squircles yet. Future CSS spec may add it. Low priority until browser support exists.</td>
+  </tr>
+</table>
+
+<!-- ============ ACTIONABLE TAKEAWAYS ============ -->
+<h2 id="takeaways">Actionable Takeaways for Our DS</h2>
+
+<div class="ds-apply">
+  <p><strong>1. Adopt opacity-based label hierarchy.</strong> Instead of separate hex values for primary/secondary/tertiary text, use opacity on a base color: 100%, 60%, 30%, 18%. This automatically harmonizes text colors with any background and reduces token count. Matches Apple's label system.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>2. Implement concentric radius rule.</strong> Add to DS_RULES.md: Inner interactive elements must use radius = parent radius - parent padding. Document per container component. This prevents the "pinched corner" artifact and matches Apple's Liquid Glass shape language.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>3. Negative tracking at body sizes.</strong> Apply letter-spacing: -0.02em at 16-17px body sizes and letter-spacing: +0.01em at 28px+ display sizes. Matches Apple's tracking curve and improves word-shape recognition at reading sizes.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>4. Weight-based hierarchy within same size.</strong> Apple uses Body (17pt Regular) and Headline (17pt Semibold) at the same size. Our DS should define emphasis through weight change, not size change, for inline hierarchy. This preserves vertical rhythm.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>5. Material tokens for overlays.</strong> Define --material-thin, --material-regular, --material-thick as combinations of background opacity + backdrop-filter blur. Command palette = material-thin. Modal = material-regular. System overlay = material-thick.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>6. Dark mode: shift hue AND luminance.</strong> Apple shifts colors by +1-3deg hue and +3-5% luminance for dark mode, not just lightening. Our dark mode tokens already do this (e.g., danger goes from #d13029 to #ff8383, shifting both hue and luminance). Validate this is consistent across all roles.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>7. Four practical font weights only.</strong> Regular (body), Medium (labels), Semibold (buttons/emphasis), Bold (titles). Avoid Thin/Light/Heavy/Black in product UI. Reserve extremes for marketing only.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>8. Animation interruptibility as a requirement.</strong> Add to interaction contracts: every animated transition must be interruptible by new user input. Non-interruptible animations are bugs, not features.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>9. Plan for high-contrast mode.</strong> Design the token architecture to support a third axis (standard / increased contrast) beyond brand and theme. Even if not implemented in v1, the structure should accommodate it without refactoring.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>10. Content-first layering.</strong> Apple's "deference" principle: UI chrome should never compete with content. In our ERP context: toolbars, navigation, and filters should use neutral/subdued surfaces. Only user content (data, conversations, documents) gets the full contrast range.</p>
+</div>
+
+</div><!-- /main -->
+</body>
+</html>

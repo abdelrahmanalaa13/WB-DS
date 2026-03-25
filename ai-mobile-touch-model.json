@@ -1,0 +1,878 @@
+{
+  "$schema": "ai-mobile-touch-model/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "description": "Comprehensive mobile touch interaction model for ERP design system. Maps desktop interactions to mobile-optimized gesture alternatives with accessibility compliance.",
+  "touchTargetMinimums": {
+    "wcagAA": "44px",
+    "wcagAAA": "48px",
+    "recommended": "48px",
+    "rationale": "Minimum touch target sizes ensure accessibility for users with motor impairments and reduce accidental activation errors"
+  },
+  "gestureAlternatives": [
+    {
+      "id": "hover-tap-reveal",
+      "desktopInteraction": "hover",
+      "mobileAlternative": "tap-reveal",
+      "description": "Content revealed on hover becomes visible on first tap, action on second tap",
+      "affectedComponents": [
+        "button",
+        "card",
+        "list-item",
+        "data-grid-row",
+        "menu-item",
+        "table-cell",
+        "tree-item",
+        "disclosure-triangle",
+        "expandable-section",
+        "link",
+        "icon-button",
+        "tag",
+        "badge",
+        "chip",
+        "segmented-control-item"
+      ],
+      "implementation": {
+        "firstTap": "Reveal hover state and any hidden actions (secondary buttons, delete icon, etc.)",
+        "secondTap": "Execute primary action or navigate",
+        "tapOutside": "Dismiss revealed state and return to default appearance",
+        "timing": "Reveal persists for 3s or until tap-outside",
+        "visual": "Apply background color or elevation change to indicate interactive state"
+      }
+    },
+    {
+      "id": "tooltip-bottom-sheet",
+      "desktopInteraction": "tooltip on hover",
+      "mobileAlternative": "bottom sheet or popover",
+      "description": "Tooltip content displayed in dismissible bottom sheet on long press or info button tap",
+      "affectedComponents": [
+        "tooltip",
+        "help-text",
+        "info-icon",
+        "form-hint",
+        "data-field-description",
+        "column-header-help"
+      ],
+      "implementation": {
+        "trigger": "long-press (500ms) on element with tooltip",
+        "alternative": "Tap info icon if present",
+        "position": "bottom-sheet",
+        "dismiss": "Swipe down or tap outside or tap close button",
+        "timing": "Animates in with slide-up motion over 250ms",
+        "content": "Include full tooltip text plus any additional contextual help"
+      }
+    },
+    {
+      "id": "dropdown-fullscreen-selector",
+      "desktopInteraction": "dropdown menu",
+      "mobileAlternative": "full-screen selector or bottom sheet picker",
+      "description": "Dropdown menus expand to full-screen overlay or bottom sheet with better touch targeting",
+      "affectedComponents": [
+        "dropdown",
+        "select",
+        "multi-select",
+        "combobox",
+        "date-picker",
+        "time-picker",
+        "duration-picker",
+        "menu",
+        "filter-menu",
+        "sort-menu"
+      ],
+      "implementation": {
+        "trigger": "Tap select field",
+        "displayMode": "full-screen modal or bottom sheet based on option count",
+        "threshold": "If <6 options: bottom sheet; if >=6 options: full-screen modal",
+        "optionSize": "56px minimum height per option for touch targets",
+        "search": "Searchable input field at top for options >10",
+        "dismiss": "Tap outside, swipe down, or tap back/cancel button",
+        "timing": "Animates in over 300ms with decelerate easing"
+      }
+    },
+    {
+      "id": "context-menu-long-press",
+      "desktopInteraction": "right-click context menu",
+      "mobileAlternative": "long press or swipe actions",
+      "description": "Right-click context menus become long-press menus or trailing swipe actions",
+      "affectedComponents": [
+        "context-menu",
+        "list-item-actions",
+        "table-row-actions",
+        "card-actions",
+        "data-grid-actions",
+        "tree-node-actions"
+      ],
+      "implementation": {
+        "primaryTrigger": "Long press (500ms) on element",
+        "secondaryTrigger": "Swipe left to reveal trailing action buttons",
+        "menuFormat": "Bottom sheet or popover with action items",
+        "actionHeight": "56px minimum per action",
+        "animation": "Contextual menu animates in from bottom or side",
+        "dismiss": "Tap action, tap outside, swipe opposite direction",
+        "haptics": "Provide haptic feedback on long-press activation"
+      }
+    },
+    {
+      "id": "modal-swipe-dismiss",
+      "desktopInteraction": "click outside or ESC to dismiss",
+      "mobileAlternative": "swipe down to dismiss",
+      "description": "Modals and sheets can be dismissed via downward swipe gesture",
+      "affectedComponents": [
+        "modal",
+        "dialog",
+        "bottom-sheet",
+        "drawer",
+        "side-panel",
+        "popover"
+      ],
+      "implementation": {
+        "trigger": "Swipe down on sheet/modal (velocity > 500px/s)",
+        "threshold": "Dismiss if swiped >30% of height",
+        "animation": "Spring physics for natural deceleration",
+        "alternate": "Tap outside or explicit close button always available",
+        "safeguard": "Warn if unsaved changes will be lost"
+      }
+    },
+    {
+      "id": "scroll-action-reveal",
+      "desktopInteraction": "persistent visible actions",
+      "mobileAlternative": "scroll to reveal leading/trailing actions",
+      "description": "Actions revealed via horizontal scroll on touch swipe",
+      "affectedComponents": [
+        "list-item",
+        "table-row",
+        "data-grid-row",
+        "message-item",
+        "order-item"
+      ],
+      "implementation": {
+        "swipeLeft": "Reveal trailing actions (edit, delete, etc.)",
+        "swipeRight": "Reveal leading actions (pin, mark, etc.)",
+        "snap": "Automatically snap to fully revealed or hidden state",
+        "spring": "Use spring physics for natural snap animation",
+        "revertOnTap": "Tapping elsewhere auto-reverts to hidden state"
+      }
+    },
+    {
+      "id": "pinch-zoom",
+      "desktopInteraction": "scroll wheel or viewport zoom",
+      "mobileAlternative": "pinch to zoom gesture",
+      "description": "Support pinch-zoom on images, maps, and data-dense content",
+      "affectedComponents": [
+        "image",
+        "map",
+        "chart",
+        "data-table",
+        "gantt-chart",
+        "timeline",
+        "diagram"
+      ],
+      "implementation": {
+        "minZoom": "1x (original size)",
+        "maxZoom": "3x or content-dependent",
+        "animation": "Smooth acceleration into zoom with decelerate easing",
+        "panAfterZoom": "Allow pan/drag when zoomed beyond viewport",
+        "resetGesture": "Double-tap to reset to 1x zoom"
+      }
+    },
+    {
+      "id": "double-tap-action",
+      "desktopInteraction": "double-click for actions",
+      "mobileAlternative": "double-tap for quick actions",
+      "description": "Double-tap enables quick actions like like, edit mode, or expand",
+      "affectedComponents": [
+        "list-item",
+        "card",
+        "image",
+        "data-grid-cell",
+        "document-item"
+      ],
+      "implementation": {
+        "debounce": "200ms to distinguish from second tap of reveal gesture",
+        "feedback": "Haptic feedback on successful double-tap detection",
+        "action": "Context-dependent (like, edit, toggle, expand)"
+      }
+    }
+  ],
+  "componentOverrides": [
+    {
+      "component": "button",
+      "category": "action",
+      "desktop": {
+        "trigger": "hover state shows elevated/background change",
+        "activate": "click",
+        "feedback": "color and elevation change"
+      },
+      "mobile": {
+        "trigger": "tap activates immediately with ripple feedback",
+        "feedback": "ripple effect + color change",
+        "minSize": "48px height, 16px padding",
+        "holdState": "Active state persists 200ms after release"
+      }
+    },
+    {
+      "component": "tooltip",
+      "category": "informational",
+      "desktop": {
+        "trigger": "hover",
+        "position": "floating near trigger",
+        "dismiss": "mouse leave"
+      },
+      "mobile": {
+        "trigger": "long-press (500ms) on element or tap info icon",
+        "position": "bottom sheet or popover",
+        "dismiss": "swipe down, tap outside, or close button",
+        "maxWidth": "90vw"
+      }
+    },
+    {
+      "component": "dropdown",
+      "category": "selection",
+      "desktop": {
+        "trigger": "click to open",
+        "display": "dropdown list below trigger",
+        "dismiss": "click outside or ESC"
+      },
+      "mobile": {
+        "trigger": "tap to open",
+        "display": "full-screen modal for 6+ items, bottom sheet for <6 items",
+        "dismiss": "swipe down or tap cancel",
+        "optionHeight": "56px minimum",
+        "search": "searchable if 10+ options"
+      }
+    },
+    {
+      "component": "context-menu",
+      "category": "action",
+      "desktop": {
+        "trigger": "right-click",
+        "display": "floating menu near cursor",
+        "dismiss": "click outside or ESC"
+      },
+      "mobile": {
+        "trigger": "long-press (500ms) or swipe left",
+        "display": "bottom sheet or action buttons",
+        "dismiss": "tap action, swipe opposite, or tap outside"
+      }
+    },
+    {
+      "component": "modal",
+      "category": "container",
+      "desktop": {
+        "dismiss": "click outside (if not blocking), ESC key, or close button",
+        "size": "Fixed width, variable height"
+      },
+      "mobile": {
+        "dismiss": "swipe down, tap close button, or back button",
+        "size": "Full width, max 90vh height",
+        "position": "Bottom sheet style or full-screen based on content"
+      }
+    },
+    {
+      "component": "popover",
+      "category": "container",
+      "desktop": {
+        "trigger": "click or hover on trigger element",
+        "position": "floating relative to trigger",
+        "dismiss": "click outside"
+      },
+      "mobile": {
+        "trigger": "tap on trigger element",
+        "position": "bottom sheet or full width",
+        "dismiss": "tap outside or swipe down"
+      }
+    },
+    {
+      "component": "menu-item",
+      "category": "navigation",
+      "desktop": {
+        "hover": "background highlight and ripple",
+        "select": "click to activate"
+      },
+      "mobile": {
+        "tap": "tap-reveal if has submenu, immediate action if leaf item",
+        "minHeight": "48px",
+        "padding": "12px vertical"
+      }
+    },
+    {
+      "component": "link",
+      "category": "navigation",
+      "desktop": {
+        "hover": "underline and color change",
+        "activate": "click to navigate"
+      },
+      "mobile": {
+        "minTouchTarget": "44px around entire link text and icon",
+        "feedback": "Color change and slight scale on tap",
+        "longPress": "Option to open in new context (share menu)"
+      }
+    },
+    {
+      "component": "icon-button",
+      "category": "action",
+      "desktop": {
+        "hover": "background highlight",
+        "activate": "click"
+      },
+      "mobile": {
+        "minSize": "44x44px",
+        "hitArea": "Extend to 48x48px minimum for touch",
+        "feedback": "Ripple effect and color change"
+      }
+    },
+    {
+      "component": "card",
+      "category": "container",
+      "desktop": {
+        "hover": "elevation increase, actions may appear",
+        "interact": "click for navigation or tap-reveal for actions"
+      },
+      "mobile": {
+        "tap": "Reveal actions via tap-reveal if has actions",
+        "primaryAction": "Tap anywhere on card for primary action",
+        "secondaryActions": "Revealed via tap-reveal or swipe"
+      }
+    },
+    {
+      "component": "data-grid-row",
+      "category": "data-display",
+      "desktop": {
+        "hover": "highlight row, show actions in cells",
+        "interact": "click to select, right-click for context menu"
+      },
+      "mobile": {
+        "tap": "Select row or show tap-reveal actions",
+        "swipeLeft": "Reveal trailing actions (edit, delete)",
+        "longPress": "Show context menu with all row actions"
+      }
+    },
+    {
+      "component": "table-cell",
+      "category": "data-display",
+      "desktop": {
+        "hover": "show edit icon or actions",
+        "interact": "click to edit or select"
+      },
+      "mobile": {
+        "tap": "Show tap-reveal actions or enter edit mode",
+        "longPress": "Copy cell content to clipboard with haptic feedback"
+      }
+    },
+    {
+      "component": "list-item",
+      "category": "data-display",
+      "desktop": {
+        "hover": "background highlight, actions appear",
+        "interact": "click for primary action, hover to see secondary actions"
+      },
+      "mobile": {
+        "tap": "Primary action or tap-reveal for secondary actions",
+        "swipeLeft": "Reveal trailing action buttons",
+        "swipeRight": "Reveal leading action buttons (pin, archive)",
+        "longPress": "Show all actions in context menu"
+      }
+    },
+    {
+      "component": "expandable-section",
+      "category": "container",
+      "desktop": {
+        "hover": "Show toggle indicator highlight",
+        "interact": "click to toggle expand/collapse"
+      },
+      "mobile": {
+        "tap": "Tap header to toggle expand/collapse",
+        "minHeight": "48px for header",
+        "animate": "Smooth height animation on toggle"
+      }
+    },
+    {
+      "component": "disclosure-triangle",
+      "category": "control",
+      "desktop": {
+        "hover": "highlight indicator",
+        "interact": "click to toggle"
+      },
+      "mobile": {
+        "minSize": "44x44px touch target",
+        "feedback": "Rotate animation and ripple effect"
+      }
+    },
+    {
+      "component": "tree-item",
+      "category": "data-display",
+      "desktop": {
+        "hover": "highlight row, show actions",
+        "interact": "click to select, click disclosure to expand"
+      },
+      "mobile": {
+        "tap": "Select item",
+        "tapDisclosure": "Expand/collapse children",
+        "swipe": "Reveal leading or trailing actions"
+      }
+    },
+    {
+      "component": "input-field",
+      "category": "form",
+      "desktop": {
+        "focus": "border color change and shadow",
+        "interact": "click to focus and type"
+      },
+      "mobile": {
+        "focus": "border color change, auto-scroll into view",
+        "keyboard": "Show appropriate keyboard (tel, email, number, etc.)",
+        "minHeight": "44px",
+        "padding": "12px vertical"
+      }
+    },
+    {
+      "component": "checkbox",
+      "category": "form",
+      "desktop": {
+        "hover": "background highlight on label or checkbox",
+        "interact": "click to toggle"
+      },
+      "mobile": {
+        "minSize": "48x48px hit area",
+        "tap": "Tap on checkbox or label text to toggle",
+        "feedback": "Ripple effect and checkmark animation"
+      }
+    },
+    {
+      "component": "radio-button",
+      "category": "form",
+      "desktop": {
+        "hover": "background highlight",
+        "interact": "click to select"
+      },
+      "mobile": {
+        "minSize": "48x48px hit area",
+        "tap": "Tap on button or label text to select",
+        "feedback": "Ripple effect and selection animation"
+      }
+    },
+    {
+      "component": "toggle-switch",
+      "category": "form",
+      "desktop": {
+        "hover": "background highlight",
+        "interact": "click to toggle state"
+      },
+      "mobile": {
+        "minSize": "48px height",
+        "tap": "Tap to toggle or drag thumb",
+        "feedback": "Smooth animation and color change"
+      }
+    },
+    {
+      "component": "slider",
+      "category": "form",
+      "desktop": {
+        "interact": "drag thumb or click track",
+        "hover": "show tooltip with value"
+      },
+      "mobile": {
+        "interact": "drag thumb with haptic feedback",
+        "tooltip": "Show value in bottom sheet or popover during drag",
+        "minTrackHeight": "4px",
+        "minThumbSize": "44x44px"
+      }
+    },
+    {
+      "component": "date-picker",
+      "category": "form",
+      "desktop": {
+        "trigger": "click input or calendar icon",
+        "display": "dropdown calendar",
+        "dismiss": "click outside or select date"
+      },
+      "mobile": {
+        "trigger": "tap input field",
+        "display": "full-screen modal with month/day/year pickers",
+        "dismiss": "tap confirm or cancel",
+        "navigation": "Swipe left/right between months"
+      }
+    },
+    {
+      "component": "time-picker",
+      "category": "form",
+      "desktop": {
+        "trigger": "click time input",
+        "display": "dropdown time picker",
+        "dismiss": "click outside or confirm"
+      },
+      "mobile": {
+        "trigger": "tap time input",
+        "display": "full-screen modal with hour/minute/second wheels",
+        "interaction": "Swipe up/down to adjust values",
+        "dismiss": "tap confirm or cancel"
+      }
+    },
+    {
+      "component": "duration-picker",
+      "category": "form",
+      "desktop": {
+        "trigger": "click duration input",
+        "display": "dropdown picker",
+        "dismiss": "click outside or confirm"
+      },
+      "mobile": {
+        "trigger": "tap duration input",
+        "display": "full-screen modal with days/hours/minutes pickers",
+        "interaction": "Swipe or tap to adjust",
+        "dismiss": "confirm or cancel button"
+      }
+    },
+    {
+      "component": "tag",
+      "category": "data-display",
+      "desktop": {
+        "hover": "highlight and show remove icon",
+        "interact": "click remove icon or click tag for action"
+      },
+      "mobile": {
+        "tap": "tap-reveal to show remove or other actions",
+        "remove": "Tap X icon to remove tag",
+        "minSize": "44px height"
+      }
+    },
+    {
+      "component": "badge",
+      "category": "data-display",
+      "desktop": {
+        "display": "static, sometimes clickable for details"
+      },
+      "mobile": {
+        "display": "Same visual, tap opens details in bottom sheet",
+        "minSize": "24px"
+      }
+    },
+    {
+      "component": "chip",
+      "category": "input",
+      "desktop": {
+        "hover": "highlight and show remove icon",
+        "interact": "click remove icon"
+      },
+      "mobile": {
+        "tap": "tap-reveal to show remove option",
+        "minSize": "44px height",
+        "feedback": "Ripple effect on tap"
+      }
+    },
+    {
+      "component": "segmented-control-item",
+      "category": "selection",
+      "desktop": {
+        "hover": "background highlight",
+        "interact": "click to select segment"
+      },
+      "mobile": {
+        "tap": "Tap to select",
+        "minWidth": "44px",
+        "feedback": "Smooth animation and highlight change"
+      }
+    },
+    {
+      "component": "snackbar",
+      "category": "feedback",
+      "desktop": {
+        "position": "bottom of viewport",
+        "dismiss": "auto-dismiss or click close/action"
+      },
+      "mobile": {
+        "position": "bottom of viewport above bottom-nav",
+        "dismiss": "swipe down, auto-dismiss, or tap action",
+        "minHeight": "48px",
+        "respectSafeArea": true
+      }
+    },
+    {
+      "component": "toast",
+      "category": "feedback",
+      "desktop": {
+        "position": "top of viewport",
+        "dismiss": "auto-dismiss or click close"
+      },
+      "mobile": {
+        "position": "below status bar, above content",
+        "dismiss": "swipe up or auto-dismiss",
+        "maxWidth": "90vw"
+      }
+    },
+    {
+      "component": "bottom-nav",
+      "category": "navigation",
+      "desktop": {
+        "display": "Not typically used on desktop",
+        "interaction": "N/A"
+      },
+      "mobile": {
+        "position": "fixed bottom of viewport",
+        "respectSafeArea": true,
+        "itemMinWidth": "40px",
+        "itemHeight": "56px with labels",
+        "tap": "Tap item to navigate",
+        "longPress": "Show label tooltip if only icon shown"
+      }
+    },
+    {
+      "component": "bottom-sheet",
+      "category": "container",
+      "desktop": {
+        "display": "Rare, usually modal instead"
+      },
+      "mobile": {
+        "position": "Slides up from bottom",
+        "drag": "Drag handle to dismiss or swipe down",
+        "respectSafeArea": true,
+        "maxHeight": "90vh",
+        "dragHandle": "Show visual indicator for drag interaction"
+      }
+    },
+    {
+      "component": "drawer",
+      "category": "navigation",
+      "desktop": {
+        "trigger": "menu icon or hover side",
+        "display": "slides from left or right"
+      },
+      "mobile": {
+        "trigger": "menu icon tap",
+        "display": "slides from left (or right)",
+        "dismiss": "tap outside, swipe opposite direction, or tap item",
+        "width": "80% of viewport, max 320px"
+      }
+    },
+    {
+      "component": "FAB",
+      "category": "action",
+      "desktop": {
+        "display": "Typically not used on desktop",
+        "hover": "show label or secondary actions"
+      },
+      "mobile": {
+        "position": "fixed bottom-right corner",
+        "respectSafeArea": true,
+        "size": "56x56px",
+        "tap": "Execute primary action or show speed dial",
+        "longPress": "Show tooltip or label"
+      }
+    },
+    {
+      "component": "speed-dial",
+      "category": "action",
+      "desktop": {
+        "hover": "show secondary actions"
+      },
+      "mobile": {
+        "trigger": "Tap FAB to expand",
+        "display": "Circular arrangement of action buttons",
+        "dismiss": "Tap action or FAB again",
+        "animation": "Scale and rotate animations for items"
+      }
+    },
+    {
+      "component": "search-field",
+      "category": "input",
+      "desktop": {
+        "focus": "keyboard input, suggestions dropdown"
+      },
+      "mobile": {
+        "focus": "keyboard input, suggestions in bottom sheet or overlay",
+        "minHeight": "48px",
+        "keyboard": "show search keyboard",
+        "clear": "X button to clear search"
+      }
+    },
+    {
+      "component": "image",
+      "category": "media",
+      "desktop": {
+        "interact": "click to view full size",
+        "hover": "show zoom indicator"
+      },
+      "mobile": {
+        "tap": "Open image in full-screen viewer",
+        "pinch": "Pinch-zoom within viewer",
+        "swipe": "Swipe to view next/previous images",
+        "longPress": "Show share or save options"
+      }
+    },
+    {
+      "component": "map",
+      "category": "media",
+      "desktop": {
+        "interact": "drag to pan, scroll to zoom",
+        "hover": "show location details"
+      },
+      "mobile": {
+        "pan": "drag to move map",
+        "zoom": "pinch to zoom or double-tap",
+        "tap": "Tap location pin for details",
+        "longPress": "Show options for that location"
+      }
+    },
+    {
+      "component": "chart",
+      "category": "data-display",
+      "desktop": {
+        "hover": "show data tooltip",
+        "interact": "click data point for details"
+      },
+      "mobile": {
+        "tap": "Show tooltip for data point",
+        "pinch": "Pinch to zoom into chart",
+        "swipe": "Swipe to pan across chart",
+        "longPress": "Show full data in bottom sheet"
+      }
+    },
+    {
+      "component": "gantt-chart",
+      "category": "data-display",
+      "desktop": {
+        "hover": "show task tooltip",
+        "interact": "drag to reschedule or click for details"
+      },
+      "mobile": {
+        "tap": "Show task details in bottom sheet",
+        "horizontal-scroll": "Scroll to change time range",
+        "pinch": "Pinch to zoom into timeline",
+        "longPress": "Show full task editing options"
+      }
+    },
+    {
+      "component": "timeline",
+      "category": "data-display",
+      "desktop": {
+        "hover": "show event details",
+        "interact": "click for full event information"
+      },
+      "mobile": {
+        "vertical-scroll": "Scroll through events",
+        "tap": "Tap event for details in bottom sheet",
+        "pinch": "Pinch to zoom/adjust timeline density"
+      }
+    }
+  ],
+  "safeAreas": {
+    "topInset": "env(safe-area-inset-top)",
+    "rightInset": "env(safe-area-inset-right)",
+    "bottomInset": "env(safe-area-inset-bottom)",
+    "leftInset": "env(safe-area-inset-left)",
+    "description": "Safe area insets prevent content from being obscured by notches, dynamic islands, or home indicators",
+    "affectedComponents": [
+      "bottom-nav",
+      "snackbar",
+      "toast",
+      "ai-chat-input",
+      "bottom-sheet",
+      "drawer",
+      "FAB",
+      "sticky-header",
+      "status-bar-notification"
+    ],
+    "implementation": {
+      "bottomNav": "Padding-bottom: calc(56px + env(safe-area-inset-bottom))",
+      "snackbar": "Margin-bottom: env(safe-area-inset-bottom)",
+      "chatInput": "Padding-bottom: env(safe-area-inset-bottom)",
+      "generalRule": "All fixed bottom elements must account for safe area inset"
+    }
+  },
+  "scrollBehavior": {
+    "momentum": true,
+    "description": "Enable momentum scrolling for natural scroll deceleration",
+    "overscrollBehavior": "contain",
+    "overscrollDescription": "Prevent overscroll from affecting parent scroll contexts",
+    "pullToRefresh": {
+      "enabled": false,
+      "reason": "App handles refresh via explicit controls in UI, not pull-to-refresh gesture"
+    },
+    "scrollSnapping": {
+      "horizontalCarousels": "snap-x mandatory with 100% spacing",
+      "verticalPaginatedLists": "snap-y mandatory with viewport height spacing"
+    },
+    "scrollIndicators": {
+      "show": "Always visible on scroll-heavy containers",
+      "position": "Floating on right edge, outside content area"
+    }
+  },
+  "gestureConflicts": {
+    "description": "Guidance for handling conflicts between multiple gestures",
+    "tapVsLongPress": {
+      "strategy": "Tap fires immediately with 500ms timeout before long-press activates",
+      "tapOutcome": "Primary action executes",
+      "longPressOutcome": "Context menu appears if held after tap timeout"
+    },
+    "swipeVsScroll": {
+      "strategy": "Swipe locked to horizontal within interactive rows; scroll works for vertical page scroll",
+      "edgeCases": "Swipe actions disabled when scroll is vertical momentum scrolling"
+    },
+    "doubleTapVsZoom": {
+      "strategy": "Double-tap for action takes priority; pinch for zoom only works with two fingers"
+    }
+  },
+  "hapticFeedback": {
+    "enabled": true,
+    "patterns": {
+      "tap": "Light haptic on successful tap detection",
+      "selection": "Medium haptic on selection or toggle change",
+      "completion": "Success (three short bursts) on form submission or important action",
+      "error": "Warning (two medium bursts) on validation error or destructive action confirmation",
+      "longPress": "Medium haptic at 500ms mark when long-press activates"
+    }
+  },
+  "accessibilityEnhancements": {
+    "screenReader": {
+      "buttons": "Announce state (enabled/disabled), type (button/toggle), and action description",
+      "menus": "Announce menu item count and current selection",
+      "forms": "Announce required fields, validation errors, and helper text",
+      "dynamicContent": "Use ARIA live regions to announce changes from gestures"
+    },
+    "motorImpairment": {
+      "minimumTouchTargets": "All interactive elements 44x44px minimum, 48x48px recommended",
+      "spacingBetweenTargets": "Minimum 8px between touch targets to prevent accidental activation",
+      "alternateInputs": "Always provide alternative to gesture-only actions (buttons, menus)"
+    },
+    "reduceMotion": {
+      "strategy": "Gesture feedback still works, but animations shortened or removed",
+      "implementation": "@media (prefers-reduced-motion: reduce) { animation-duration: 0s; }"
+    }
+  },
+  "deviceOrientations": {
+    "portrait": {
+      "fullScreenModals": "Occupy full width, max 90vh height",
+      "bottomSheets": "Slide up to 80-90% of viewport height"
+    },
+    "landscape": {
+      "fullScreenModals": "Centered modal with max 60% width",
+      "bottomSheets": "Side sheet or smaller bottom sheet to preserve horizontal space"
+    }
+  },
+  "viewportSizes": {
+    "small": {
+      "breakpoint": "<375px width",
+      "adjustments": "Single column layouts, larger touch targets, simplified navigation"
+    },
+    "medium": {
+      "breakpoint": "375px - 599px width",
+      "adjustments": "Standard mobile layout, all gestures fully supported"
+    },
+    "large": {
+      "breakpoint": "600px - 839px width",
+      "adjustments": "Tablet layout, two-column where appropriate, horizontal nav possible"
+    },
+    "xlarge": {
+      "breakpoint": "840px+ width",
+      "adjustments": "Desktop or large tablet, desktop interactions can supplement mobile"
+    }
+  },
+  "bestPractices": {
+    "consistency": "Use same gesture for same action across entire app",
+    "discoverability": "Show visual hints for gestures (e.g., drag handle for swipe, chevron for expand)",
+    "feedback": "Always provide immediate feedback (visual, haptic, auditory) on gesture recognition",
+    "reversibility": "Allow undo or easy cancellation for destructive gesture-based actions",
+    "progressive": "Common actions via simple gestures; advanced actions via menus or secondary gestures",
+    "avoidAmbiguity": "Don't use same gesture for conflicting actions in same context"
+  }
+}

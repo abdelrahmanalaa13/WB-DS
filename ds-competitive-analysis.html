@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS Competitive Analysis - WideBot ERP Design System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --surface-ground: #0b1416;
+            --surface-default: #0f1e21;
+            --surface-raised: #172a2e;
+            --surface-sunken: #080f11;
+            --surface-overlay: rgba(0, 0, 0, 0.6);
+            --content-primary: #e8eef0;
+            --content-secondary: #a0adb0;
+            --content-tertiary: #7e9092;
+            --content-disabled: #3d5052;
+            --border-subtle: #1d3033;
+            --border-default: #2b4245;
+            --border-strong: #4a6265;
+            --primary: #fe9566;
+            --primary-tonal-bg: #312622;
+            --primary-tonal-fg: #febfa3;
+            --danger: #fe9ba4;
+            --danger-tonal-bg: #312022;
+            --danger-tonal-fg: #fe9ba4;
+            --warning: #ffc194;
+            --warning-tonal-bg: #31271f;
+            --warning-tonal-fg: #ffc194;
+            --success: #50d195;
+            --success-tonal-bg: #1b2b24;
+            --success-tonal-fg: #7cddb0;
+            --ai: #D8B4FE;
+            --ai-tonal-bg: #2D1F3D;
+            --ai-tonal-fg: #D8B4FE;
+            --neutral-tonal-bg: #1e2d30;
+            --neutral-tonal-fg: #e1e8ea;
+            --focus-ring-color: #ff8040;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background: var(--surface-ground);
+            color: var(--content-primary);
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--surface-default);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: var(--space-10) var(--space-6);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: var(--space-1);
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: var(--content-tertiary);
+            font-weight: 300;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+
+        section {
+            margin-bottom: var(--space-8);
+            background: var(--surface-default);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: inset 0 0 0 1px var(--border-subtle);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: var(--space-5);
+            padding-bottom: var(--space-3);
+            border-bottom: 2px solid var(--border-default);
+        }
+
+        h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--content-primary);
+            margin-bottom: var(--space-3);
+            margin-top: var(--space-5);
+        }
+
+        p { color: var(--content-secondary); margin-bottom: var(--space-3); }
+
+        /* ========== COMPARISON TABLE ========== */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            box-shadow: inset 0 0 0 1px var(--border-default);
+            margin: var(--space-5) 0;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            background: var(--surface-raised);
+            color: var(--primary);
+            padding: var(--space-3) var(--space-4);
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        td {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+            vertical-align: top;
+            color: var(--content-secondary);
+        }
+
+        tbody tr:hover { background: var(--surface-raised); }
+
+        .dim { font-weight: 600; color: var(--content-primary); background: var(--surface-sunken); min-width: 140px; white-space: nowrap; }
+
+        .g { background: var(--success-tonal-bg); color: var(--success-tonal-fg); padding: 3px 8px; border-radius: var(--radius-sm); font-size: 0.8rem; display: inline-block; }
+        .y { background: var(--warning-tonal-bg); color: var(--warning-tonal-fg); padding: 3px 8px; border-radius: var(--radius-sm); font-size: 0.8rem; display: inline-block; }
+        .r { background: var(--danger-tonal-bg); color: var(--danger-tonal-fg); padding: 3px 8px; border-radius: var(--radius-sm); font-size: 0.8rem; display: inline-block; }
+
+        /* ========== GAPS SECTION ========== */
+        .gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin: var(--space-5) 0; }
+
+        .gap-col h3 {
+            margin-top: 0;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            font-size: 1rem;
+        }
+
+        .gap-col.pros h3 { background: var(--success-tonal-bg); color: var(--success); }
+        .gap-col.cons h3 { background: var(--danger-tonal-bg); color: var(--danger); }
+
+        .gap-item {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.9rem;
+            color: var(--content-secondary);
+        }
+
+        .gap-item:last-child { border-bottom: none; }
+
+        .gap-item strong { color: var(--content-primary); }
+
+        .gap-item .src {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 1px 6px;
+            border-radius: var(--radius-sm);
+            background: var(--neutral-tonal-bg);
+            color: var(--content-tertiary);
+            margin-inline-start: 4px;
+        }
+
+        .gap-list {
+            background: var(--surface-raised);
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            box-shadow: inset 0 0 0 1px var(--border-subtle);
+        }
+
+        /* ========== SYSTEM BLOCKS ========== */
+        .sys-block {
+            background: var(--surface-raised);
+            border-radius: var(--radius-md);
+            box-shadow: inset 0 0 0 1px var(--border-subtle);
+            margin-bottom: var(--space-4);
+            overflow: hidden;
+        }
+
+        .sys-header {
+            padding: var(--space-3) var(--space-4);
+            background: var(--surface-sunken);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sys-header::after { content: ''; }
+
+        .sys-body { padding: var(--space-4); }
+
+        .sys-body .gap-grid { margin: 0; }
+
+        /* ========== PRIORITY LIST ========== */
+        .pri {
+            padding: var(--space-4);
+            background: var(--surface-raised);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-3);
+            box-shadow: inset 0 0 0 1px var(--border-subtle);
+            border-inline-start: 3px solid var(--border-default);
+        }
+
+        .pri.p0 { border-inline-start-color: var(--danger); }
+        .pri.p1 { border-inline-start-color: var(--warning); }
+        .pri.p2 { border-inline-start-color: var(--ai); }
+        .pri.p3 { border-inline-start-color: var(--content-disabled); }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-inline-end: var(--space-2);
+        }
+
+        .badge.p0 { background: var(--danger-tonal-bg); color: var(--danger); }
+        .badge.p1 { background: var(--warning-tonal-bg); color: var(--warning); }
+        .badge.p2 { background: var(--ai-tonal-bg); color: var(--ai); }
+        .badge.p3 { background: var(--neutral-tonal-bg); color: var(--content-tertiary); }
+        .badge.eff { background: var(--surface-sunken); color: var(--content-tertiary); }
+        .badge.from { background: var(--primary-tonal-bg); color: var(--primary-tonal-fg); }
+
+        .pri h4 { color: var(--content-primary); font-size: 0.95rem; margin-bottom: var(--space-2); }
+        .pri p { font-size: 0.85rem; margin-bottom: var(--space-2); }
+
+        /* ========== FOOTER ========== */
+        footer {
+            text-align: center;
+            padding: var(--space-6);
+            color: var(--content-disabled);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        @media (max-width: 768px) {
+            .gap-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 1.5rem; }
+            th, td { padding: var(--space-2); font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Design System Competitive Analysis</h1>
+    <p>WideBot (Enterprise, WCAG AAA) + Hulul (SMB, WCAG AA) vs. Material 3, Apple HIG, Anthropic, OpenAI, Fluent 2, IBM Carbon</p>
+</header>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- DIMENSION TABLE -->
+<!-- ============================================================ -->
+<section>
+    <h2>Dimension Comparison</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Dimension</th>
+                    <th>WideBot + Hulul</th>
+                    <th>Material 3</th>
+                    <th>Apple HIG</th>
+                    <th>Anthropic</th>
+                    <th>OpenAI</th>
+                    <th>Fluent 2</th>
+                    <th>Carbon</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="dim">Token Architecture</td>
+                    <td><span class="y">2-Tier Semantic, 2 brands (WB: warm teal/orange, HL: cool indigo/purple), L/D per brand</span></td>
+                    <td><span class="g">3-Tier Ref/Sys/Comp</span></td>
+                    <td><span class="y">Semantic Colors</span></td>
+                    <td><span class="r">Hardcoded</span></td>
+                    <td><span class="y">CSS Vars</span></td>
+                    <td><span class="g">2-Tier Global/Alias</span></td>
+                    <td><span class="g">52 Vars/Theme</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Components</td>
+                    <td><span class="g">37 (6 layers)</span></td>
+                    <td><span class="g">30+</span></td>
+                    <td><span class="g">~50</span></td>
+                    <td><span class="r">~12</span></td>
+                    <td><span class="r">~15</span></td>
+                    <td><span class="g">~70</span></td>
+                    <td><span class="g">30+</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Motion System</td>
+                    <td><span class="y">Token-driven curves</span></td>
+                    <td><span class="g">7 Easing + Spring</span></td>
+                    <td><span class="g">Spring Physics</span></td>
+                    <td><span class="y">Shimmer only</span></td>
+                    <td><span class="y">Streaming anim</span></td>
+                    <td><span class="g">Categorized durations</span></td>
+                    <td><span class="g">Productive/Expressive</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Accessibility</td>
+                    <td><span class="g">WB: WCAG AAA (7:1, 3px focus), HL: WCAG AA (4.5:1, 2px focus)</span></td>
+                    <td><span class="g">AA+</span></td>
+                    <td><span class="g">VoiceOver native</span></td>
+                    <td><span class="y">AA</span></td>
+                    <td><span class="r">Known SR issues</span></td>
+                    <td><span class="g">AA + HC Mode</span></td>
+                    <td><span class="g">AA + Guild</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">AI Components</td>
+                    <td><span class="g">Chat, CmdPalette, 5 agents</span></td>
+                    <td><span class="r">None</span></td>
+                    <td><span class="r">Apple Intel TBD</span></td>
+                    <td><span class="g">Artifacts + Stream</span></td>
+                    <td><span class="g">Canvas + Memory</span></td>
+                    <td><span class="g">Copilot UI pkg</span></td>
+                    <td><span class="y">AI Labels only</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Responsive</td>
+                    <td><span class="g">4 BP + Container Q</span></td>
+                    <td><span class="g">Window classes</span></td>
+                    <td><span class="g">2-axis size classes</span></td>
+                    <td><span class="y">Mobile-first</span></td>
+                    <td><span class="y">Web-optimized</span></td>
+                    <td><span class="g">4px base unit</span></td>
+                    <td><span class="g">2x Grid + 5 BP</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">State Mgmt</td>
+                    <td><span class="g">Layer + dual selectors</span></td>
+                    <td><span class="g">8/12/12% layers</span></td>
+                    <td><span class="y">Native states</span></td>
+                    <td><span class="y">CSS classes</span></td>
+                    <td><span class="y">Inline styles</span></td>
+                    <td><span class="g">Slot composition</span></td>
+                    <td><span class="g">State propagation</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Icons</td>
+                    <td><span class="y">HugeIcons (36)</span></td>
+                    <td><span class="g">Material Symbols</span></td>
+                    <td><span class="g">SF Symbols 4000+</span></td>
+                    <td><span class="y">Custom</span></td>
+                    <td><span class="y">Custom</span></td>
+                    <td><span class="g">Fluent Icons</span></td>
+                    <td><span class="g">Carbon Icons</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Theming</td>
+                    <td><span class="g">WB: teal/orange dark + light, HL: indigo/purple dark + light, both RTL/LTR</span></td>
+                    <td><span class="g">Dynamic Color</span></td>
+                    <td><span class="y">L/D/Auto</span></td>
+                    <td><span class="y">3 themes</span></td>
+                    <td><span class="y">L/D</span></td>
+                    <td><span class="g">5 product themes</span></td>
+                    <td><span class="g">5 themes</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Enterprise</td>
+                    <td><span class="g">WB: governance + U1-U19 + SOC2/GDPR, HL: U1-U19 + WCAG AA</span></td>
+                    <td><span class="y">Enterprise edition</span></td>
+                    <td><span class="y">Platform features</span></td>
+                    <td><span class="r">Consumer</span></td>
+                    <td><span class="r">Consumer</span></td>
+                    <td><span class="g">Teams/Office</span></td>
+                    <td><span class="g">Guild + Control</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Registry</td>
+                    <td><span class="g">JSON + Knowledge Graph</span></td>
+                    <td><span class="y">Docs site</span></td>
+                    <td><span class="y">Design Kit</span></td>
+                    <td><span class="r">Implicit</span></td>
+                    <td><span class="r">Implicit</span></td>
+                    <td><span class="g">Defined specs</span></td>
+                    <td><span class="g">React packages</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Governance</td>
+                    <td><span class="g">7-Phase + 19 rules</span></td>
+                    <td><span class="y">Quarterly</span></td>
+                    <td><span class="y">WWDC</span></td>
+                    <td><span class="r">Ad-hoc</span></td>
+                    <td><span class="r">Ad-hoc</span></td>
+                    <td><span class="g">Formal cycle</span></td>
+                    <td><span class="g">IBM Academy</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Data Viz</td>
+                    <td><span class="r">None</span></td>
+                    <td><span class="r">None</span></td>
+                    <td><span class="r">None</span></td>
+                    <td><span class="r">None</span></td>
+                    <td><span class="y">Code Interpreter</span></td>
+                    <td><span class="r">None</span></td>
+                    <td><span class="g">Carbon Charts D3</span></td>
+                </tr>
+                <tr>
+                    <td class="dim">Documentation</td>
+                    <td><span class="y">Spec files + agents</span></td>
+                    <td><span class="g">Extensive site</span></td>
+                    <td><span class="g">Comprehensive HIG</span></td>
+                    <td><span class="y">Blog + guides</span></td>
+                    <td><span class="y">Help center</span></td>
+                    <td><span class="g">Specs + code</span></td>
+                    <td><span class="g">Kit + code</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p style="font-size:0.8rem;color:var(--content-tertiary);">
+        <span class="g">Green</span> = strong/leading &nbsp;
+        <span class="y">Yellow</span> = partial/adequate &nbsp;
+        <span class="r">Red</span> = gap/missing
+    </p>
+</section>
+
+<!-- ============================================================ -->
+<!-- PER-SYSTEM PROS AND CONS -->
+<!-- ============================================================ -->
+<section>
+    <h2>Gap Analysis: Pros and Cons vs. Each System</h2>
+
+    <!-- Material Design 3 -->
+    <div class="sys-block">
+        <div class="sys-header">vs. Material Design 3 (Google)</div>
+        <div class="sys-body">
+            <div class="gap-grid">
+                <div class="gap-col pros">
+                    <h3>We Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>Dual-brand tokens</strong> with separate palettes (WB: teal/orange #fe9566, HL: indigo/purple #bfa1ff) sharing same component logic. M3 only does single-brand dynamic color.</div>
+                        <div class="gap-item"><strong>WB: WCAG AAA</strong> (7:1 contrast, 3px focus ring), <strong>HL: WCAG AA</strong> (4.5:1, 2px focus) vs M3's single AA+ target</div>
+                        <div class="gap-item"><strong>AI components</strong> (Chat, CmdPalette, 5 agents) vs M3 has zero AI patterns</div>
+                        <div class="gap-item"><strong>RTL as first-class</strong> with logical properties vs M3 requires separate config</div>
+                        <div class="gap-item"><strong>19 enforced build rules</strong> vs M3 relies on guidelines only</div>
+                        <div class="gap-item"><strong>Machine-readable registry + knowledge graph</strong> vs M3 documentation site</div>
+                    </div>
+                </div>
+                <div class="gap-col cons">
+                    <h3>They Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>3-tier tokens</strong> (reference/system/component) scales better than our 2-tier <span class="src">Learn</span></div>
+                        <div class="gap-item"><strong>848+ tokens</strong> inventory, we may be under-tokenized in typography and shadows <span class="src">Audit</span></div>
+                        <div class="gap-item"><strong>HCT color space</strong> for perceptual contrast harmony across all combinations <span class="src">Research</span></div>
+                        <div class="gap-item"><strong>Spring animations</strong> with 7 easing curves vs our 3 curve-only durations <span class="src">Adopt</span></div>
+                        <div class="gap-item"><strong>Surface container roles</strong> (semantic elevation) vs our shadow-based depth <span class="src">Adopt</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Apple HIG -->
+    <div class="sys-block">
+        <div class="sys-header">vs. Apple HIG</div>
+        <div class="sys-body">
+            <div class="gap-grid">
+                <div class="gap-col pros">
+                    <h3>We Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>Multi-brand</strong> architecture vs Apple's single ecosystem</div>
+                        <div class="gap-item"><strong>Web/cross-platform</strong> vs Apple's native-only focus</div>
+                        <div class="gap-item"><strong>AI-native components</strong> vs Apple Intelligence still TBD</div>
+                        <div class="gap-item"><strong>Enterprise governance lifecycle</strong> vs Apple's WWDC-gated releases</div>
+                        <div class="gap-item"><strong>Container queries</strong> (component-level responsive) vs Apple's viewport-only size classes</div>
+                    </div>
+                </div>
+                <div class="gap-col cons">
+                    <h3>They Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>Spring physics animations</strong> with damping/frequency feel more natural <span class="src">Adopt</span></div>
+                        <div class="gap-item"><strong>SF Symbols</strong> (4000+ configurable icons) vs our 36 mapped icons <span class="src">Expand</span></div>
+                        <div class="gap-item"><strong>Dynamic Type</strong> scaling to 200% vs our 3 density modes <span class="src">Enhance</span></div>
+                        <div class="gap-item"><strong>Liquid Glass / translucency</strong> material system for premium surfaces <span class="src">Research</span></div>
+                        <div class="gap-item"><strong>Haptic feedback</strong> integration rules, we have none <span class="src">Define</span></div>
+                        <div class="gap-item"><strong>8pt grid discipline</strong> is cleaner than our mixed 4px base <span class="src">Evaluate</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anthropic -->
+    <div class="sys-block">
+        <div class="sys-header">vs. Anthropic (Claude)</div>
+        <div class="sys-body">
+            <div class="gap-grid">
+                <div class="gap-col pros">
+                    <h3>We Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>37 components</strong> across 6 layers vs their ~12 basic components</div>
+                        <div class="gap-item"><strong>Full token system</strong> with dual brand vs their hardcoded colors</div>
+                        <div class="gap-item"><strong>Enterprise governance</strong> + compliance + accessibility framework vs consumer focus</div>
+                        <div class="gap-item"><strong>Machine-readable registry</strong> + knowledge graph vs implicit structure</div>
+                        <div class="gap-item"><strong>Motion system formalized</strong> with 45 patterns vs their shimmer-only approach</div>
+                        <div class="gap-item"><strong>RTL/bilingual</strong> support vs English-only</div>
+                    </div>
+                </div>
+                <div class="gap-col cons">
+                    <h3>They Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>Artifacts system</strong> renders React/HTML/SVG inline in chat, we lack this <span class="src">Build</span></div>
+                        <div class="gap-item"><strong>Brand-forward warmth</strong> (terracotta + cream), our DS is more neutral/clinical <span class="src">Consider</span></div>
+                        <div class="gap-item"><strong>Projects/workspace</strong> context for organizing conversations <span class="src">Plan</span></div>
+                        <div class="gap-item"><strong>Token-by-token streaming</strong> perceived performance in chat <span class="src">Enhance</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OpenAI -->
+    <div class="sys-block">
+        <div class="sys-header">vs. OpenAI (ChatGPT)</div>
+        <div class="sys-body">
+            <div class="gap-grid">
+                <div class="gap-col pros">
+                    <h3>We Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>WB WCAG AAA + HL WCAG AA</strong> vs their known screen reader accessibility issues</div>
+                        <div class="gap-item"><strong>Formalized DS</strong> with 37 components, 4 themes (WB L/D + HL L/D) vs their ~15 custom components</div>
+                        <div class="gap-item"><strong>Enterprise governance</strong> (WB: SOC2/GDPR, HL: SMB compliance) vs consumer-only</div>
+                        <div class="gap-item"><strong>Semantic token architecture</strong> with brand-specific color roles vs Tailwind utilities</div>
+                        <div class="gap-item"><strong>Arabic RTL + English LTR</strong> across both brands vs their English-only product</div>
+                    </div>
+                </div>
+                <div class="gap-col cons">
+                    <h3>They Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>Canvas</strong> workspace for code/writing editing, we have nothing equivalent <span class="src">Build</span></div>
+                        <div class="gap-item"><strong>Memory system</strong> that auto-learns user preferences across conversations <span class="src">Plan</span></div>
+                        <div class="gap-item"><strong>Reasoning traces</strong> with "Thought for X seconds" collapsible UI <span class="src">Adopt</span></div>
+                        <div class="gap-item"><strong>Voice mode UI</strong> (blue orb interface) for multi-modal interaction <span class="src">Research</span></div>
+                        <div class="gap-item"><strong>Code Interpreter</strong> with interactive chart output inline <span class="src">Plan</span></div>
+                        <div class="gap-item"><strong>Custom GPTs marketplace</strong> model for extending AI capabilities <span class="src">Consider</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fluent 2 -->
+    <div class="sys-block">
+        <div class="sys-header">vs. Microsoft Fluent 2</div>
+        <div class="sys-body">
+            <div class="gap-grid">
+                <div class="gap-col pros">
+                    <h3>We Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>WB: WCAG AAA, HL: WCAG AA</strong>. Both exceed Fluent's single AA target</div>
+                        <div class="gap-item"><strong>5 coordinated agent skills</strong> vs their standalone @fluentui-copilot package</div>
+                        <div class="gap-item"><strong>Knowledge graph</strong> (207 relationships) modeling both brands' tokens and rules</div>
+                        <div class="gap-item"><strong>RTL first-class</strong> with logical properties across both brands vs Fluent's add-on</div>
+                        <div class="gap-item"><strong>Container queries</strong> per component vs their viewport-only responsive</div>
+                    </div>
+                </div>
+                <div class="gap-col cons">
+                    <h3>They Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>~70 components</strong> vs our 37. They have nearly 2x coverage <span class="src">Expand</span></div>
+                        <div class="gap-item"><strong>Slot-based composition</strong> (named customizable areas) vs our prop-only API <span class="src">Adopt</span></div>
+                        <div class="gap-item"><strong>Griffel CSS-in-JS</strong> near-zero runtime, better perf than CSS custom props <span class="src">Evaluate</span></div>
+                        <div class="gap-item"><strong>Duration standards</strong> categorized (160ms routine, 240-360ms transitions) <span class="src">Formalize</span></div>
+                        <div class="gap-item"><strong>Multi-product theming</strong> (Teams, Office, Windows, Edge) vs our 2 brands <span class="src">Prepare</span></div>
+                        <div class="gap-item"><strong>Published Copilot UI package</strong> (@fluentui-copilot) as standalone <span class="src">Build</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IBM Carbon -->
+    <div class="sys-block">
+        <div class="sys-header">vs. IBM Carbon</div>
+        <div class="sys-body">
+            <div class="gap-grid">
+                <div class="gap-col pros">
+                    <h3>We Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>WB: WCAG AAA, HL: WCAG AA</strong>. Both exceed Carbon's single AA target</div>
+                        <div class="gap-item"><strong>AI components suite</strong> (Chat, CmdPalette, agents) vs their AI labels only</div>
+                        <div class="gap-item"><strong>Dual-brand architecture</strong> (WB enterprise + HL SMB) vs their single-brand 5-theme system</div>
+                        <div class="gap-item"><strong>Knowledge graph</strong> and machine-readable registry vs documentation-driven</div>
+                        <div class="gap-item"><strong>19 enforced build rules</strong> vs guidelines + review</div>
+                    </div>
+                </div>
+                <div class="gap-col cons">
+                    <h3>They Lead</h3>
+                    <div class="gap-list">
+                        <div class="gap-item"><strong>Carbon Charts (D3.js)</strong> production-tested data visualization. We have zero <span class="src">Critical</span></div>
+                        <div class="gap-item"><strong>Multi-framework</strong> (React, Vue, Svelte, Angular, Web Components) vs our Angular-only <span class="src">Plan</span></div>
+                        <div class="gap-item"><strong>Accessibility Guild</strong> as formal cross-functional team vs our agent-only approach <span class="src">Establish</span></div>
+                        <div class="gap-item"><strong>52 color variables/theme</strong> (8 families x 10 values) vs our more limited palette <span class="src">Expand</span></div>
+                        <div class="gap-item"><strong>AI explainability popovers</strong> with confidence/source visualization <span class="src">Adopt</span></div>
+                        <div class="gap-item"><strong>2x Grid (16-column)</strong> formal layout framework vs our flexible but less structured grid <span class="src">Adopt</span></div>
+                        <div class="gap-item"><strong>Productive vs Expressive</strong> motion split gives clear guidance per context <span class="src">Adopt</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PRIORITIZED ENHANCEMENTS -->
+<!-- ============================================================ -->
+<section>
+    <h2>Prioritized Enhancements</h2>
+
+    <div class="pri p0">
+        <span class="badge p0">P0 Critical</span><span class="badge eff">Effort: L</span><span class="badge from">IBM Carbon</span>
+        <h4>Data Visualization System</h4>
+        <p>Zero charting components. An ERP without charts is incomplete. Evaluate Carbon Charts (D3.js) or build a custom chart component set (line, bar, pie, scatter, heatmap) with token-driven theming.</p>
+    </div>
+
+    <div class="pri p0">
+        <span class="badge p0">P0 Critical</span><span class="badge eff">Effort: M</span><span class="badge from">IBM Carbon</span>
+        <h4>Accessibility Guild + Screen Reader Audit</h4>
+        <p>We claim WCAG AAA but lack formal governance. Establish a cross-functional a11y team. Audit all 37 components against NVDA, JAWS, VoiceOver. Document testing matrix.</p>
+    </div>
+
+    <div class="pri p0">
+        <span class="badge p0">P0 Critical</span><span class="badge eff">Effort: M</span><span class="badge from">Anthropic + OpenAI</span>
+        <h4>Artifact/Code Renderer Component</h4>
+        <p>AI Chat lacks live rendering of generated code. Build an artifact renderer that supports React, HTML, SVG, and Mermaid output inline in conversation.</p>
+    </div>
+
+    <div class="pri p1">
+        <span class="badge p1">P1 High</span><span class="badge eff">Effort: L</span><span class="badge from">Material 3 + Fluent 2</span>
+        <h4>3-Tier Token Architecture</h4>
+        <p>Add a reference token layer under our semantic tokens. ref (brand primitives) / sys (cross-cutting) / comp (component-local). Scales better as brands multiply.</p>
+    </div>
+
+    <div class="pri p1">
+        <span class="badge p1">P1 High</span><span class="badge eff">Effort: M</span><span class="badge from">Apple HIG + Material 3</span>
+        <h4>Spring/Physics Animations</h4>
+        <p>Add spring tokens (--motion-spring-damping, --motion-spring-frequency) alongside current curves. Migrate modals, dropdowns, and sheets to spring motion for natural feel.</p>
+    </div>
+
+    <div class="pri p1">
+        <span class="badge p1">P1 High</span><span class="badge eff">Effort: M</span><span class="badge from">Apple HIG</span>
+        <h4>Icon System Expansion (500+)</h4>
+        <p>36 mapped HugeIcons is limiting. Expand mappings to 500+ with weight/scale configuration per icon. Or evaluate variable icon systems.</p>
+    </div>
+
+    <div class="pri p1">
+        <span class="badge p1">P1 High</span><span class="badge eff">Effort: XL</span><span class="badge from">IBM Carbon</span>
+        <h4>Chart Components (Line, Bar, Pie, Scatter)</h4>
+        <p>Even with a data viz system, individual chart components need design tokens, accessibility, RTL support, and responsive behavior. Full implementation is XL effort.</p>
+    </div>
+
+    <div class="pri p2">
+        <span class="badge p2">P2 Medium</span><span class="badge eff">Effort: L</span><span class="badge from">Fluent 2</span>
+        <h4>Slot-Based Composition</h4>
+        <p>Move from prop-only to named slots (icon, label, description, actions). Reduces variant explosion and improves composability.</p>
+    </div>
+
+    <div class="pri p2">
+        <span class="badge p2">P2 Medium</span><span class="badge eff">Effort: S</span><span class="badge from">Apple HIG</span>
+        <h4>Translucency + Backdrop Blur Tokens</h4>
+        <p>Add frosted glass surface tokens (--surface-glass-bg, --surface-glass-blur) for overlays, panels, and floating elements.</p>
+    </div>
+
+    <div class="pri p2">
+        <span class="badge p2">P2 Medium</span><span class="badge eff">Effort: M</span><span class="badge from">IBM Carbon</span>
+        <h4>Color Palette Expansion (8 families x 10 values)</h4>
+        <p>Our palette may be sparse for data visualization and illustration. Expand to Carbon's model: 8 color families x 10 values per theme.</p>
+    </div>
+
+    <div class="pri p2">
+        <span class="badge p2">P2 Medium</span><span class="badge eff">Effort: S</span><span class="badge from">IBM Carbon</span>
+        <h4>AI Explainability Components</h4>
+        <p>Add "AI-generated" badges, confidence indicators, and explainability popovers. Essential for transparent AI in enterprise ERP contexts.</p>
+    </div>
+
+    <div class="pri p2">
+        <span class="badge p2">P2 Medium</span><span class="badge eff">Effort: M</span><span class="badge from">Fluent 2</span>
+        <h4>Publish ds-copilot-ui Package</h4>
+        <p>Extract AI Chat, reasoning traces, and artifact renderer into a standalone package. Enables faster AI feature adoption across products.</p>
+    </div>
+
+    <div class="pri p3">
+        <span class="badge p3">P3 Nice-to-have</span><span class="badge eff">Effort: XL</span><span class="badge from">IBM Carbon</span>
+        <h4>Web Components Port</h4>
+        <p>Framework-agnostic layer for long-term flexibility. Enables Vue, Svelte, and vanilla JS adoption alongside Angular.</p>
+    </div>
+
+    <div class="pri p3">
+        <span class="badge p3">P3 Nice-to-have</span><span class="badge eff">Effort: M</span><span class="badge from">OpenAI</span>
+        <h4>Memory System in Copilot</h4>
+        <p>Auto-learn user preferences (brand, layout, components used frequently). Reduces friction for repeat users.</p>
+    </div>
+
+    <div class="pri p3">
+        <span class="badge p3">P3 Nice-to-have</span><span class="badge eff">Effort: S</span><span class="badge from">OpenAI</span>
+        <h4>Reasoning Traces UI Component</h4>
+        <p>Collapsible "thinking" component showing AI decision logic. Builds trust and aids onboarding.</p>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- WHAT WE DO BETTER -->
+<!-- ============================================================ -->
+<section>
+    <h2>Our Competitive Advantages</h2>
+    <p>Areas where we lead all 6 competitors. These are moats to protect and invest in.</p>
+
+    <div class="gap-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="gap-col pros">
+            <h3>Architecture Advantages</h3>
+            <div class="gap-list">
+                <div class="gap-item"><strong>Dual-brand tokens</strong>: WB (teal/orange, enterprise, WCAG AAA) + HL (indigo/purple, SMB, WCAG AA) sharing 37 components. No competitor does this.</div>
+                <div class="gap-item"><strong>19 enforced build rules (U1-U19)</strong> applied consistently across both brands. Governance through automation, not docs.</div>
+                <div class="gap-item"><strong>Knowledge graph (207 relationships)</strong> modeling both brands' tokens, components, compliance rules.</div>
+                <div class="gap-item"><strong>Container queries per component</strong>. True component-level responsive across both brands.</div>
+                <div class="gap-item"><strong>Dual selectors (:hover + .hover)</strong>. Enables touch devices and deterministic testing for both brands.</div>
+            </div>
+        </div>
+        <div class="gap-col pros">
+            <h3>AI and Ecosystem Advantages</h3>
+            <div class="gap-list">
+                <div class="gap-item"><strong>5-skill agent ecosystem</strong>. Operationalized DS through AI agents, not just documentation.</div>
+                <div class="gap-item"><strong>AI Chat + Command Palette</strong>. Cohesive AI component suite vs scattered patterns elsewhere.</div>
+                <div class="gap-item"><strong>WB: WCAG AAA, HL: WCAG AA</strong>. Tiered accessibility for different market segments. Gov/healthcare use WB, SMB uses HL.</div>
+                <div class="gap-item"><strong>Arabic RTL + English LTR</strong> first-class across both brands with logical CSS properties.</div>
+                <div class="gap-item"><strong>3 density modes</strong> (compact/default/comfortable) across all components and both brands.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    WideBot + Hulul ERP Design System Competitive Analysis | Generated 2026-03-25 | vs. Material 3, Apple HIG, Anthropic, OpenAI, Fluent 2, IBM Carbon
+</footer>
+
+</body>
+</html>

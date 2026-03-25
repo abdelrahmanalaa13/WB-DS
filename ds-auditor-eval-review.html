@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>Eval Review: <span id="skill-name"></span></h1>
+        <div class="instructions">Review each output and leave feedback below. Navigate with arrow keys or buttons. When done, copy feedback and paste into Claude Code.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">Outputs</button>
+      <button class="view-tab" onclick="switchView('benchmark')">Benchmark</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">Prompt <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">Output</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">No output files found</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            Previous Output
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            Formal Grades
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">Your Feedback</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="What do you think of this output? Any issues, suggestions, or things that look great?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">Previous feedback</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Previous</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">Submit All Reviews</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">No benchmark data available. Run a benchmark to see quantitative results here.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>Review Complete</h2>
+      <p>Your feedback has been saved. Go back to your Claude Code session and tell Claude you're done reviewing.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "ds-auditor-agent", "runs": [{"id": "eval-1-prebuild-list-with_skill", "prompt": "I'm about to build the List component for Sprint D. Generate the pre-build test cases so I know exactly what to verify after building it.", "eval_id": 1, "outputs": [{"name": "prebuild-list.md", "type": "text", "content": "# Pre-Build QC: List\n\n**Component category**: Data Display (L5)\n**Sprint**: D\n**Dependencies**: Avatar (L1), Badge (L1), Icon Button (L1), Divider (L1), Chip (L1)\n**Spec file**: `DS-COMPONENTS/data-display/list.md`\n\n---\n\n## 1. State Matrix\n\n### Base States\n\n| State | CSS Class/Pseudo | Visual Change | Tokens Consumed |\n|-------|-----------------|---------------|-----------------|\n| Default | (none) | Base list item appearance, no overlay | `--surface-default`, `--content-primary`, `--border-subtle` |\n| Hover | `:hover`, `.hover` | State layer overlay (8% opacity), optional inline action appears | `--neutral-tonal-bg` or `::before` with `currentColor` + `opacity: 0.08` |\n| Focus | `:focus-visible` | 2px primary ring via box-shadow, visible on keyboard navigation | `--primary-filled-bg` |\n| Active/Pressed | `:active`, `.active` | State layer overlay (12% opacity) | `::before` with `currentColor` + `opacity: 0.12` |\n| Disabled | `:disabled`, `.disabled` | Item text becomes `--content-disabled`, no interaction | `--content-disabled`, `--border-subtle` |\n\n### Selection States (if multi-select/single-select enabled)\n\n| State | CSS Class | Visual Change | Tokens |\n|-------|----------|---------------|--------|\n| Selected | `.selected` | Checkbox/radio checked, item background may lighten, left accent indicator | `--primary-filled-bg`, `--surface-raised` |\n| Selected + Hover | `.selected:hover` | State layer on top of selected state, accent remains visible | `--primary-filled-bg`, `--neutral-tonal-bg` (overlay) |\n| Selected + Disabled | `.selected.disabled` | Checkbox/radio disabled, all text `--content-disabled` | `--content-disabled`, `--primary-filled-bg` (faded) |\n\n### Compound States\n\n| State Combo | CSS Selector | Visual Change | Token Consumed |\n|------------|-------------|---------------|----------------|\n| Focus (keyboard) | `:focus-visible` on item | 2px ring around entire row or selected cell | `--primary-filled-bg` |\n| Disabled + Hover | `.disabled:hover`, `.disabled.hover` | No state layer, reverts to disabled default (no interactive feedback) | `--content-disabled` |\n\n---\n\n## 2. Variant Matrix\n\n| Variant Axis | Values | What Changes |\n|-------------|--------|-------------|\n| Type | simple, two-line, three-line, rich | Primary text only vs primary+secondary text vs primary+secondary+meta text vs avatar/icon+text+action. Avatar/icon sizes scale with type. |\n| Dividers | none, inset, full-width | Divider presence and left inset distance. Inset stops before leading element (avatar/icon). Full-width spans entire width. |\n| Selection | none, single-select, multi-select | No selection control vs radio button vs checkbox. Selection control affects item height (minimum target: 48px on mobile). |\n| Density | compact, default, comfortable | Item padding and text line-height. Compact: `--space-3` padding; Default: `--space-4`; Comfortable: `--space-5`. Font sizes may remain consistent per type. |\n| Interactive | clickable, non-interactive | Clickable items show hover state + focus ring + cursor: pointer. Non-interactive items show no state feedback. |\n\n**Total combinations**: 4 types \u00d7 3 divider options \u00d7 3 selection modes \u00d7 3 density \u00d7 2 interactive = 216 configurations\n**Total with states**: 216 configurations \u00d7 5 base states \u00d7 3 selection states = significant but manageable test matrix\n\n**Practical focus for testing**:\n- All 4 types with default density, no divider, no selection, clickable (16 state combos)\n- Two-line type across all densities (15 state combos)\n- Two-line type with single-select and full-width dividers (15 state combos)\n- Rich type with multi-select and inset dividers (15 state combos)\n- Non-interactive variant to verify no hover/active states apply\n\n---\n\n## 3. Content Resilience\n\n| Slot | Empty | Minimal | Normal | Overflow | Arabic/RTL |\n|------|-------|---------|--------|----------|-----------|\n| Primary text | N/A -- required field | Single letter (e.g., \"A\") or short word (e.g., \"Done\") | Typical label (15-30 chars) | 80+ characters: must truncate with ellipsis | Right-to-left text should render correctly, text-align: start |\n| Secondary text (two-line, three-line) | Collapses to nothing, item height adjusts down | Single character or number (e.g., \"1\") | Typical value (10-20 chars) | 50+ characters: truncate with ellipsis | RTL text renders correctly |\n| Meta text (three-line) | Item becomes two-line appearance | Single character or abbrev (e.g., \"M\" for Monday) | Timestamp or short metadata (15-20 chars) | 40+ characters: truncate with ellipsis | RTL text, Arabic numbers convert correctly |\n| Avatar/Icon (rich type) | Not applicable (required if rich type) | 24px avatar (xs) in compact mode | 32px avatar (md) in default mode | 40px avatar (lg) in comfortable mode | Avatar/icon remains leading element in RTL |\n| Trailing action (rich type, hoverable) | N/A when non-interactive | Single icon button (minimal width 24px target in AA, 44px in AAA) | Icon button showing on hover in LTR, shows on mobile swipe in RTL | Icon button does not overflow, remains accessible at 44x44px minimum target | Icon button positioned at `inset-inline-end` not `right` |\n\n### Ellipsis Verification\n\nFor all overflow cases:\n- [ ] `text-overflow: ellipsis` present on truncated text\n- [ ] `white-space: nowrap` present (prevents wrapping, forces truncation)\n- [ ] `overflow: hidden` present on container\n- [ ] `max-width` or flex container constraint defined to trigger truncation\n- [ ] Ellipsis applied to primary text ONLY by default (secondary/meta rarely overflow)\n\n---\n\n## 4. RTL Verification Points\n\n| Element | LTR Property | RTL Equivalent | Verify |\n|---------|-------------|---------------|--------|\n| Avatar/Icon position | Leading element at start | Position flips to end automatically via flexbox `flex-direction: row` in LTR, `flex-direction: row-rtl` or RTL overrides | No explicit `left:` or `right:` in CSS |\n| Divider inset | `margin-left` past avatar width | `margin-inline-start` in logical property | No physical `margin-left` |\n| Trailing action position | Positioned at `right` (physical) | Flips to `left` in RTL via `inset-inline-end` | No `right:` property |\n| Selection control | Leading element before text | Flips to trailing element after text in RTL (may require JS logic or dir=rtl aware layout) | Flexbox order or explicit RTL branch |\n| Icon/Chevron (if present) | Points right (LTR) | Points left (RTL) via `transform: scaleX(-1)` or logical property | Points correct direction per direction |\n| Text alignment | `text-align: left` | `text-align: start` | No physical `left`/`right` in text-align |\n\n---\n\n## 5. Accessibility Checklist\n\n### Semantic HTML\n\n| Element | Required Tag | ARIA Attributes |\n|---------|-------------|-----------------|\n| List wrapper | `<ul>` or `<div role=\"list\">` | `role=\"list\"` if div (not needed if ul) |\n| List item (non-selectable) | `<li>` or `<div role=\"listitem\">` | `role=\"listitem\"` if div (not needed if li) |\n| List item (single-select) | `<li>` containing radio input | `role=\"radio\"` on input; `aria-checked=\"true/false\"` |\n| List item (multi-select) | `<li>` containing checkbox input | `role=\"checkbox\"` on input (or native `<input type=\"checkbox\">`); `aria-checked=\"true/false\"` |\n| Primary text | `<span>` or `<div>` | (semantic content, no aria needed) |\n| Secondary text | `<span>` or `<p>` | (semantic content) |\n| Trailing action (button) | `<button>` | `aria-label` if icon-only (required); `aria-haspopup` if opens menu |\n| Avatar | `<img>` or `<div>` | `alt` text if img; `aria-label` or `aria-labelledby` if decorative avatar |\n| Divider | `<hr>` or `<div role=\"separator\">` | `role=\"separator\"` if div; `aria-orientation=\"horizontal\"` if clarification needed |\n\n### Keyboard Interaction\n\n| Key | Action |\n|-----|--------|\n| Tab | Focus moves through list items; interactive items (clickable rows, select controls, action buttons) are reachable |\n| Shift+Tab | Focus moves backward through list |\n| Enter | Activates clicked item (if clickable row); toggles select control (if checkbox/radio) |\n| Space | Toggles checkbox/radio selection in multi-select or single-select items |\n| Arrow Up | Moves focus to previous list item (optional; required if list is large and scrollable) |\n| Arrow Down | Moves focus to next list item (optional; required if list is large and scrollable) |\n| Escape | Closes any inline edit or popover actions (if applicable) |\n\n### Brand-Specific Requirements\n\n| Requirement | Hulul (AA) | WideBot (AAA) |\n|-------------|-----------|--------------|\n| Text contrast (primary on surface-default) | `--content-primary` on `--surface-default` >= 4.5:1 | >= 7:1 |\n| Text contrast (secondary on surface-default) | `--content-secondary` on `--surface-default` >= 4.5:1 | >= 7:1 |\n| Text contrast (tertiary on surface-default) | `--content-tertiary` on `--surface-default` >= 4.5:1 (often fails at AAA) | >= 4.5:1 (flag if < 7:1) |\n| Interactive element target size | >= 24x24px minimum (row height typically 48px on mobile) | >= 44x44px minimum |\n| Focus ring contrast | Visible (2px ring) | 3:1 contrast against adjacent surface |\n| Focus ring visibility | Must be visible on all backgrounds | Must enclose entire component |\n| Selection indicator | Checkmark/radio checked state visible | Checkmark/radio + color + no color-alone indication |\n| Error state (if applicable) | N/A (List itself non-form) | N/A |\n| Disabled state distinction | Text color change to `--content-disabled` | Text color change + no hover feedback |\n\n---\n\n## 6. Token Validation\n\n### Required Token References\n\n| Token | Usage | Exists in globals-v4.css? |\n|-------|-------|--------------------------|\n| `--surface-default` | List background | YES (Hulul light: #ffffff, Hulul dark: #141420, etc.) |\n| `--surface-raised` | Selected item background highlight | YES (Hulul light: #ffffff, Hulul dark: #1c1c2c) |\n| `--content-primary` | Primary text (title/main label) | YES |\n| `--content-secondary` | Secondary text (subtitle/description) | YES |\n| `--content-tertiary` | Meta text (timestamp/count) | YES |\n| `--content-disabled` | Disabled item text | YES |\n| `--border-subtle` | Divider color | YES |\n| `--primary-filled-bg` | Focus ring, selected indicator accent | YES |\n| `--neutral-tonal-bg` | Hover state layer background | YES |\n| `--space-3` | Compact padding | YES (12px) |\n| `--space-4` | Default padding | YES (16px) |\n| `--space-5` | Comfortable padding | YES (20px) |\n| `--radius-md` | Item corner radius (if selected item has rounded bg) | YES |\n\n### Token Panel Requirements\n\nThe token panel function must:\n- [ ] Accept `config` parameter with: `{ type, dividers, selection, density, interactive, state, theme, brand }`\n- [ ] Display `--surface-default` (list bg) always\n- [ ] Display `--content-primary`, `--content-secondary`, `--content-tertiary` based on type (secondary/tertiary only if two-line/three-line)\n- [ ] Display `--border-subtle` if dividers !== 'none'\n- [ ] Display `--neutral-tonal-bg` if state === 'hover' or state === 'active'\n- [ ] Display `--primary-filled-bg` if state === 'focus'\n- [ ] Display `--content-disabled` if disabled\n- [ ] Display `--surface-raised` if selected\n- [ ] Display `--radius-md` if selected and item has rounded background\n- [ ] No emphasis concept for List (no filled/tonal/outlined/ghost variants)\n\n---\n\n## 7. CSS Architecture\n\n- [ ] Item borders (dividers) use `box-shadow: inset 0 0 0 1px var(--border-subtle)` or similar (NOT CSS `border` property, unless `border-bottom` for full-width divider is acceptable)\n- [ ] Focus ring uses `box-shadow: 0 0 0 2px var(--primary-filled-bg)` on item with `:focus-visible`\n- [ ] Every text element (primary, secondary, meta, counter) has explicit:\n  - [ ] `font-family: var(--font-sans)`\n  - [ ] `font-size: var(--font-size-*)` (typically `--font-size-base` for primary, `--font-size-sm` for secondary, `--font-size-xs` for meta)\n  - [ ] `color: var(--content-*)` (appropriate hierarchy token)\n- [ ] Hover state layer uses `::before` with `currentColor` + `opacity: 0.08` (or `--state-hover`), not raw `rgba()`\n- [ ] Active state layer uses `::before` with `currentColor` + `opacity: 0.12` (or `--state-pressed`), not raw `rgba()`\n- [ ] State classes (`.hover`, `.active`, `.focused`, `.disabled`, `.selected`) exist alongside pseudo-classes\n- [ ] Disabled state: never rely on opacity alone. Label/primary/secondary/meta text all switch to `--content-disabled` color\n- [ ] Wrapper item class propagates disabled state to all child text: `.list-item.disabled` cascades to `.primary`, `.secondary`, `.meta`\n- [ ] Divider inset: if avatar/icon width is 32px (default) and margin is applied, it uses `margin-inline-start: 40px` (32 + 8px gap), NOT `margin-left`\n- [ ] Non-interactive items have CSS rule: `.list-item:not(.interactive)` applies no hover/active styles, no state layer\n- [ ] `text-overflow: ellipsis` always paired with `white-space: nowrap` and `overflow: hidden` on truncated text\n\n---\n\n## 8. Motion\n\n| Interaction | Duration Token | Easing Token |\n|------------|---------------|-------------|\n| Hover state layer fade in | `--motion-fast` (150ms) | `--ease-standard` |\n| Hover state layer fade out | `--motion-fast` | `--ease-standard` |\n| Focus ring appear | `--motion-fast` | `--ease-standard` |\n| Selection control animation (if checkbox animates) | `--motion-normal` (250ms) | `--ease-standard` |\n| Item height change (if collapsing empty secondary text) | `--motion-normal` | `--ease-standard` |\n\n- [ ] All transitions reference token variables (no hardcoded `100ms`, `200ms`, etc.)\n- [ ] All easings reference token variables (no hardcoded `cubic-bezier()`)\n- [ ] `prefers-reduced-motion` is respected:\n  - [ ] Transitions reduce to 0ms (instant) or disabled\n  - [ ] Opacity-only changes allowed (fade, but no movement)\n  - [ ] If auto-expanding content, it expands instantly without animation\n\n---\n\n## 9. Tester Integration\n\n### Render Controls\n\n| Control | Options | Affects |\n|---------|---------|--------|\n| Type | simple, two-line, three-line, rich | Item structure, text layout, trailing action visibility |\n| Dividers | none, inset, full-width | Divider visibility and left inset distance |\n| Selection | none, single-select, multi-select | Selection control (radio/checkbox) visibility, item structure |\n| Density | compact, default, comfortable | Item padding, line-height (may affect item height) |\n| Interactive | yes, no | Hover state layer, focus ring, cursor pointer |\n| State | default, hover, active, focused, disabled | State layer opacity, focus ring visibility, text color |\n| Theme | light, dark | Token color values |\n| Brand | hulul, widebot | Radius sizes, token values |\n\n### Token Panel Control\n\n| Control | Branches Token Panel | Dynamic Updates |\n|---------|-------------------|-----------------|\n| Type | Shows secondary/tertiary tokens only for two-line/three-line | Panel refreshes when type changes |\n| Dividers | Shows `--border-subtle` only if dividers !== 'none' | Panel refreshes when dividers change |\n| Density | No token change (density affects CSS padding/line-height only, not colors) | N/A |\n| State | Adds state-specific tokens (hover: `--neutral-tonal-bg`, disabled: `--content-disabled`, focus: `--primary-filled-bg`) | Panel refreshes when state changes |\n| Theme/Brand | All tokens resolve per theme/brand | Token values update when theme/brand changes |\n\n### Render Tests\n\n- [ ] Default render shows single item with primary text, no divider, no selection control, default density, interactive\n- [ ] Switching type to two-line adds secondary text with `--content-secondary` color\n- [ ] Switching type to three-line adds meta text with `--content-tertiary` color\n- [ ] Switching type to rich adds avatar/icon + trailing action button on hover\n- [ ] Switching dividers to inset shows divider with left inset (stops before avatar in rich type)\n- [ ] Switching dividers to full-width shows divider spanning entire width\n- [ ] Switching selection to single-select adds radio control before primary text\n- [ ] Switching selection to multi-select adds checkbox control before primary text\n- [ ] Switching density to compact reduces padding from 16px to 12px\n- [ ] Switching density to comfortable increases padding from 16px to 20px\n- [ ] Switching interactive to no removes hover state layer, active layer, focus ring, cursor pointer\n- [ ] Switching state to hover shows state layer overlay (`opacity: 0.08`) and hover preview\n- [ ] Switching state to active shows darker state layer (`opacity: 0.12`)\n- [ ] Switching state to focused shows 2px primary focus ring around item\n- [ ] Switching state to disabled shows all text as `--content-disabled`, no state layer, no focus ring\n- [ ] Switching theme to dark updates all color token values\n- [ ] Switching brand to widebot updates radius and primary token color\n\n---\n\n## 10. Dependency Verification\n\nAll dependencies must be validated as complete and exported:\n\n- [ ] **Avatar (L1, done)**: Component exists in ds-library.html; can be instantiated with size variant (xs/sm/md/lg). Rich list type uses Avatar.\n- [ ] **Badge (L1, done)**: Component exists; can be added as overlay on avatar (optional). Verify Badge re-exports from ds-library.html.\n- [ ] **Icon Button (L1, done)**: Component exists; used as trailing action in rich list type. Verify Icon Button re-exports.\n- [ ] **Divider (L1, done)**: Component exists; used as horizontal divider between items. Verify Divider re-exports.\n- [ ] **Chip (L1, done)**: NOT directly used in List, but spec mentions it as dependency. Verify it exists if future feature requires tag-based items.\n\n---\n\n## 11. Spec Compliance Checklist\n\nFrom `DS-COMPONENTS/data-display/list.md`:\n\n- [ ] **Type variants**: simple, two-line, three-line, rich all implemented\n- [ ] **Divider options**: none, inset, full-width all render correctly\n- [ ] **Selection modes**: none, single-select (radio), multi-select (checkbox) all functional\n- [ ] **Density model**: compact, default, comfortable scaling applied correctly\n- [ ] **Interactive mode**: Clickable items show state feedback; non-interactive items don't\n- [ ] **Viewport support**: Desktop mode shows list with optional inline actions on hover; Mobile mode shows full-width items with swipe actions (if implemented)\n- [ ] **Token usage**: All specified tokens (`--surface-default`, `--primary-filled-bg`, `--content-primary`, `--content-secondary`, `--content-tertiary`, `--border-subtle`, `--space-3/4/5`, `--radius-md`) are consumed correctly\n- [ ] **Forbidden pattern check**: Lists never nest more than one level deep (if nesting required, use Tree View instead)\n- [ ] **Touch target**: Mobile items meet 48px minimum height (Hulul AA: 24px min, WideBot AAA: 44px min for interactive controls)\n\n---\n\n## 12. Learning Loop Application\n\nReview `DS_LEARNING_LOOP.md` for relevant patterns from previous sprints:\n\n- [ ] **Wave 1**: State classes (`.hover`, `.active`, `.disabled`) alongside pseudo-classes; `::before` state layer with `currentColor` + opacity; focus ring via box-shadow\n- [ ] **Wave 2**: Density model applies to List container items (compact/default/comfortable); no width/height on container\n- [ ] **Sprint B**: Every text element needs explicit `font-family` + `font-size` + `color`; disabled propagation via wrapper state class to all child text\n- [ ] **Breadcrumb**: Overflow collapse pattern (not applicable to List, but truncation ellipsis applies)\n- [ ] **Full Library Audit**: RTL safety (inset-inline-start/end, no left/right); hover on filled surfaces uses `currentColor` + opacity; all text must have explicit font properties\n- [ ] **Sprint C**: `color-mix()` for transparent tints (if focus ring halo needed)\n\nSpecific checks:\n- [ ] Is List using density model from Card/Panel precedent?\n- [ ] Are text elements using explicit font-family/size/color?\n- [ ] Is disabled state propagating via wrapper class?\n- [ ] Are dividers using inset box-shadow or CSS border (if full-width)?\n- [ ] Is selection control using same token pattern as Checkbox/Radio?\n- [ ] Are all physical CSS properties (left/right/margin-left) replaced with logical properties?\n\n---\n\n## Test Case Execution Summary\n\n**Essential test cases** (minimum to verify build success):\n\n1. **Render all 4 types** with default density, no divider, no selection, interactive\n2. **State matrix for two-line type**: default \u2192 hover \u2192 active \u2192 focused \u2192 disabled (visual verification)\n3. **Density scaling**: Same two-line item in compact, default, comfortable (padding + line-height changes)\n4. **Selection controls**: Two-line with single-select (radio), then multi-select (checkbox)\n5. **Divider variants**: Two-line with none, inset, full-width dividers\n6. **Rich type with trailing action**: Verify action button appears on hover (desktop) / visible on mobile\n7. **Accessibility**: Focus-visible on keyboard Tab, `:focus-visible` ring renders, all text has semantic role\n8. **Overflow text**: Primary text at 80+ chars truncates with ellipsis, not wrapping\n9. **RTL test**: Swap `dir=\"rtl\"` on list, verify avatar position flips, divider inset adjusts, text-align: start applies\n10. **Disabled item**: All text color switches to `--content-disabled`, no hover/active/focus states\n\n---\n\n## Sign-Off Criteria\n\nThis pre-build QC is **complete when all 10 sections above are verified**. Before submitting the component for post-build audit:\n\n1. Every checkbox in sections 1-9 is checked\n2. Dependency section (10) confirms all L1 components are accessible\n3. Spec compliance (11) confirms all variants and states from the spec are implemented\n4. Learning loop (12) confirms no regressions from previous sprints\n5. At least 2 people have visually tested the component using the tester config\n\nBuild pass: **when all test cases in the summary pass without visual defects or console errors.**\n"}], "grading": null}, {"id": "eval-2-postbuild-slider-with_skill", "prompt": "Audit the Slider component. Check everything - use cases, test cases, interactions, tokens, missing rules, brand compliance.", "eval_id": 2, "outputs": [{"name": "audit-slider.md", "type": "text", "content": "# Post-Build Audit: Slider\n\n## Summary\n- Total checks: 71\n- Passed: 64\n- Failed: 4\n- Warnings: 3\n\n---\n\n## Failures (must fix)\n\n### 1. [Gate 4] Missing :focus-visible State\n   - **File**: ds-library.html, line ~2894-2915\n   - **Current**: `.ds-slider-thumb` has `:hover` and `.hover` but NO `:focus-visible` rule\n   - **Required**: `:focus-visible` selector with `box-shadow: 0 0 0 2px var(--primary-filled-bg)` focus ring\n   - **Impact**: Keyboard navigation fails to show visual focus indicator on thumb\n   - **Fix**: Add rule after line 2907:\n   ```css\n   .ds-slider-thumb:focus-visible {\n     box-shadow: 0 0 0 2px var(--primary-filled-bg), 0 0 0 8px color-mix(in srgb, var(--primary-filled-bg) 15%, transparent), var(--shadow-sm);\n     outline: none;\n   }\n   ```\n   - **Learning**: All interactive elements need `:focus-visible` with box-shadow, not outline. This matches the Sprint C Audit learning (line 179 of DS_LEARNING_LOOP.md).\n\n### 2. [Gate 5] Incomplete Disabled Propagation\n   - **File**: ds-library.html, line ~2880\n   - **Current**: `.ds-slider-track.disabled` has `opacity: 0.5` but label and value text color propagation is only via `.ds-slider-wrapper.disabled` (lines 2890-2891)\n   - **Required**: Disabled state should ALSO propagate to `.ds-slider-fill` color (currently hard-coded primary color in hover/active state) and track background should NOT use opacity\n   - **Issue**: The track itself uses `opacity: 0.5` which is insufficient. All text elements properly use `--content-disabled` via wrapper, BUT the track opacity approach is non-standard.\n   - **Fix**: Replace opacity approach with explicit disabled color on track:\n   ```css\n   .ds-slider-track.disabled {\n     background-color: color-mix(in srgb, var(--neutral-tonal-bg) 50%, transparent);\n     cursor: not-allowed;\n   }\n   ```\n   - **Secondary Fix**: Ensure `.ds-slider-wrapper.disabled .ds-slider-track` also gets the color treatment (verify cascade is working correctly)\n\n### 3. [Gate 6] Tooltip Positioning Uses Physical Transform\n   - **File**: ds-library.html, line ~2931-2932\n   - **Current**: `.ds-slider-tooltip` uses `transform: translateX(-50%)` to center horizontally\n   - **Required**: Logical properties for RTL safety. Already uses `inset-inline-start: 50%` (correct), but `translateX()` is physical\n   - **Issue**: In RTL, `inset-inline-start` flips correctly, but `translateX(-50%)` is always left-translation. Combined positioning breaks centering in RTL.\n   - **Fix**: Replace with logical transform or use `translate(calc(-50%), -50%)` won't work. Use alternative:\n   ```css\n   .ds-slider-tooltip {\n     position: absolute;\n     bottom: calc(100% + 8px);\n     inset-inline-start: 50%;\n     transform: translateX(-50%);  /* This actually OK since both properties together create logical centering */\n     /* OR: left: 0; right: 0; margin-inline: auto; width: max-content; for full logical approach */\n   }\n   ```\n   - **Clarification**: `translateX(-50%)` + `inset-inline-start: 50%` together DO work correctly in RTL because they're relative to the `inset-inline-start` reference, not viewport. However, the transform should be `translate(-50%, -50%)` to properly move down AND left. Current code only moves left.\n   - **True Issue**: The tooltip uses `bottom: calc(100% + 8px)` for vertical positioning but NO horizontal transform is truly logical. Rewrite for full RTL support:\n   ```css\n   .ds-slider-tooltip {\n     position: absolute;\n     bottom: calc(100% + 8px);\n     inset-inline-start: 50%;\n     inset-inline-end: auto;\n     transform: translateX(-50%);  /* translateX is OK here since it's relative to element's own position */\n   }\n   ```\n   - **Actual Fix**: Current code at line 2932 has `transform: translateX(-50%)` which is CORRECT. This translates the element -50% of its own width, centering it. No change needed here \u2014 this pattern is acceptable.\n   - **Revised Assessment**: **This is a FALSE POSITIVE**. The combination of `inset-inline-start: 50%` + `translateX(-50%)` is correct and used in Sprint C Audit (line 176 of DS_LEARNING_LOOP.md) for Slider specifically. No fix required.\n\n### 4. [Gate 9] Missing Shadow Token in Tooltip\n   - **File**: ds-library.html, line ~2928-2942\n   - **Current**: `.ds-slider-tooltip` has no shadow. Tooltip floats above track with no elevation\n   - **Required**: Tooltip should have `box-shadow: var(--shadow-md)` or similar for elevation\n   - **Issue**: Tooltip is positioned absolutely above the track but has no shadow to separate it from background content\n   - **Fix**: Add after line 2939:\n   ```css\n   box-shadow: var(--shadow-md);\n   ```\n   - **Token verification**: `--shadow-md` exists in globals-v4.css (line 149). Hover example in Tooltip spec would have this.\n\n---\n\n## Warnings (should fix)\n\n### 1. Track Background Not Using Token\n   - **File**: ds-library.html, line ~2876\n   - **Current**: `.ds-slider-track` uses `background-color: var(--neutral-tonal-bg)` \u2713 correct\n   - **Assessment**: Token is correct. No warning.\n   - **Retracted**: No issue here.\n\n### 2. Disabled State Opacity Pattern (Non-standard but works)\n   - **File**: ds-library.html, line ~2880\n   - **Current**: `.ds-slider-track.disabled { opacity: 0.5; }`\n   - **Concern**: Opacity is used here instead of explicit color change. This violates the \"never rely on opacity alone\" pattern from Sprint B (line 131).\n   - **Recommendation**: Replace with explicit color:\n   ```css\n   .ds-slider-track.disabled {\n     background-color: color-mix(in srgb, var(--neutral-tonal-bg) 50%, transparent);\n     cursor: not-allowed;\n   }\n   ```\n   - **Note**: Already flagged as Failure #2. This is a duplicate warning.\n\n### 3. Thumb Target Size at 20px (Below Hulul Minimum)\n   - **File**: ds-library.html, line ~2898\n   - **Current**: `.ds-slider-thumb` has `width: 20px; height: 20px`\n   - **Concern**: Hulul requires 24px minimum target size (brand-compliance.md, line 41). Slider thumb is 20x20px.\n   - **Context**: Spec at line 22 of slider.md states \"Touch target for thumb: 44x44px minimum\" but this appears to be incorrect or refers to hit area, not visual size.\n   - **Recommendation**: Verify if this is intentional (visual=20px but click area=44px via padding on parent). If visual thumb needs to be 20px, add padding to `.ds-slider-track` to create larger hit area around thumb. However, current CSS does not show explicit hit-area padding.\n   - **Action**: Clarify spec intent. If 20px visual is correct, add CSS to create 44px hit area around thumb position.\n   - **Severity**: MEDIUM (WideBot requires 44px; Hulul requires 24px minimum)\n\n---\n\n## Brand Compliance\n\n| Check | Hulul (AA) | WideBot (AAA) | Notes |\n|-------|-----------|--------------|-------|\n| Text contrast (label/value) | PASS | PASS | Uses `--content-primary`, `--content-secondary`, verified against light theme in globals-v4.css |\n| Thumb target size | FAIL | FAIL | 20x20px visual size below 24px (Hulul) and 44px (WideBot) minimums |\n| Focus indicator visible | FAIL | FAIL | No `:focus-visible` rule defined (Failure #1) |\n| Focus indicator 3:1 contrast (AAA) | N/A | UNKNOWN | Cannot verify without focus ring implementation |\n| Disabled state clear | PASS | PASS | Opacity + color propagation makes state evident |\n| No color-alone signals | PASS | PASS | All state changes include visual (color, size, shadow) indicators |\n| Keyboard accessible | FAIL | FAIL | Missing `:focus-visible` means keyboard users cannot see focus (Failure #1) |\n\n---\n\n## Cross-Reference Learning Loop\n\n### Confirmed Patterns (No regressions)\n- **Wave 1**: Inset box-shadow for thumb ring \u2713 (line 2901, 2906, 2909)\n- **Wave 1**: State classes alongside pseudo-classes \u2713 (hover, active classes; pending focus-visible)\n- **Wave 1**: ::before state layer \u2717 Slider uses `color-mix()` instead (line 2906, 2909) \u2014 acceptable modern alternative\n- **Sprint B**: Every text element explicit CSS \u2713 (label, value, step-mark all have font-family, font-size, color)\n- **Sprint B**: Disabled state color propagation \u2713 (lines 2890-2892)\n- **Sprint C**: Slider tooltip uses `inset-inline-start` not `left` \u2713 (line 2931)\n- **Sprint C Audit (line 176)**: Slider tooltip positioning uses logical properties \u2713 (verified)\n- **Sprint C Audit (line 177)**: Disabled propagation to label/value \u2713 (lines 2890-2891)\n- **Full Library Audit (line 156)**: All text elements need explicit font-family \u2713 (confirmed)\n\n### Potential Regressions\n- **Sprint C Audit (line 179)**: \"All interactive elements need `:focus-visible`\" \u2014 **REGRESSION**: Slider thumb missing `:focus-visible` (Failure #1)\n\n---\n\n## Test Case Verification\n\n### Control Effectiveness\n- **type control** (continuous/discrete/range): \u2713 All three render different UI (step marks appear only on discrete/range)\n- **state control** (default/hover/active/disabled): \u2713 All states apply classes and visual changes\n- **tooltip control** (hidden/visible): \u2713 Tooltip div is conditionally rendered\n- **All controls visibly change output**: \u2713 PASS\n\n### Default Config Rendering\n- **defaults**: `{ type: 'continuous', state: 'default', tooltip: 'hidden' }` \u2713 Renders single-thumb slider without marks or tooltip\n- **Representative**: \u2713 PASS\n\n### Token Panel Accuracy\n- **Token function takes config**: \u2713 YES (line 4878)\n- **Branches per state**: \u2713 YES (adds `--content-disabled` when state=disabled, line 4888-4890)\n- **All token names resolve in globals-v4.css**: \u2713 PASS\n  - `--primary-filled-bg` \u2713\n  - `--neutral-tonal-bg` \u2713\n  - `--surface-default` \u2713\n  - `--content-secondary`, `--content-primary`, `--content-tertiary`, `--radius-full` \u2713\n  - `--content-disabled` \u2713\n- **Missing tokens in panel**: `--shadow-sm` is used (line 2901) but NOT in token panel. Add to tokens function.\n  - **Fix**: Add `'shadow-sm': '--shadow-sm'` to token object at line 4880-4887\n\n### Render Correctness\n- **Disabled state passes class to wrapper AND children**: \u2713 YES (wrapper gets `disabled` class, applies to track, label, value, step-marks)\n- **Label/value text color switches with disabled**: \u2713 YES (lines 2890-2891)\n- **Step-marks inherit disabled color**: \u2713 YES (line 2892)\n- **Range type renders both thumbs**: \u2713 YES (lines 4856-4857)\n- **Continuous/discrete types render single thumb**: \u2713 YES (lines 4864-4872)\n\n---\n\n## CSS Architecture Deep Dive\n\n### Gate 1: RTL Safety \u2713 PASS\n- No `left:` or `right:` \u2713\n- No `margin-left`/`margin-right` \u2713\n- No `padding-left`/`padding-right` \u2713\n- All positioned elements use `inset-inline-start`/`inset-inline-end` \u2713\n  - Thumb: `position: absolute; top: 50%; transform: translate(-50%, -50%);` uses relative positioning \u2713\n  - Tooltip: `inset-inline-start: 50%` \u2713\n- No directional border-radius \u2713\n- No `float` \u2713\n- Transitions reference correct properties \u2713\n\n### Gate 2: Token Compliance \u2713 PASS\n- No raw hex colors \u2713\n- No rgb()/rgba() (uses `color-mix()` instead) \u2713 (lines 2906, 2909)\n- No hardcoded font-family \u2713\n- No raw px for spacing \u2713\n- Raw px for component-specific sizes (20px thumb, 6px track height) \u2713 Acceptable\n\n### Gate 3: Text Element Coverage \u2713 PASS\n- `.ds-slider-label`: font-family \u2713, font-size \u2713, color \u2713 (line 2870)\n- `.ds-slider-value`: font-family \u2713 (inherited), font-size \u2713 (inherited), color \u2713, font-weight \u2713, font-variant-numeric \u2713 (line 2871)\n- `.ds-slider-step-mark`: font-family \u2713, font-size \u2713, color \u2713 (lines 2923-2925)\n\n### Gate 6: Box-Shadow Borders \u2713 PASS\n- Thumb ring uses `box-shadow: 0 0 0 2px var(--primary-filled-bg)` \u2713 (line 2901)\n- Hover/active use same ring with additional halo \u2713 (line 2906, 2909)\n- No CSS `border` \u2713\n\n### Gate 7: Hover on Inverted Surfaces \u2717 PARTIAL\n- Hover overlay uses `color-mix()` not raw `rgba()` \u2713 (line 2906)\n- BUT: Tooltip background uses `var(--neutral-filled-bg)` (inverted surface) \u2713 (line 2933)\n- Tooltip has no hover state, so Gate 7 doesn't fully apply\n- **Assessment**: PASS\n\n---\n\n## Missing Rules & Enhancements\n\n### 1. Missing Shadow on Tooltip (Failure #4)\nTooltip should have elevation. Add `box-shadow: var(--shadow-md);` after line 2939.\n\n### 2. Track Disabled Should Not Use Opacity (Failure #2)\nReplace `opacity: 0.5` with explicit color. Opacity alone violates Sprint B learning (line 131).\n\n### 3. Thumb Missing :focus-visible (Failure #1)\nAdd focus ring support for keyboard navigation. This is a WCAG requirement and Sprint C Audit regression.\n\n### 4. Thumb Target Size Below Minimum (Warning #3)\n20x20px thumb is below Hulul minimum 24px. Needs clarification on hit-area vs visual-size intent.\n\n### 5. Missing Token in Panel (Minor)\nAdd `--shadow-sm` to token function (used in CSS but not listed).\n\n### 6. Tooltip Transform Could Be More Explicit (Clarification)\nCurrent `translate(-50%, -50%)` only translates X. Add `translateY()` for Y-axis move, or use cleaner approach with `margin: auto; left: 0; right: 0;`.\n   - **Assessment**: Actually, tooltip uses `bottom: calc(100% + 8px)` for Y-position, so only X-translation needed. Current code is correct. No change.\n\n---\n\n## New Learnings\n\n### 1. color-mix() as Alternative to ::before Opacity\nSlider uses `color-mix(in srgb, var(--primary-filled-bg) 15%, transparent)` for hover halo instead of `::before` pseudo-element. This is:\n- **Cleaner**: No extra DOM element\n- **Modern**: CSS Color Module 4 compliant\n- **Equivalent**: Produces same visual result\n- **Applicability**: Can be used in any future component needing transparent tint of a token color\n\n**Learning to propagate**: Both `::before` opacity overlay AND `color-mix()` are valid patterns for creating transparent token-based overlays. Prefer `color-mix()` for simplicity when browser support is acceptable.\n\n### 2. Touch Target Size Vs Visual Size Ambiguity\nSlider spec (line 22) states \"44x44px minimum\" but visual thumb is 20x20px. This suggests:\n- **Visual size** for aesthetics: 20px\n- **Hit area** for accessibility: Should be 44px (padded around thumb)\n- **Current implementation**: Visual size is 20px, no explicit hit-area padding visible in CSS\n\n**Learning to propagate**: For sliders and other small interactive elements, distinguish between visual size (icon/thumb) and hit area (clickable zone). Document both in spec. CSS should show explicit padding/margin to create larger hit area even when visual element is small.\n\n### 3. Disabled Propagation Via Wrapper Class Works Well\nSlider successfully propagates disabled state to multiple child text elements using `.ds-slider-wrapper.disabled`. Pattern:\n```css\n.ds-slider-wrapper.disabled .ds-slider-label { color: var(--content-disabled); }\n.ds-slider-wrapper.disabled .ds-slider-value { color: var(--content-disabled); }\n.ds-slider-wrapper.disabled .ds-slider-step-mark { color: var(--content-disabled); }\n```\n\nThis is cleaner than requiring each child to have its own `.disabled` class. Validates the wrapper-level state propagation pattern from Sprint B.\n\n---\n\n## Audit Summary by Gate\n\n| Gate | Name | Status | Comments |\n|------|------|--------|----------|\n| 1 | RTL Safety | PASS | All logical properties, no physical positioning |\n| 2 | Token Compliance | PASS | All colors are tokens, spacing uses token units |\n| 3 | Text Element Coverage | PASS | All text elements have explicit font-family, font-size, color |\n| 4 | State Completeness | FAIL | Missing `:focus-visible` on thumb (Failure #1) |\n| 5 | Disabled Propagation | FAIL | Track uses opacity instead of explicit color (Failure #2) |\n| 6 | Box-Shadow Borders | PASS | Thumb ring uses correct box-shadow pattern |\n| 7 | Hover on Inverted Surfaces | PASS | Tooltip uses `color-mix()`, no raw rgba |\n| 8 | Control Effectiveness | PASS | All tester controls visibly change output |\n| 9 | Token Panel Accuracy | FAIL | Missing `--shadow-sm` and `--neutral-filled-bg`, `--neutral-filled-fg` tokens (Failure #4 related) |\n| 10 | Render Correctness | PASS | All state classes correctly applied to wrapper and children |\n\n---\n\n## Recommended Fix Order\n\n**MUST FIX (Failures):**\n1. Add `:focus-visible` to `.ds-slider-thumb` (Failure #1, Failure #4)\n2. Replace track `.disabled { opacity: 0.5 }` with explicit color (Failure #2)\n3. Add `box-shadow: var(--shadow-md)` to `.ds-slider-tooltip` (Failure #4)\n4. Add `--shadow-sm`, `--neutral-filled-bg`, `--neutral-filled-fg` to token panel function\n\n**SHOULD FIX (Warnings):**\n5. Clarify thumb target size spec vs hit-area implementation (Warning #3)\n6. Document visual size (20px) vs touch target (should be 44px) in spec\n\n**OPTIONAL ENHANCEMENTS:**\n7. Consider explicit transform for tooltip Y-axis (currently handled by `bottom:` property)\n\n---\n\n## Files Affected\n- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ds-library.html` (CSS: lines 2856-2942, JS: lines 4834-4893)\n- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS-COMPONENTS/inputs/slider.md` (spec clarification needed)\n- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS_LEARNING_LOOP.md` (new learnings to add)\n\n---\n\n## Post-Audit Checklist\n- [ ] Fix `:focus-visible` state\n- [ ] Fix disabled opacity pattern\n- [ ] Add shadow to tooltip\n- [ ] Update token panel\n- [ ] Update target size spec\n- [ ] Re-test keyboard navigation (Tab to thumb, see focus ring)\n- [ ] Re-test disabled state (no opacity visual only)\n- [ ] Re-test tooltip elevation in both brands/themes\n- [ ] Update learning loop with new patterns\n"}], "grading": null}], "previous_feedback": {}, "previous_outputs": {}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">No output files</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "Sheet: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "Error rendering spreadsheet: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.passed || 0) + ' passed, ' + (summary.failed || 0) + ' failed of ' + (summary.total || 0) + '</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "Download";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = "Download " + file.name;
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "Saved";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "Will download on submit";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>Benchmark Results</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "Evals: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += (metadata.runs_per_configuration || "?") + " runs per configuration";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>Metric</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>Delta</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>Pass Rate</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>Time (s)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>Tokens</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>Per-Eval Breakdown</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "Eval " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>Config</th><th>Run</th><th>Pass Rate</th>";
+          if (hasTime) html += "<th>Time (s)</th>";
+          if (hasErrors) html += "<th>Crashes During Execution</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>Avg</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>Assertion</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>Analysis Notes</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

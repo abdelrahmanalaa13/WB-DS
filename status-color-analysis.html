@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Color Analysis - Carbon / M3 / Fluent 2 vs Our DS</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #0f0f11; color: #e4e4e7; line-height: 1.6; padding: 32px; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 600; color: #a1a1aa; margin: 40px 0 16px; border-bottom: 1px solid #27272a; padding-bottom: 8px; }
+  h3 { font-size: 16px; font-weight: 600; color: #d4d4d8; margin: 24px 0 12px; }
+  p { margin-bottom: 12px; color: #a1a1aa; }
+  .subtitle { color: #71717a; font-size: 14px; margin-bottom: 32px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
+  th { background: #18181b; color: #a1a1aa; font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 2px solid #27272a; }
+  td { padding: 8px 12px; border-bottom: 1px solid #1f1f23; vertical-align: middle; }
+  tr:hover { background: #18181b; }
+  .swatch { display: inline-block; width: 36px; height: 24px; border-radius: 4px; vertical-align: middle; margin-right: 8px; border: 1px solid rgba(255,255,255,0.1); }
+  .swatch-sm { width: 20px; height: 20px; border-radius: 3px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .tag-pass { background: #052e16; color: #4ade80; }
+  .tag-fail { background: #450a0a; color: #f87171; }
+  .tag-warn { background: #422006; color: #fb923c; }
+  .tag-info { background: #172554; color: #60a5fa; }
+  .card { background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 24px; margin: 16px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .insight { background: #1a1a2e; border-left: 3px solid #818cf8; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .insight p { color: #c7d2fe; margin: 0; }
+  .concern { background: #2a1a0e; border-left: 3px solid #fb923c; }
+  .concern p { color: #fed7aa; }
+  .good { background: #0a2a1a; border-left: 3px solid #4ade80; }
+  .good p { color: #bbf7d0; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #52525b; margin-bottom: 8px; }
+  .filled-preview { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; margin: 4px; }
+  .tone-bar { height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .recommendation { background: #1e1b4b; border: 1px solid #3730a3; border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .recommendation h4 { color: #a5b4fc; font-size: 14px; margin-bottom: 8px; }
+  .recommendation p { color: #c7d2fe; }
+</style>
+</head>
+<body>
+
+<h1>Status Color Reference Analysis</h1>
+<p class="subtitle">Carbon Design System, Material Design 3, Fluent 2 -- logic behind their choices and how our DS compares</p>
+
+<!-- ===== SECTION 1: REFERENCE SYSTEMS ===== -->
+<h2>1. How Each System Handles Status Colors</h2>
+
+<div class="grid-3">
+  <div class="card">
+    <div class="section-label">IBM Carbon</div>
+    <h3>Grade-based Ramp System</h3>
+    <p>Each color family (Red, Yellow, Orange, Green, Blue) has 10 grades from 10 (lightest) to 100 (darkest). Status tokens reference specific grades, and the grade shifts between light and dark themes to maintain contrast.</p>
+    <table>
+      <tr><th>Role</th><th>Light (White)</th><th>Dark (G100)</th></tr>
+      <tr><td>Error</td><td><span class="swatch" style="background:#da1e28"></span><span class="mono">Red 60</span></td><td><span class="swatch" style="background:#fa4d56"></span><span class="mono">Red 50</span></td></tr>
+      <tr><td>Success</td><td><span class="swatch" style="background:#24a148"></span><span class="mono">Green 50</span></td><td><span class="swatch" style="background:#42be65"></span><span class="mono">Green 40</span></td></tr>
+      <tr><td>Warning</td><td><span class="swatch" style="background:#f1c21b"></span><span class="mono">Yellow 30</span></td><td><span class="swatch" style="background:#f1c21b"></span><span class="mono">Yellow 30</span></td></tr>
+      <tr><td>Info</td><td><span class="swatch" style="background:#0043ce"></span><span class="mono">Blue 70</span></td><td><span class="swatch" style="background:#4589ff"></span><span class="mono">Blue 50</span></td></tr>
+      <tr><td>Caution Major</td><td><span class="swatch" style="background:#ff832b"></span><span class="mono">Orange 40</span></td><td><span class="swatch" style="background:#ff832b"></span><span class="mono">Orange 40</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Material Design 3</div>
+    <h3>HCT Tonal Palette System</h3>
+    <p>M3 uses the HCT color space (Hue, Chroma, Tone). A source color generates a 13-tone palette (0-100). Color roles map to specific tones that flip between light and dark.</p>
+    <table>
+      <tr><th>Role</th><th>Light Tone</th><th>Dark Tone</th></tr>
+      <tr><td>Primary/Error</td><td>40</td><td>80</td></tr>
+      <tr><td>On-Primary/Error</td><td>100 (white)</td><td>20</td></tr>
+      <tr><td>Container</td><td>90 (very light)</td><td>30 (dark)</td></tr>
+      <tr><td>On-Container</td><td>10 (very dark)</td><td>90 (light)</td></tr>
+      <tr><td>Surface</td><td>98</td><td>6</td></tr>
+    </table>
+    <p style="font-size:12px;color:#71717a;margin-top:8px;">M3 only ships with <strong>Error</strong> natively. Warning, Success, Info must be added as custom extended colors following the same tonal pattern.</p>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Microsoft Fluent 2</div>
+    <h3>Named Ramp + Alias Token System</h3>
+    <p>Each status maps to a named color ramp (Cranberry, Orange, Green) with Primary + 6 Tints + 6 Shades. Alias tokens reference specific tint/shade levels per theme.</p>
+    <table>
+      <tr><th>Role</th><th>Ramp</th><th>Light Fg</th><th>Dark Fg</th></tr>
+      <tr><td>Danger</td><td>Cranberry</td><td>shade10</td><td>tint30</td></tr>
+      <tr><td>Warning</td><td>Orange</td><td>shade20</td><td>tint30</td></tr>
+      <tr><td>Success</td><td>Green</td><td>shade10</td><td>tint30</td></tr>
+    </table>
+    <p style="font-size:12px;color:#71717a;margin-top:8px;">3 numbered variants per token type (Background1/2/3, Foreground1/2/3). Deeper numbers = higher emphasis.</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 2: WHY THESE DECISIONS ===== -->
+<h2>2. Logic Behind Each System's Decisions</h2>
+
+<div class="card">
+  <h3>Carbon: Why Grade Shifting?</h3>
+  <p>Carbon uses <strong>higher grades (darker) for light themes</strong> and <strong>lower grades (lighter) for dark themes</strong>. The logic: on a white background, you need a darker shade of red to hit 4.5:1 contrast. On a near-black background, a lighter shade provides the same contrast. This is why Error goes from Red 60 (dark red, 5.0:1 on white) to Red 50 (brighter red, 5.4:1 on #161616).</p>
+  <p><strong>Special case: Warning stays Yellow 30 in ALL themes.</strong> Carbon treats warning yellow as an <em>indicator color</em> (icon or status dot), never as standalone text on a background. Yellow 30 on white is only 1.7:1 -- it fails even AA. Carbon always pairs it with a dark text label next to the icon, or places dark text on a tinted yellow container. This is fundamentally different from using warning as a button color.</p>
+  <p><strong>Why separate Caution Major (Orange) from Warning (Yellow)?</strong> Carbon distinguishes severity levels: Yellow = minor caution (informational), Orange = major caution (action needed), Red = critical error. This gives them 3 levels of warm-spectrum urgency with increasing hue shift toward red.</p>
+</div>
+
+<div class="card">
+  <h3>M3: Why the Tonal Palette Approach?</h3>
+  <p>M3's HCT system solves a fundamental problem: <strong>perceptual uniformity</strong>. In HSL, two colors at the same "lightness" value can look very different in perceived brightness (yellow at L=50 looks much brighter than blue at L=50). HCT's "Tone" dimension is calibrated to actual perceived luminance, so Tone 40 of any hue produces roughly the same apparent lightness.</p>
+  <p><strong>Why Tone 40 for light, Tone 80 for dark?</strong> Tone 40 on a Tone 98 surface (light) gives approximately 7:1 contrast. Tone 80 on a Tone 6 surface (dark) gives approximately 7:1 contrast. The system is designed so that light and dark schemes achieve equivalent contrast automatically. The Container pattern (Tone 90 light / Tone 30 dark) provides a subtle tinted background for less prominent elements.</p>
+  <p><strong>Why no native Warning/Success?</strong> M3 limits the baseline scheme to Primary, Secondary, Tertiary + Error. Warning/Success are considered application-specific and should be added as custom extended colors following the same tonal logic. This keeps the core system lean and avoids imposing specific semantic meanings on colors that may vary by product domain.</p>
+</div>
+
+<div class="card">
+  <h3>Fluent 2: Why Named Ramps with Cranberry?</h3>
+  <p>Fluent uses <strong>named color ramps</strong> (Cranberry, not "Red") to decouple the semantic meaning from the color name. "Cranberry" is a specific hue (#C50F1F) that reads as "danger red" but avoids the confusion of calling it "Red" when the brand might also use red for other purposes.</p>
+  <p><strong>Why tint/shade numbered variants?</strong> Each status needs multiple intensity levels: Background1 (subtle container), Background2 (medium), Background3 (strong/filled). The numbered system makes it easy to pick the right intensity without manual hex tweaking. Light themes use tints (lighter) for backgrounds and shades (darker) for foregrounds; dark themes invert this.</p>
+  <p><strong>Why Orange for Warning (not Yellow)?</strong> Fluent chose orange over yellow for the same accessibility reason Carbon encountered: pure yellow cannot achieve sufficient contrast on white at typical text sizes. Orange provides the "caution" association while maintaining readability. This is the same trade-off our DS makes.</p>
+</div>
+
+<!-- ===== SECTION 3: UNIVERSAL PATTERNS ===== -->
+<h2>3. Universal Patterns Across All Three Systems</h2>
+
+<div class="grid-2">
+  <div class="insight">
+    <p><strong>Pattern 1: Grade/Tone Inversion Between Themes</strong><br>All three systems use darker shades for light backgrounds and lighter shades for dark backgrounds. The specific color "identity" (hue) stays the same; only the lightness shifts. This is exactly what our DS does.</p>
+  </div>
+  <div class="insight">
+    <p><strong>Pattern 2: Warning Yellow is Problematic</strong><br>Pure yellow fails contrast on white at every useful lightness level. Carbon works around this by using yellow only as an icon color. Fluent and our DS both substitute orange. M3 leaves it to implementers.</p>
+  </div>
+  <div class="insight">
+    <p><strong>Pattern 3: Never Rely on Color Alone</strong><br>All three systems mandate pairing color with icons, text labels, or patterns. This is critical for color-blind users who may not distinguish red from green or orange from yellow.</p>
+  </div>
+  <div class="insight">
+    <p><strong>Pattern 4: Container + On-Container Pairing</strong><br>M3 pioneered this explicitly, but all systems use it: a tinted background (container) with dark text on it (on-container) for lower-emphasis status display. Our "tonal" emphasis level maps directly to this.</p>
+  </div>
+</div>
+
+<!-- ===== SECTION 4: OUR DS COMPARED ===== -->
+<h2>4. Our DS Status Colors vs References</h2>
+
+<h3>Hulul (Blue brand, AA target)</h3>
+<table>
+  <tr>
+    <th>Role</th>
+    <th>Filled (bg + fg)</th>
+    <th>Ratio</th>
+    <th>Tonal (bg + fg)</th>
+    <th>Ratio</th>
+    <th>Hue</th>
+    <th>Assessment</th>
+  </tr>
+  <tr>
+    <td>Danger</td>
+    <td><span class="filled-preview" style="background:#d13029;color:#fafafa">Danger</span></td>
+    <td><span class="tag tag-pass">4.8:1</span></td>
+    <td><span class="filled-preview" style="background:#faeae7;color:#b12a23">Danger</span></td>
+    <td><span class="tag tag-pass">5.6:1</span></td>
+    <td class="mono">3 deg</td>
+    <td>Red. Matches Carbon/M3 conventions.</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td><span class="filled-preview" style="background:#c05119;color:#fafafa">Warning</span></td>
+    <td><span class="tag tag-pass">4.5:1</span></td>
+    <td><span class="filled-preview" style="background:#fcebe3;color:#a24313">Warning</span></td>
+    <td><span class="tag tag-pass">5.4:1</span></td>
+    <td class="mono">20 deg</td>
+    <td>Orange-brown. Close to Fluent's approach.</td>
+  </tr>
+  <tr>
+    <td>Success</td>
+    <td><span class="filled-preview" style="background:#0c824a;color:#fafafa">Success</span></td>
+    <td><span class="tag tag-pass">4.7:1</span></td>
+    <td><span class="filled-preview" style="background:#d0f9e1;color:#0a6c3e">Success</span></td>
+    <td><span class="tag tag-pass">5.7:1</span></td>
+    <td class="mono">152 deg</td>
+    <td>Green. Standard across all systems.</td>
+  </tr>
+</table>
+
+<h3>WideBot (Orange brand, AAA target)</h3>
+<table>
+  <tr>
+    <th>Role</th>
+    <th>Filled (bg + fg)</th>
+    <th>Ratio</th>
+    <th>Tonal (bg + fg)</th>
+    <th>Ratio</th>
+    <th>Hue</th>
+    <th>Assessment</th>
+  </tr>
+  <tr>
+    <td>Danger</td>
+    <td><span class="filled-preview" style="background:#ab021e;color:#f6fbfd">Danger</span></td>
+    <td><span class="tag tag-pass">7.3:1</span></td>
+    <td><span class="filled-preview" style="background:#fce3e7;color:#820318">Danger</span></td>
+    <td><span class="tag tag-pass">8.7:1</span></td>
+    <td class="mono">350 deg</td>
+    <td>Deep crimson. Strong danger signal.</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td><span class="filled-preview" style="background:#ff9244;color:#0f1e21">Warning</span></td>
+    <td><span class="tag tag-pass">7.7:1</span></td>
+    <td><span class="filled-preview" style="background:#fcede3;color:#823803">Warning</span></td>
+    <td><span class="tag tag-pass">7.3:1</span></td>
+    <td class="mono">25 deg</td>
+    <td>Bright amber + dark text. Very distinct from danger. Uses inverted contrast (like M3 container pattern).</td>
+  </tr>
+  <tr>
+    <td>Success</td>
+    <td><span class="filled-preview" style="background:#045930;color:#f6fbfd">Success</span></td>
+    <td><span class="tag tag-pass">8.1:1</span></td>
+    <td><span class="filled-preview" style="background:#e5fceb;color:#04381f">Success</span></td>
+    <td><span class="tag tag-pass">12.2:1</span></td>
+    <td class="mono">151 deg</td>
+    <td>Deep green. Standard and strong.</td>
+  </tr>
+</table>
+
+<!-- ===== SECTION 5: HUE SEPARATION ===== -->
+<h2>5. Hue Separation Analysis (Color-blind Safety)</h2>
+
+<div class="card">
+  <p>For users with deuteranopia (red-green color blindness), the hue difference between danger and warning matters significantly. The recommended minimum separation is ~30 degrees, though lightness difference can compensate.</p>
+  <table>
+    <tr><th>System</th><th>Danger Hue</th><th>Warning Hue</th><th>Delta</th><th>Lightness Delta</th><th>Assessment</th></tr>
+    <tr><td>Carbon (error vs yellow)</td><td class="mono">357 deg</td><td class="mono">47 deg</td><td><span class="tag tag-pass">50 deg</span></td><td>4%</td><td>Very well separated (yellow vs red)</td></tr>
+    <tr><td>Carbon (error vs caution_major)</td><td class="mono">357 deg</td><td class="mono">25 deg</td><td><span class="tag tag-warn">28 deg</span></td><td>9%</td><td>Closer, relies on lightness + context</td></tr>
+    <tr><td>WideBot light</td><td class="mono">350 deg</td><td class="mono">25 deg</td><td><span class="tag tag-pass">35 deg</span></td><td>29%</td><td>Good hue + excellent lightness separation</td></tr>
+    <tr><td>WideBot dark</td><td class="mono">355 deg</td><td class="mono">25 deg</td><td><span class="tag tag-pass">30 deg</span></td><td>1%</td><td>Adequate hue separation</td></tr>
+    <tr><td>Hulul light</td><td class="mono">3 deg</td><td class="mono">20 deg</td><td><span class="tag tag-warn">17 deg</span></td><td>6%</td><td>Below recommended 30 deg minimum</td></tr>
+    <tr><td>Hulul dark</td><td class="mono">0 deg</td><td class="mono">20 deg</td><td><span class="tag tag-warn">20 deg</span></td><td>6%</td><td>Below recommended 30 deg minimum</td></tr>
+  </table>
+</div>
+
+<div class="concern">
+  <p><strong>Concern: Hulul danger-warning hue separation (17-20 deg) is below the 30 deg threshold.</strong> Both are in the red-orange range and may be hard to distinguish for deuteranopic users. However: (1) Hulul is AA not AAA, (2) icons + text labels are always paired per DS rules, (3) Carbon's own "caution major" orange at 28 deg is also borderline. Mitigation: prefer tonal/outlined emphasis for warning in Hulul (where the container color provides additional differentiation), and always pair warning with a distinct icon (triangle-alert vs circle-x for danger).</p>
+</div>
+
+<div class="good">
+  <p><strong>WideBot is well-differentiated.</strong> 35 deg hue separation plus 29% lightness difference (dark bg + white text for danger vs bright bg + dark text for warning) provides a double visual signal. This "inverted" approach for warning mirrors M3's container pattern where the container is the prominent color and the text provides contrast.</p>
+</div>
+
+<!-- ===== SECTION 6: KEY DECISIONS ===== -->
+<h2>6. Decisions Summary and Recommendations</h2>
+
+<div class="recommendation">
+  <h4>Decision 1: Orange for Warning (Not Yellow) -- VALIDATED</h4>
+  <p>Pure yellow cannot achieve AA (4.5:1) contrast on white at any useful lightness. Carbon works around this by restricting yellow to icon-only use. Fluent chose orange for the same reason. Our choice to use orange-amber for warning is the correct trade-off for a system where warning appears as buttons and text, not just icons.</p>
+</div>
+
+<div class="recommendation">
+  <h4>Decision 2: Grade Inversion for Dark Mode -- VALIDATED</h4>
+  <p>All three reference systems shift to lighter/brighter shades on dark backgrounds. Our approach of using brighter, desaturated tints in dark mode (e.g., danger goes from #d13029 to #ff8383) follows the universal pattern. Carbon shifts from Red 60 to Red 50; M3 shifts from Tone 40 to Tone 80. Same logic.</p>
+</div>
+
+<div class="recommendation">
+  <h4>Decision 3: WideBot Warning Uses Inverted Contrast -- VALIDATED</h4>
+  <p>WideBot's primary (orange) and warning (also orange family) needed differentiation. Using bright amber bg + dark text for warning (vs dark bg + white text for primary) mirrors M3's Container pattern and provides both color AND lightness differentiation. This is the strongest approach available.</p>
+</div>
+
+<div class="recommendation">
+  <h4>Decision 4: Hulul Warning Hue Proximity -- ACCEPTABLE WITH MITIGATION</h4>
+  <p>Hulul's 17 deg danger-warning separation is below the ideal 30 deg. However: Carbon's caution_major is also close at 28 deg. The critical mitigation (which our DS_RULES.md already mandates) is to never use color alone -- always pair with icons and text. Additionally, the tonal emphasis level shows the actual hue more clearly than filled, and the icon shapes (triangle-alert for warning, circle-x/trash for danger) provide a non-color signal.</p>
+</div>
+
+<div class="recommendation">
+  <h4>Recommendation: Icon Pairing Mandate for Status Colors</h4>
+  <p>Based on reference system analysis, add an explicit rule to DS_RULES.md: <strong>Status-colored components (buttons, alerts, badges, toasts) MUST pair the color with a semantically distinct icon.</strong> Recommended pairings: Danger = circle-x or trash, Warning = triangle-alert, Success = circle-check, Info = circle-info. This follows Carbon's status indicator pattern and provides color-blind safety across all brands.</p>
+</div>
+
+<!-- ===== SECTION 7: CONTRAST AUDIT ===== -->
+<h2>7. Final Contrast Audit -- All 72 Checks Pass</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="section-label">Hulul Light (AA 4.5:1)</div>
+    <table>
+      <tr><th>Role</th><th>Filled</th><th>Tonal</th><th>Outlined</th></tr>
+      <tr><td>Primary</td><td><span class="tag tag-pass">6.5</span></td><td><span class="tag tag-pass">7.0</span></td><td><span class="tag tag-pass">8.3</span></td></tr>
+      <tr><td>Danger</td><td><span class="tag tag-pass">4.8</span></td><td><span class="tag tag-pass">5.6</span></td><td><span class="tag tag-pass">6.5</span></td></tr>
+      <tr><td>Warning</td><td><span class="tag tag-pass">4.5</span></td><td><span class="tag tag-pass">5.4</span></td><td><span class="tag tag-pass">6.3</span></td></tr>
+      <tr><td>Success</td><td><span class="tag tag-pass">4.7</span></td><td><span class="tag tag-pass">5.7</span></td><td><span class="tag tag-pass">6.5</span></td></tr>
+      <tr><td>Neutral</td><td><span class="tag tag-pass">12.1</span></td><td><span class="tag tag-pass">11.6</span></td><td><span class="tag tag-pass">12.6</span></td></tr>
+      <tr><td>AI</td><td><span class="tag tag-pass">8.4</span></td><td><span class="tag tag-pass">7.4</span></td><td><span class="tag tag-pass">8.7</span></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="section-label">Hulul Dark (AA 4.5:1)</div>
+    <table>
+      <tr><th>Role</th><th>Filled</th><th>Tonal</th><th>Outlined</th></tr>
+      <tr><td>Primary</td><td><span class="tag tag-pass">8.1</span></td><td><span class="tag tag-pass">8.2</span></td><td><span class="tag tag-pass">9.5</span></td></tr>
+      <tr><td>Danger</td><td><span class="tag tag-pass">7.3</span></td><td><span class="tag tag-pass">8.0</span></td><td><span class="tag tag-pass">9.1</span></td></tr>
+      <tr><td>Warning</td><td><span class="tag tag-pass">8.2</span></td><td><span class="tag tag-pass">8.6</span></td><td><span class="tag tag-pass">10.0</span></td></tr>
+      <tr><td>Success</td><td><span class="tag tag-pass">10.4</span></td><td><span class="tag tag-pass">9.7</span></td><td><span class="tag tag-pass">11.7</span></td></tr>
+      <tr><td>Neutral</td><td><span class="tag tag-pass">10.8</span></td><td><span class="tag tag-pass">11.6</span></td><td><span class="tag tag-pass">13.9</span></td></tr>
+      <tr><td>AI</td><td><span class="tag tag-pass">7.2</span></td><td><span class="tag tag-pass">5.8</span></td><td><span class="tag tag-pass">6.6</span></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="section-label">WideBot Light (AAA 7.0:1)</div>
+    <table>
+      <tr><th>Role</th><th>Filled</th><th>Tonal</th><th>Outlined</th></tr>
+      <tr><td>Primary</td><td><span class="tag tag-pass">8.7</span></td><td><span class="tag tag-pass">7.7</span></td><td><span class="tag tag-pass">9.0</span></td></tr>
+      <tr><td>Danger</td><td><span class="tag tag-pass">7.3</span></td><td><span class="tag tag-pass">8.7</span></td><td><span class="tag tag-pass">10.6</span></td></tr>
+      <tr><td>Warning</td><td><span class="tag tag-pass">7.7</span></td><td><span class="tag tag-pass">7.3</span></td><td><span class="tag tag-pass">8.3</span></td></tr>
+      <tr><td>Success</td><td><span class="tag tag-pass">8.1</span></td><td><span class="tag tag-pass">12.2</span></td><td><span class="tag tag-pass">13.2</span></td></tr>
+      <tr><td>Neutral</td><td><span class="tag tag-pass">11.8</span></td><td><span class="tag tag-pass">11.3</span></td><td><span class="tag tag-pass">12.3</span></td></tr>
+      <tr><td>AI</td><td><span class="tag tag-pass">8.4</span></td><td><span class="tag tag-pass">7.4</span></td><td><span class="tag tag-pass">8.7</span></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="section-label">WideBot Dark (AAA 7.0:1)</div>
+    <table>
+      <tr><th>Role</th><th>Filled</th><th>Tonal</th><th>Outlined</th></tr>
+      <tr><td>Primary</td><td><span class="tag tag-pass">7.9</span></td><td><span class="tag tag-pass">9.2</span></td><td><span class="tag tag-pass">10.7</span></td></tr>
+      <tr><td>Danger</td><td><span class="tag tag-pass">8.5</span></td><td><span class="tag tag-pass">7.7</span></td><td><span class="tag tag-pass">8.5</span></td></tr>
+      <tr><td>Warning</td><td><span class="tag tag-pass">10.8</span></td><td><span class="tag tag-pass">9.2</span></td><td><span class="tag tag-pass">10.8</span></td></tr>
+      <tr><td>Success</td><td><span class="tag tag-pass">8.9</span></td><td><span class="tag tag-pass">9.0</span></td><td><span class="tag tag-pass">10.4</span></td></tr>
+      <tr><td>Neutral</td><td><span class="tag tag-pass">10.7</span></td><td><span class="tag tag-pass">11.5</span></td><td><span class="tag tag-pass">13.8</span></td></tr>
+      <tr><td>AI</td><td><span class="tag tag-pass">9.7</span></td><td><span class="tag tag-pass">8.6</span></td><td><span class="tag tag-pass">9.7</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="good" style="margin-top:24px;">
+  <p><strong>All 72 contrast checks pass.</strong> Hulul meets AA (4.5:1) across all 36 combinations. WideBot meets AAA (7.0:1) across all 36 combinations. The globals.css is ready for Lovable upload.</p>
+</div>
+
+</body>
+</html>

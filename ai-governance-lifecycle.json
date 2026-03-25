@@ -1,0 +1,407 @@
+{
+  "$schema": "ai-governance-lifecycle/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "description": "Component governance lifecycle for the AI-native design system. No component may be created without human approval.",
+  "phases": [
+    {
+      "id": "proposal",
+      "order": 1,
+      "name": "Proposal",
+      "description": "New component need is identified and formally proposed by any team member or AI agent",
+      "gate": "human-review",
+      "actor": "proposer",
+      "requiredFields": {
+        "name": "Component name in lowercase-hyphenated format",
+        "displayName": "Human-readable display name for the component",
+        "purpose": "One-line description of what the component does and its primary use case",
+        "layer": "L1-L6 classification with detailed justification for placement",
+        "category": "One of: general, containers, inputs, navigation, data-display, composed",
+        "dependencies": "List of existing components this depends on or relates to",
+        "justification": "Detailed explanation of why this cannot be achieved by composing existing components",
+        "requestedBy": "Name and role of who requested this (product, engineering, design, AI agent)",
+        "targetProducts": "Which products or features need this component",
+        "estimatedComplexity": "Low, Medium, or High based on implementation effort",
+        "accessibilityConsiderations": "Initial accessibility implications and requirements",
+        "estimatedDeliveryDate": "Target completion date for full release"
+      },
+      "validationRules": [
+        "Name must not conflict with any existing component in the registry",
+        "Must demonstrate with specific examples that existing components cannot satisfy the need through composition",
+        "Layer assignment must respect dependency rules: cannot depend on same or higher layer components",
+        "Must identify at least one target product or specific feature that needs this component",
+        "Justification must reference attempted composition patterns and their limitations",
+        "Category must be appropriate for the component's function and role in the system",
+        "Proposer must have documented current use case in at least one product"
+      ],
+      "outputs": [
+        "proposal-document.md with all required fields completed",
+        "proposal-record.json added to governance registry"
+      ],
+      "nextPhase": "specification",
+      "approval": {
+        "requiredRole": "design-lead or product-owner",
+        "criteria": "Proposal meets all validation rules and demonstrates genuine unmet need",
+        "timeoutDays": 5
+      }
+    },
+    {
+      "id": "specification",
+      "order": 2,
+      "name": "Specification",
+      "description": "Detailed component specification is written including API, behavior, states, and accessibility requirements",
+      "gate": "peer-review",
+      "actor": "spec-writer",
+      "requiredFields": {
+        "componentName": "Formal component name",
+        "api": "Complete prop interface with TypeScript types",
+        "variants": "All supported variants and their combinations",
+        "states": "Default, hover, focus, active, disabled, loading, error, success states",
+        "accessibility": "WCAG 2.1 AA compliance requirements and ARIA attributes",
+        "interactions": "User interactions and expected behaviors for each state",
+        "composition": "Whether component is atomic or composed of subcomponents",
+        "subcomponents": "List of internal subcomponents if applicable",
+        "tokens": "Design tokens used for spacing, color, typography, sizing",
+        "responsive": "Behavior at each breakpoint and container query rules",
+        "contentGuidelines": "When to use, when not to use, dos and donts",
+        "relatedComponents": "Similar or related components and differentiation",
+        "migrationPath": "If replacing existing component, migration strategy from old to new"
+      },
+      "validationRules": [
+        "API must be minimal and expressive, avoiding verbose or redundant props",
+        "All states must be testable and have clear visual differentiation",
+        "Accessibility requirements must include keyboard navigation and screen reader support",
+        "Variants must follow established naming conventions from existing components",
+        "Design tokens must be used instead of hardcoded values",
+        "Responsive behavior must be defined for all breakpoints",
+        "Content guidelines must include real-world examples",
+        "Subcomponents must be documented with their own APIs if composed",
+        "Must pass U1-U19 audit template requirements for structure"
+      ],
+      "outputs": [
+        "specification.md with complete detail",
+        "api.ts with typed component interface",
+        "content-guidelines.md with dos and donts",
+        "accessibility-checklist.md with WCAG requirements"
+      ],
+      "nextPhase": "human-approval",
+      "review": {
+        "requiredRole": "design-system-team or design-lead",
+        "criteria": "Specification is complete, consistent with design system, technically feasible",
+        "timeoutDays": 7
+      }
+    },
+    {
+      "id": "human-approval",
+      "order": 3,
+      "name": "Human Approval",
+      "description": "Specification is reviewed and explicitly approved by human stakeholder before implementation begins",
+      "gate": "explicit-approval",
+      "actor": "approver",
+      "requiredFields": {
+        "specificationId": "Reference to completed specification from phase 2",
+        "approverName": "Name of human approver",
+        "approverRole": "Role of approver (design-lead, product-owner, engineering-lead)",
+        "approvalDate": "Date approval was given",
+        "approvalComments": "Any feedback or conditions for approval",
+        "designGoalAlignment": "How this component aligns with design system goals",
+        "businessValue": "Expected business impact and user benefit",
+        "technicalFeasibility": "Confirmation that implementation is feasible within constraints",
+        "resourceAllocation": "Approved resources and timeline for implementation"
+      },
+      "validationRules": [
+        "Approver must have authority to approve new components for their product",
+        "Approval must be explicit and documented (not implicit or assumed)",
+        "Specification must not have unresolved comments or questions",
+        "All previous phase validation must pass",
+        "Approver must confirm alignment with product roadmap and design goals",
+        "Cannot proceed without explicit sign-off - no defaults or assumptions"
+      ],
+      "outputs": [
+        "approval-record.json with approver details and date",
+        "approval-notification.md sent to implementation team",
+        "governance-registry updated with approved status"
+      ],
+      "nextPhase": "implementation",
+      "approval": {
+        "requiredRole": "design-lead or product-owner",
+        "criteria": "Human has reviewed specification and explicitly approves proceeding to implementation",
+        "evidenceRequired": "Recorded approval with timestamp and approver identity",
+        "timeoutDays": 3
+      }
+    },
+    {
+      "id": "implementation",
+      "order": 4,
+      "name": "Implementation",
+      "description": "Component is implemented in code following specification exactly, with tests and internal documentation",
+      "gate": "automated-audit",
+      "actor": "implementer",
+      "requiredFields": {
+        "componentFile": "Main component file path and location",
+        "subcomponentFiles": "Paths to all subcomponent files if composed",
+        "testFile": "Test file with minimum 80% code coverage",
+        "storybookStories": "Storybook stories for all variants and states",
+        "typeDefinitions": "Complete TypeScript types matching specification",
+        "internalDocumentation": "JSDoc comments and inline documentation",
+        "designTokenUsage": "All styling via design tokens, no hardcoded values",
+        "accessibilityImplementation": "ARIA attributes, keyboard navigation, role definitions",
+        "responsiveImplementation": "CSS media queries and container queries per spec"
+      },
+      "validationRules": [
+        "Implementation must match specification exactly - no deviations without approval",
+        "All props and variants from spec must be implemented",
+        "All states must be testable via Storybook",
+        "No hardcoded values - all sizing, spacing, color must use design tokens",
+        "Test coverage must be at least 80% of component code",
+        "TypeScript types must match specification interface exactly",
+        "Keyboard navigation must work per accessibility spec",
+        "Must pass automated U1-U19 audit",
+        "Code must follow established style guide and patterns from existing components",
+        "Responsive behavior must work at all specified breakpoints"
+      ],
+      "outputs": [
+        "component.tsx with full implementation",
+        "component.test.tsx with 80%+ code coverage",
+        "component.stories.tsx with all variants and states",
+        "types.ts with TypeScript interface",
+        "styles.module.css or equivalent styling",
+        "audit-report.json from automated U1-U19 checker"
+      ],
+      "nextPhase": "documentation",
+      "review": {
+        "requiredRole": "automated-audit",
+        "criteria": "U1-U19 audit passes all checks, no hardcoded values, tests pass, coverage above 80%",
+        "automationLevel": "Fully automated with human review gate"
+      }
+    },
+    {
+      "id": "documentation",
+      "order": 5,
+      "name": "Documentation",
+      "description": "All documentation is written and integrated into design system knowledge base and registry",
+      "gate": "documentation-audit",
+      "actor": "documentation-team",
+      "requiredFields": {
+        "designSystemRegistry": "Component entry in registry with all metadata",
+        "componentDocumentation": "Full documentation page with usage examples",
+        "apiReference": "Complete API reference with prop descriptions and types",
+        "contentGuidelines": "Dos and donts with real-world examples",
+        "accessibilityGuide": "WCAG compliance notes and keyboard navigation guide",
+        "designTokens": "List of all design tokens used by component",
+        "codeExamples": "Working code examples for common use cases",
+        "relatedComponentsGuide": "How this component relates to similar components",
+        "migrationGuide": "If replacing existing component, detailed migration steps",
+        "roadmapEntry": "Updated roadmap with component release date and status"
+      },
+      "validationRules": [
+        "All documentation must be written in clear, concise language",
+        "Code examples must be functional and tested",
+        "API reference must match implementation exactly",
+        "Content guidelines must include specific visual examples",
+        "Accessibility documentation must reference WCAG success criteria",
+        "Design token usage must match implementation",
+        "Related components section must be bidirectional - all related components updated",
+        "Registry entry must include version, layer, category, and dependencies",
+        "All documentation must be internally linked and cross-referenced",
+        "Roadmap must be updated before component can be released to users"
+      ],
+      "outputs": [
+        "docs/component-name/index.md main documentation",
+        "docs/component-name/api.md API reference",
+        "docs/component-name/guidelines.md content guidelines",
+        "docs/component-name/accessibility.md accessibility guide",
+        "registry.json updated with component entry",
+        "roadmap.md updated with release information",
+        "knowledge-graph.json updated with relationships"
+      ],
+      "nextPhase": "release",
+      "review": {
+        "requiredRole": "documentation-team or design-lead",
+        "criteria": "All required documentation complete, accurate, well-organized, examples tested",
+        "timeoutDays": 5
+      }
+    },
+    {
+      "id": "release",
+      "order": 6,
+      "name": "Release",
+      "description": "Component is packaged, versioned, and released to public component library and design system",
+      "gate": "release-approval",
+      "actor": "release-manager",
+      "requiredFields": {
+        "version": "Semantic version number for release",
+        "releaseNotes": "Summary of what is included in this release",
+        "changelog": "Detailed list of changes, fixes, and improvements",
+        "npmPackage": "Published to npm under design system package",
+        "figmaLibrary": "Design component added to Figma design library",
+        "typesPublished": "TypeScript types included in package",
+        "documentationLive": "All documentation live and accessible",
+        "breakingChanges": "Any breaking changes clearly documented",
+        "deprecationNotices": "Notices for any replaced components or patterns",
+        "releaseDate": "Date component was released to users"
+      },
+      "validationRules": [
+        "All documentation must be live and accessible before release",
+        "npm package must include TypeScript types",
+        "Changelog must be complete and accurate",
+        "Breaking changes must be clearly documented",
+        "Version number must follow semantic versioning",
+        "Figma design library must be updated with design component",
+        "All tests must pass in CI/CD pipeline",
+        "No known critical bugs at time of release",
+        "Release notes must explain what changed and why",
+        "Migration guides must be in place for replaced components"
+      ],
+      "outputs": [
+        "npm package @design-system/component-name published",
+        "git tag vX.Y.Z created and pushed",
+        "github-release.md with full release notes",
+        "changelog updated in repo",
+        "design-system-site updated with new component",
+        "announcement sent to all teams"
+      ],
+      "nextPhase": "stable",
+      "review": {
+        "requiredRole": "release-manager or design-system-lead",
+        "criteria": "All documentation live, package published, no critical bugs, ready for general use",
+        "timeoutDays": 2
+      }
+    },
+    {
+      "id": "deprecation",
+      "order": 7,
+      "name": "Deprecation",
+      "description": "Component is phased out when replaced by newer version, with clear migration path for users",
+      "gate": "deprecation-approval",
+      "actor": "release-manager",
+      "requiredFields": {
+        "componentName": "Name of component being deprecated",
+        "deprecationDate": "Date deprecation is announced",
+        "sunsetDate": "Date after which component will no longer be supported",
+        "replacementComponent": "Name of component that replaces this one",
+        "migrationGuide": "Step-by-step guide for migrating to replacement",
+        "automatedCodemods": "Automated migration scripts if available",
+        "notificationStrategy": "How users are notified of deprecation",
+        "supportWindow": "How long old version will receive bug fixes",
+        "reasons": "Explanation of why component is being deprecated"
+      },
+      "validationRules": [
+        "Replacement component must be fully documented and released",
+        "Migration guide must be specific and include code examples",
+        "Support window must be minimum 6 months from deprecation date",
+        "Users must be notified at least 3 months before sunset date",
+        "Automated migration scripts should be provided if possible",
+        "All references to component in docs must be updated",
+        "Deprecation notice must appear in component documentation",
+        "Changelog must record deprecation with sunset date"
+      ],
+      "outputs": [
+        "deprecation-notice.md added to component docs",
+        "migration-guide.md with detailed migration steps",
+        "codemod-migration-script.ts for automated migration",
+        "announcement sent to all product teams",
+        "changelog updated with deprecation notice",
+        "knowledge-graph updated to mark as deprecated"
+      ],
+      "nextPhase": null,
+      "review": {
+        "requiredRole": "release-manager",
+        "criteria": "Replacement component ready, migration guide complete, users notified",
+        "timeoutDays": 1
+      }
+    }
+  ],
+  "roles": {
+    "proposer": "Any team member or AI agent who identifies a component need",
+    "spec-writer": "Design system copilot agent or design system team member",
+    "approver": "Human stakeholder with decision authority (design lead or product owner)",
+    "implementer": "Frontend engineer or design system copilot agent",
+    "documentation-team": "Technical writer or design system team member",
+    "release-manager": "Design system team lead or product manager",
+    "automated-audit": "U1-U19 audit system that validates implementation",
+    "design-lead": "Design system lead with approval authority",
+    "product-owner": "Product owner for the product using the component"
+  },
+  "statusTransitions": [
+    {
+      "from": "proposal",
+      "to": "specification",
+      "requires": "Proposal accepted and approved by design lead or product owner",
+      "condition": "All validation rules for proposal phase pass"
+    },
+    {
+      "from": "specification",
+      "to": "human-approval",
+      "requires": "Specification passes peer review and is complete",
+      "condition": "Specification document is comprehensive and all sections completed"
+    },
+    {
+      "from": "human-approval",
+      "to": "implementation",
+      "requires": "Explicit human approval on record from authorized approver",
+      "condition": "Approval timestamp and approver identity documented in governance registry"
+    },
+    {
+      "from": "implementation",
+      "to": "documentation",
+      "requires": "Implementation passes U1-U19 audit with no critical issues",
+      "condition": "Automated audit passes, tests pass, no hardcoded values, coverage above 80%"
+    },
+    {
+      "from": "documentation",
+      "to": "release",
+      "requires": "All documentation complete and live on design system site",
+      "condition": "Registry updated, roadmap updated, all docs linked and cross-referenced"
+    },
+    {
+      "from": "release",
+      "to": "stable",
+      "requires": "No critical bugs reported for minimum 2 weeks after release",
+      "condition": "Component in production use by at least one product team"
+    },
+    {
+      "from": "stable",
+      "to": "deprecated",
+      "requires": "Replacement component released and migration path documented",
+      "condition": "Replacement component fully documented and available to users"
+    }
+  ],
+  "emergencyProcess": {
+    "description": "Fast-track approval process for critical bugs or security fixes in existing released components",
+    "applicableTo": "Critical bugs, security vulnerabilities, data loss issues, compliance violations",
+    "steps": [
+      "Identify and verify issue is critical",
+      "Get verbal or written approval from release manager or design lead",
+      "Fix issue in component code",
+      "Write regression test for issue",
+      "Run U1-U19 audit to verify no new issues introduced",
+      "Update documentation and changelog",
+      "Release hotfix version",
+      "Document incident and post-mortem within 48 hours"
+    ],
+    "skipPhases": ["proposal", "specification", "human-approval"],
+    "requiresApproval": true,
+    "approvalRole": "release-manager or design-lead",
+    "approvalTimeoutMinutes": 30,
+    "postMortemRequired": true,
+    "postMortemTimeoutDays": 2
+  },
+  "rules": {
+    "noComponentWithoutApproval": "No component may be created or added to the design system without explicit human approval in the human-approval phase",
+    "allChangesTracked": "All component changes must be tracked in version control with clear commit messages",
+    "noBreakingChanges": "No breaking API changes in stable components without major version bump and deprecation period",
+    "designTokensMandatory": "All styling must use design tokens - no hardcoded values permitted",
+    "testingRequired": "All components must have 80%+ code coverage with passing tests",
+    "accessibilityRequired": "All components must meet WCAG 2.1 AA accessibility standards",
+    "documentationRequired": "All components must have complete documentation before release",
+    "typesRequired": "All components must have complete TypeScript type definitions"
+  },
+  "metrics": {
+    "averageProposalToReleaseTime": "Target: 60 days from proposal to general availability",
+    "componentCoverage": "Target: 90%+ of UI patterns covered by documented components",
+    "adoptionRate": "Track percentage of new components used by product teams within first 3 months",
+    "qualityScore": "All released components must have U1-U19 audit score of 90 or higher",
+    "accessibilityCompliance": "All components must pass WCAG 2.1 AA audit with 0 critical issues"
+  }
+}

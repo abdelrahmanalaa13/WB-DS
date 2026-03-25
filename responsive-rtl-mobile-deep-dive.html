@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive, RTL & Mobile Design Deep Dive</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #09090b; color: #d4d4d8; line-height: 1.7; }
+
+  .nav { position: fixed; top: 0; left: 0; width: 260px; height: 100vh; background: #0a0a0c; border-right: 1px solid #1f1f23; padding: 24px 16px; overflow-y: auto; z-index: 100; }
+  .nav .brand { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+  .nav .subtitle { font-size: 11px; color: #52525b; margin-bottom: 16px; }
+  .nav h3 { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #3f3f46; margin: 16px 0 6px; }
+  .nav a { display: block; padding: 5px 12px; color: #71717a; font-size: 13px; text-decoration: none; border-radius: 6px; margin: 1px 0; }
+  .nav a:hover { color: #e4e4e7; background: #18181b; }
+
+  .main { margin-left: 260px; padding: 48px 64px; max-width: 1100px; }
+  h1 { font-size: 36px; font-weight: 800; color: #fafafa; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .hero-sub { font-size: 16px; color: #71717a; margin-bottom: 48px; }
+  h2 { font-size: 24px; font-weight: 700; color: #fafafa; margin: 56px 0 20px; padding-top: 24px; border-top: 1px solid #1f1f23; letter-spacing: -0.3px; }
+  h2:first-of-type { border-top: none; }
+  h3 { font-size: 17px; font-weight: 600; color: #e4e4e7; margin: 28px 0 12px; }
+  h4 { font-size: 14px; font-weight: 600; color: #a1a1aa; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #a1a1aa; font-size: 15px; }
+  strong { color: #e4e4e7; font-weight: 600; }
+  code { background: #18181b; padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: #a5b4fc; }
+
+  .card { background: #111113; border: 1px solid #1f1f23; border-radius: 12px; padding: 24px; margin: 16px 0; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 16px 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: #111113; color: #a1a1aa; font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 2px solid #1f1f23; }
+  td { padding: 8px 12px; border-bottom: 1px solid #18181b; color: #a1a1aa; vertical-align: top; }
+  tr:hover { background: #111113; }
+
+  .ds-apply { background: #0a1a0a; border-left: 3px solid #4ade80; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .ds-apply p { color: #bbf7d0; margin: 0; }
+  .ds-apply strong { color: #4ade80; }
+  .insight { background: #0f0f2a; border-left: 3px solid #818cf8; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .insight p { color: #c7d2fe; margin: 0; }
+  .warning-block { background: #1a1400; border-left: 3px solid #facc15; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .warning-block p { color: #fef08a; margin: 0; }
+
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; margin: 2px 4px 2px 0; }
+  .tag-green { background: #052e16; color: #4ade80; }
+  .tag-blue { background: #172554; color: #60a5fa; }
+  .tag-purple { background: #1e1b4b; color: #a5b4fc; }
+  .tag-amber { background: #422006; color: #fbbf24; }
+  .tag-red { background: #450a0a; color: #f87171; }
+
+  .code-block { background: #0a0a0c; border: 1px solid #1f1f23; border-radius: 8px; padding: 16px 20px; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; color: #e4e4e7; overflow-x: auto; white-space: pre; }
+  .code-block .comment { color: #52525b; }
+  .code-block .prop { color: #a5b4fc; }
+  .code-block .val { color: #4ade80; }
+  .code-block .sel { color: #fbbf24; }
+
+  @media (max-width: 900px) {
+    .nav { display: none; }
+    .main { margin-left: 0; padding: 24px; }
+    .card-grid, .card-grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">Responsive + RTL + Mobile</div>
+  <div class="subtitle">Deep Dive Reference</div>
+
+  <h3>Responsive</h3>
+  <a href="#breakpoints">Breakpoint Systems</a>
+  <a href="#grid">Grid Architecture</a>
+  <a href="#adaptive-patterns">Adaptive Layout Patterns</a>
+  <a href="#nav-adaptation">Navigation Adaptation</a>
+  <a href="#content-density">Content Density</a>
+
+  <h3>RTL / Bidirectional</h3>
+  <a href="#rtl-overview">RTL Overview</a>
+  <a href="#what-mirrors">What Mirrors</a>
+  <a href="#what-doesnt">What Does NOT Mirror</a>
+  <a href="#icon-mirroring">Icon Mirroring Rules</a>
+  <a href="#bidi-text">Bidirectional Text</a>
+  <a href="#css-logical">CSS Logical Properties</a>
+  <a href="#rtl-components">Component RTL Rules</a>
+
+  <h3>Mobile-Friendly</h3>
+  <a href="#touch-targets">Touch Target Sizing</a>
+  <a href="#thumb-zone">Thumb Zone</a>
+  <a href="#mobile-patterns">Mobile Adaptation Patterns</a>
+  <a href="#gestures">Gesture Design</a>
+
+  <h3>Applied</h3>
+  <a href="#our-ds">Our DS Implementation</a>
+  <a href="#index">Learning Index</a>
+  <a href="#takeaways">Actionable Takeaways</a>
+</nav>
+
+<div class="main">
+
+<h1>Responsive, RTL & Mobile Design</h1>
+<p class="hero-sub">How Apple, Material Design, Carbon, and Fluent handle adaptive layouts, right-to-left languages, and mobile-friendly interactions. Indexed for our design system with Arabic RTL as a primary requirement.</p>
+
+<!-- ============ BREAKPOINTS ============ -->
+<h2 id="breakpoints">Breakpoint Systems Compared</h2>
+
+<table>
+  <tr><th>System</th><th>Compact / Small</th><th>Medium</th><th>Expanded / Large</th><th>Extra Large</th></tr>
+  <tr>
+    <td><strong>Apple (Size Classes)</strong></td>
+    <td>Compact width<br><span style="font-size:11px;color:#71717a;">iPhone portrait, iPad 1/3 split</span></td>
+    <td>--</td>
+    <td>Regular width<br><span style="font-size:11px;color:#71717a;">iPhone landscape, iPad, Mac</span></td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td><strong>M3 (Window Classes)</strong></td>
+    <td>Compact: 0-599dp<br><span style="font-size:11px;color:#71717a;">Phone portrait</span></td>
+    <td>Medium: 600-839dp<br><span style="font-size:11px;color:#71717a;">Tablet portrait, foldable</span></td>
+    <td>Expanded: 840dp+<br><span style="font-size:11px;color:#71717a;">Tablet landscape, desktop</span></td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td><strong>Carbon</strong></td>
+    <td>SM: 320-671px<br><span style="font-size:11px;color:#71717a;">4 columns, 16px margin</span></td>
+    <td>MD: 672-1055px<br><span style="font-size:11px;color:#71717a;">8 columns, 16px margin</span></td>
+    <td>LG: 1056-1311px<br><span style="font-size:11px;color:#71717a;">16 columns, 16px margin</span></td>
+    <td>XL: 1312-1583px<br>MAX: 1584px+<br><span style="font-size:11px;color:#71717a;">16 cols, 24px margin</span></td>
+  </tr>
+  <tr>
+    <td><strong>Fluent 2</strong></td>
+    <td>S: 320-479px<br><span style="font-size:11px;color:#71717a;">1 column</span></td>
+    <td>M: 480-639px<br>L: 640-1023px<br><span style="font-size:11px;color:#71717a;">1-2 columns</span></td>
+    <td>XL: 1024-1365px<br><span style="font-size:11px;color:#71717a;">2-3 columns</span></td>
+    <td>XXL: 1366px+<br><span style="font-size:11px;color:#71717a;">3+ columns</span></td>
+  </tr>
+</table>
+
+<div class="insight">
+  <p><strong>Key difference:</strong> Apple uses <em>binary</em> size classes (compact vs regular) with no pixel breakpoints. M3 uses <em>three</em> named classes with dp thresholds. Carbon uses <em>five</em> named breakpoints with pixel thresholds. For web-based ERP, Carbon's 5-tier system or a simplified M3-inspired 3-tier system (compact/medium/expanded) is most practical. Apple's binary system is too coarse for complex desktop layouts.</p>
+</div>
+
+<!-- ============ GRID ============ -->
+<h2 id="grid">Grid Architecture</h2>
+
+<div class="card">
+  <h4>M3 Column Grid</h4>
+  <table>
+    <tr><th>Window Class</th><th>Width</th><th>Columns</th><th>Margins</th><th>Gutter</th></tr>
+    <tr><td>Compact</td><td>0-599dp</td><td>4</td><td>16dp</td><td>8dp</td></tr>
+    <tr><td>Medium</td><td>600-839dp</td><td>8</td><td>24dp</td><td>16dp</td></tr>
+    <tr><td>Expanded</td><td>840dp+</td><td>12</td><td>24-32dp</td><td>24dp</td></tr>
+  </table>
+  <p style="margin-top:12px;">M3 column widths are percentage-based, not fixed. This allows content to flex within breakpoint ranges. Gutters and margins grow at each breakpoint to prevent content from feeling cramped on larger screens.</p>
+</div>
+
+<div class="card">
+  <h4>Apple's Approach: No Grid, Constraint-Based</h4>
+  <p>Apple does not prescribe a column grid. Instead, they use Auto Layout constraints with <code>leading</code> and <code>trailing</code> anchors. Content width is governed by readability margins (max ~700pt on iPad) rather than column counts. The key measurement: <strong>minimum 44pt touch targets</strong> and <strong>system-defined safe area insets</strong> (status bar, home indicator, notch).</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> For our Angular ERP, use a 3-tier system: Compact (0-599px, 4 columns, 16px margins), Medium (600-1023px, 8 columns, 24px margins), Expanded (1024px+, 12 columns, 24-32px margins). This maps to M3's approach but extends the Expanded breakpoint down to 1024px (standard for enterprise desktop). All spacing uses our 4px base grid.</p>
+</div>
+
+<!-- ============ ADAPTIVE PATTERNS ============ -->
+<h2 id="adaptive-patterns">Adaptive Layout Patterns</h2>
+
+<p>All major design systems converge on three canonical layout patterns that adapt between mobile and desktop:</p>
+
+<div class="card-grid-3">
+  <div class="card">
+    <h4>List-Detail (Master-Detail)</h4>
+    <p><strong>Compact:</strong> Full-screen list. Tap navigates to full-screen detail. Back button returns.</p>
+    <p><strong>Expanded:</strong> Side-by-side. List on the left (or start), detail on the right (or end). Selection highlights in list, detail updates in place.</p>
+    <p><strong>ERP use:</strong> Conversation inbox, contact list, ticket management, settings pages.</p>
+  </div>
+  <div class="card">
+    <h4>Supporting Pane</h4>
+    <p><strong>Compact:</strong> Main content full-screen. Supporting pane accessed via bottom sheet or modal.</p>
+    <p><strong>Expanded:</strong> Main content + persistent side panel. Panel can be collapsible.</p>
+    <p><strong>ERP use:</strong> AI chat panel alongside workspace, property inspector, filter panels.</p>
+  </div>
+  <div class="card">
+    <h4>Feed / Content Grid</h4>
+    <p><strong>Compact:</strong> Single-column vertical scroll. Cards stack.</p>
+    <p><strong>Expanded:</strong> Multi-column grid (2-3 columns). Cards fill available width.</p>
+    <p><strong>ERP use:</strong> Dashboard widgets, analytics cards, notification feed, activity timeline.</p>
+  </div>
+</div>
+
+<!-- ============ NAV ADAPTATION ============ -->
+<h2 id="nav-adaptation">Navigation Adaptation</h2>
+
+<table>
+  <tr><th>Pattern</th><th>Compact (Mobile)</th><th>Medium (Tablet)</th><th>Expanded (Desktop)</th></tr>
+  <tr>
+    <td><strong>Primary Nav</strong></td>
+    <td>Bottom navigation bar (3-5 items). Most-used destinations + hamburger for overflow.</td>
+    <td>Navigation rail (icons-only, left edge, 72-80dp wide).</td>
+    <td>Navigation drawer/sidebar (icons + labels, 256-320px, collapsible to rail).</td>
+  </tr>
+  <tr>
+    <td><strong>Secondary Nav</strong></td>
+    <td>Full-screen overlay or bottom sheet with menu items.</td>
+    <td>Dropdown menu or expandable section within rail.</td>
+    <td>Nested tree in sidebar, or horizontal tabs below top bar.</td>
+  </tr>
+  <tr>
+    <td><strong>Back Navigation</strong></td>
+    <td>System back gesture (swipe from edge) + optional back button in top bar.</td>
+    <td>Back button in top bar. No system gesture on tablets.</td>
+    <td>Breadcrumbs. No back button (users use sidebar to navigate).</td>
+  </tr>
+  <tr>
+    <td><strong>Search</strong></td>
+    <td>Full-screen search overlay.</td>
+    <td>Expandable search in top bar.</td>
+    <td>Persistent search field in top bar or Cmd+K command palette.</td>
+  </tr>
+  <tr>
+    <td><strong>Contextual Actions</strong></td>
+    <td>Bottom sheet with action list. Long-press for context menu.</td>
+    <td>Context menu (right-click or long-press).</td>
+    <td>Inline action buttons, right-click context menu, toolbar.</td>
+  </tr>
+</table>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> Our DS_RULES.md already defines 15 desktop-to-mobile adaptations. This table refines them with the medium (tablet) tier. Key addition: the Navigation Rail pattern for medium screens, which our system does not yet define. For an ERP used on tablets (sales reps, field agents), the rail is critical.</p>
+</div>
+
+<!-- ============ CONTENT DENSITY ============ -->
+<h2 id="content-density">Content Density</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Apple's Approach</h4>
+    <p>Apple uses <strong>readability margins</strong> that automatically constrain text width on large screens. On iPad in landscape, body text does not span the full width. Instead, it stays within ~700pt, centered. This prevents long line lengths that reduce readability.</p>
+    <p>Apple also reduces information density on mobile: fewer columns in tables, card-based views instead of rows, progressive disclosure via drill-down navigation.</p>
+  </div>
+  <div class="card">
+    <h4>M3's Approach</h4>
+    <p>M3 defines <strong>maximum content width</strong> containers. On expanded screens, content does not stretch infinitely. A max-width container (typically 1040-1280dp) centers content with auto margins. This creates breathing room on ultra-wide screens.</p>
+    <p>For data-dense views (tables, dashboards), M3 recommends horizontal scrolling for columns that do not fit, rather than cramming all columns into the viewport.</p>
+  </div>
+</div>
+
+<!-- ============ RTL OVERVIEW ============ -->
+<h2 id="rtl-overview">RTL / Bidirectional: Overview</h2>
+
+<p>Right-to-left (RTL) layout support is a primary requirement for our DS: WideBot serves Arabic-speaking government and enterprise clients, Hulul serves Arabic-speaking SMBs. Arabic is the primary UI language, not an afterthought localization.</p>
+
+<div class="card">
+  <h4>The Fundamental Rule</h4>
+  <p>In RTL mode, the <strong>entire layout mirrors horizontally</strong>. What was on the left moves to the right. What was on the right moves to the left. Reading flow reverses: right-to-left, top-to-bottom. Navigation that went "forward to the right" now goes "forward to the left." The back arrow points right instead of left.</p>
+  <p>This is not a CSS transform or visual hack. It is a structural reversal of the layout's inline axis. The block axis (vertical) is unchanged.</p>
+</div>
+
+<!-- ============ WHAT MIRRORS ============ -->
+<h2 id="what-mirrors">What Mirrors in RTL</h2>
+
+<table>
+  <tr><th>Element</th><th>LTR</th><th>RTL</th><th>Notes</th></tr>
+  <tr><td>Text alignment</td><td>Left-aligned</td><td>Right-aligned</td><td>Natural alignment handles this automatically.</td></tr>
+  <tr><td>Navigation sidebar</td><td>Left edge</td><td>Right edge</td><td>Sidebar opens from the right in RTL.</td></tr>
+  <tr><td>Back arrow</td><td>Points left (&larr;)</td><td>Points right (&rarr;)</td><td>Back = "toward the start direction."</td></tr>
+  <tr><td>Progress bars</td><td>Fill left to right</td><td>Fill right to left</td><td>Linear progress follows reading direction.</td></tr>
+  <tr><td>Breadcrumbs</td><td>Home &gt; Section &gt; Page</td><td>Page &lt; Section &lt; Home</td><td>Visual flow reverses. Separator direction may flip.</td></tr>
+  <tr><td>Lists / item order</td><td>Left-aligned content, right-aligned actions</td><td>Right-aligned content, left-aligned actions</td><td>Icon on the start side, chevron on the end side.</td></tr>
+  <tr><td>Form labels</td><td>Above or left of field</td><td>Above or right of field</td><td>Above (block-start) works in both directions.</td></tr>
+  <tr><td>Checkboxes / radio</td><td>Indicator on the left of label</td><td>Indicator on the right of label</td><td>Indicator is always on the inline-start side.</td></tr>
+  <tr><td>Tabs</td><td>First tab on the left</td><td>First tab on the right</td><td>Tab order follows reading direction.</td></tr>
+  <tr><td>Icons with direction</td><td>Arrow pointing right = forward</td><td>Arrow pointing left = forward</td><td>Directional icons must mirror.</td></tr>
+  <tr><td>Padding/margin asymmetry</td><td>margin-left: 16px</td><td>margin-right: 16px</td><td>Use <code>margin-inline-start</code> instead.</td></tr>
+</table>
+
+<!-- ============ WHAT DOESN'T ============ -->
+<h2 id="what-doesnt">What Does NOT Mirror in RTL</h2>
+
+<p>These are critical exceptions. Getting these wrong in Arabic makes the interface feel broken.</p>
+
+<table>
+  <tr><th>Element</th><th>Behavior</th><th>Why</th></tr>
+  <tr><td><strong>Phone numbers</strong></td><td>Always LTR (+966 5xx xxx xxxx)</td><td>Numbers are universally read left-to-right. Mirroring makes them unreadable.</td></tr>
+  <tr><td><strong>Clocks / circular time</strong></td><td>Clockwise in all languages</td><td>Physical clocks turn clockwise worldwide. Circular refresh/loading indicators stay clockwise.</td></tr>
+  <tr><td><strong>Media playback controls</strong></td><td>Play/pause/seek stay LTR</td><td>Represents tape/timeline direction, not reading direction. Play button points right in all locales.</td></tr>
+  <tr><td><strong>Sliders for audio/video</strong></td><td>Stay LTR (left = start, right = end)</td><td>Represents timeline progression, not text direction.</td></tr>
+  <tr><td><strong>Music notation</strong></td><td>Always LTR</td><td>Universal notation standard.</td></tr>
+  <tr><td><strong>Graphs / charts</strong></td><td>X-axis and Y-axis do NOT flip</td><td>Mathematical convention. Origin stays at bottom-left.</td></tr>
+  <tr><td><strong>Checkmark icon</strong></td><td>Does NOT mirror</td><td>The checkmark shape is universal and non-directional.</td></tr>
+  <tr><td><strong>Physical object icons</strong></td><td>Camera, headphones, etc. do NOT mirror</td><td>These depict real objects that don't change orientation by language.</td></tr>
+  <tr><td><strong>Logos and brand marks</strong></td><td>Never mirror</td><td>Brand identity is fixed.</td></tr>
+  <tr><td><strong>Toggle switches</strong></td><td>System-specific (Apple: always LTR position)</td><td>Apple keeps toggle handle position fixed. M3 mirrors the on/off position to match start/end semantics. Our DS should follow M3 and mirror.</td></tr>
+</table>
+
+<div class="warning-block">
+  <p><strong>Critical for our DS:</strong> Data tables with numeric columns, charts/dashboards, and phone/ID number fields must NOT mirror. But table row layout (icon, name, actions) DOES mirror. This means a data table mirrors its row structure but keeps number alignment and chart axes in LTR. Get this wrong and Arabic users will report the interface as broken.</p>
+</div>
+
+<!-- ============ ICON MIRRORING ============ -->
+<h2 id="icon-mirroring">Icon Mirroring Decision Tree</h2>
+
+<div class="card">
+  <h4>The 4 Categories (from Material Design)</h4>
+  <p><strong>1. Always mirror:</strong> Icons representing directionality in the UI. Back arrow, forward arrow, navigation arrows, text alignment icons, list indent/outdent, send button, reply, undo/redo, bullet list.</p>
+  <p><strong>2. Never mirror:</strong> Icons representing physical objects (camera, headphones, key), universal symbols (checkmark, X close, plus, minus), media controls (play, pause, skip), clocks and circular indicators.</p>
+  <p><strong>3. Mirror with caution:</strong> Icons with subtle directional meaning. A speech bubble with tail on the left might mirror. A pencil icon angled to suggest right-handed writing might need a left-angled variant for RTL. Evaluate case by case.</p>
+  <p><strong>4. Provide locale-specific variants:</strong> Some icons need entirely different designs for RTL. The "text align left" icon becomes "text align right" in RTL, but it is not the same icon mirrored; it is a different concept. SF Symbols provides locale-specific variants for Arabic, Hebrew, and Devanagari.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> We use HugeIcons. We need to audit the full icon set and tag each icon as: <code>mirror: always</code>, <code>mirror: never</code>, or <code>mirror: locale-variant</code>. This tag should be in our AI Component Registry so generative agents know which icons to flip in RTL layouts. The DS_RULES.md already mandates <code>dir="rtl"</code> support. This icon audit is the missing piece.</p>
+</div>
+
+<!-- ============ BIDI TEXT ============ -->
+<h2 id="bidi-text">Bidirectional Text Handling</h2>
+
+<div class="card">
+  <h4>The Challenge</h4>
+  <p>Arabic text mixed with English words, brand names, URLs, or numbers creates bidirectional (bidi) content. A single sentence might contain:</p>
+  <p style="direction:rtl; text-align:right; font-size:16px; color:#e4e4e7; background:#18181b; padding:12px; border-radius:8px; margin:8px 0;">مرحبا بك في WideBot! رقم الطلب هو 12345</p>
+  <p>In this example, "WideBot" and "12345" are LTR segments embedded in RTL text. The Unicode Bidirectional Algorithm (UBA) handles most cases automatically, but edge cases require explicit direction markers.</p>
+</div>
+
+<div class="card">
+  <h4>Rules for Our DS</h4>
+  <p><strong>1. Phone numbers:</strong> Wrap with <code>U+202A</code> (LRE) before and <code>U+202C</code> (PDF) after, or use <code>&lt;bdo dir="ltr"&gt;</code> in HTML.</p>
+  <p><strong>2. Brand names in Arabic context:</strong> Use <code>&lt;bdi&gt;</code> (bidirectional isolate) element to prevent the brand name from affecting surrounding text direction.</p>
+  <p><strong>3. URLs and email addresses:</strong> Always LTR. Use <code>dir="ltr"</code> on the container element.</p>
+  <p><strong>4. Mixed number + Arabic text:</strong> UBA handles this correctly in most cases. Only intervene if the display is visually wrong.</p>
+  <p><strong>5. Text input fields:</strong> Set <code>dir="auto"</code> on inputs so the direction is determined by the first strong character the user types. An Arabic user typing a phone number should see LTR input; typing Arabic text should see RTL input.</p>
+</div>
+
+<!-- ============ CSS LOGICAL ============ -->
+<h2 id="css-logical">CSS Logical Properties: The RTL Foundation</h2>
+
+<p>CSS Logical Properties are the single most important technology for RTL support on the web. They replace physical directions (left/right/top/bottom) with logical ones (inline-start/inline-end/block-start/block-end) that automatically flip in RTL.</p>
+
+<div class="code-block"><span class="comment">/* WRONG: Physical properties - breaks in RTL */</span>
+<span class="sel">.card</span> {
+  <span class="prop">margin-left</span>: <span class="val">16px</span>;
+  <span class="prop">padding-right</span>: <span class="val">24px</span>;
+  <span class="prop">border-left</span>: <span class="val">3px solid #4ade80</span>;
+  <span class="prop">text-align</span>: <span class="val">left</span>;
+  <span class="prop">float</span>: <span class="val">left</span>;
+}
+
+<span class="comment">/* CORRECT: Logical properties - works in both LTR and RTL */</span>
+<span class="sel">.card</span> {
+  <span class="prop">margin-inline-start</span>: <span class="val">16px</span>;
+  <span class="prop">padding-inline-end</span>: <span class="val">24px</span>;
+  <span class="prop">border-inline-start</span>: <span class="val">3px solid #4ade80</span>;
+  <span class="prop">text-align</span>: <span class="val">start</span>;
+  <span class="prop">float</span>: <span class="val">inline-start</span>;
+}</div>
+
+<div class="card">
+  <h4>Complete Mapping: Physical to Logical</h4>
+  <table>
+    <tr><th>Physical (LTR-only)</th><th>Logical (LTR + RTL)</th><th>Shorthand</th></tr>
+    <tr><td><code>margin-left</code></td><td><code>margin-inline-start</code></td><td rowspan="2"><code>margin-inline: start end</code></td></tr>
+    <tr><td><code>margin-right</code></td><td><code>margin-inline-end</code></td></tr>
+    <tr><td><code>padding-left</code></td><td><code>padding-inline-start</code></td><td rowspan="2"><code>padding-inline: start end</code></td></tr>
+    <tr><td><code>padding-right</code></td><td><code>padding-inline-end</code></td></tr>
+    <tr><td><code>border-left</code></td><td><code>border-inline-start</code></td><td rowspan="2"><code>border-inline: ...</code></td></tr>
+    <tr><td><code>border-right</code></td><td><code>border-inline-end</code></td></tr>
+    <tr><td><code>left</code></td><td><code>inset-inline-start</code></td><td rowspan="2"><code>inset-inline: start end</code></td></tr>
+    <tr><td><code>right</code></td><td><code>inset-inline-end</code></td></tr>
+    <tr><td><code>text-align: left</code></td><td><code>text-align: start</code></td><td>--</td></tr>
+    <tr><td><code>text-align: right</code></td><td><code>text-align: end</code></td><td>--</td></tr>
+    <tr><td><code>float: left</code></td><td><code>float: inline-start</code></td><td>--</td></tr>
+    <tr><td><code>border-radius: 8px 0 0 8px</code></td><td><code>border-start-start-radius: 8px; border-end-start-radius: 8px</code></td><td>--</td></tr>
+  </table>
+  <p style="margin-top:12px;">All modern browsers support logical properties. This one change handles approximately 80% of RTL layout issues.</p>
+</div>
+
+<!-- ============ RTL COMPONENTS ============ -->
+<h2 id="rtl-components">Component-Level RTL Rules</h2>
+
+<table>
+  <tr><th>Component</th><th>RTL Behavior</th><th>Implementation</th></tr>
+  <tr><td>Button with icon</td><td>Icon moves to inline-end if it was on the right; inline-start if on the left</td><td>Use <code>flex-direction: row</code> (auto-reverses with <code>dir="rtl"</code>)</td></tr>
+  <tr><td>Text field with icon</td><td>Leading icon moves to right, trailing icon to left</td><td>Logical padding + <code>flex</code></td></tr>
+  <tr><td>Navigation drawer</td><td>Opens from right edge</td><td><code>inset-inline-start: 0</code></td></tr>
+  <tr><td>Data table</td><td>Row layout mirrors. Number columns stay LTR. Sort arrows flip.</td><td>Table cells use <code>text-align: start</code>. Number cells use <code>dir="ltr"</code>.</td></tr>
+  <tr><td>Stepper</td><td>Steps flow right-to-left. Step 1 is rightmost.</td><td><code>flex-direction: row</code> + <code>dir="rtl"</code></td></tr>
+  <tr><td>Breadcrumbs</td><td>Right-to-left with reversed separators</td><td>CSS logical properties + separator character flip</td></tr>
+  <tr><td>Slider</td><td>Non-media sliders mirror (min on right). Media/time sliders stay LTR.</td><td>Conditional <code>direction</code> based on slider type</td></tr>
+  <tr><td>Toast / Snackbar</td><td>Appears from inline-end (left in RTL)</td><td><code>inset-inline-end: 16px</code></td></tr>
+  <tr><td>FAB</td><td>Moves to inline-end (left in RTL)</td><td><code>inset-inline-end: 16px; inset-block-end: 16px</code></td></tr>
+  <tr><td>Dialog</td><td>Action buttons order mirrors. Confirm is on inline-end.</td><td><code>flex-direction: row</code> with confirm always last child</td></tr>
+  <tr><td>Calendar / Date picker</td><td>Month navigation mirrors. Day grid does NOT mirror (always Sunday-Saturday or Saturday-Thursday depending on locale).</td><td>Calendar grid uses locale-aware first-day-of-week. Navigation arrows mirror.</td></tr>
+</table>
+
+<!-- ============ TOUCH TARGETS ============ -->
+<h2 id="touch-targets">Touch Target Sizing</h2>
+
+<table>
+  <tr><th>Standard</th><th>Minimum Target Size</th><th>Minimum Spacing</th><th>Physical Size</th></tr>
+  <tr><td><strong>Apple HIG</strong></td><td>44 x 44pt</td><td>Not explicitly specified</td><td>~7.7mm x 7.7mm</td></tr>
+  <tr><td><strong>Material Design</strong></td><td>48 x 48dp</td><td>8dp between targets</td><td>~9mm x 9mm</td></tr>
+  <tr><td><strong>WCAG 2.2 (AAA)</strong></td><td>44 x 44 CSS px</td><td>--</td><td>~7.7mm x 7.7mm</td></tr>
+  <tr><td><strong>WCAG 2.2 (AA)</strong></td><td>24 x 24 CSS px</td><td>--</td><td>~4.2mm x 4.2mm</td></tr>
+</table>
+
+<div class="insight">
+  <p><strong>Important distinction:</strong> The visual element can be smaller than the touch target. A 32px icon button can have a 48px touch target by adding transparent padding. This is how Apple achieves compact visual density while maintaining accessible tap areas. Material calls this the "touch target area" which extends beyond the visual bounds.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> Our DS should mandate 48px minimum touch targets (matching Material, exceeding Apple and WCAG AA). For WideBot (AAA), use 48px targets with 8px spacing. For compact components (data table action icons, chip close buttons), the visual element can be 24-32px but the touch area must extend to 48px minimum. Document this as: <code>min-height: 48px; min-width: 48px</code> on all interactive elements, with <code>padding</code> bridging the gap between visual size and touch size.</p>
+</div>
+
+<!-- ============ THUMB ZONE ============ -->
+<h2 id="thumb-zone">Thumb Zone and Reachability</h2>
+
+<div class="card">
+  <h4>Research Findings</h4>
+  <p><strong>75% of mobile interactions are thumb-driven.</strong> 49% of users hold the phone one-handed, 36% cradle it, 10% use two thumbs. The "thumb zone" is not fixed; users shift their grip based on context. But the natural resting position of the thumb creates three zones:</p>
+  <p><strong>Easy zone (green):</strong> Lower-center and lower-inline-start of the screen. This is where primary actions should live.</p>
+  <p><strong>Stretch zone (yellow):</strong> Middle of the screen and lower-inline-end. Reachable with some effort.</p>
+  <p><strong>Hard zone (red):</strong> Top corners. Requires the user to shift their grip or use the other hand.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>DS Application:</strong> This directly validates our mobile adaptation patterns: bottom navigation for primary nav (easy zone), bottom sheets for contextual actions (easy zone), FAB at bottom-inline-end (easy zone). Search and settings in the top bar (stretch/hard zone) are acceptable because they are less frequent actions. The key rule: <strong>frequently-used actions at the bottom, infrequently-used actions at the top.</strong></p>
+</div>
+
+<!-- ============ MOBILE PATTERNS ============ -->
+<h2 id="mobile-patterns">Mobile Adaptation Patterns (Consolidated)</h2>
+
+<p>Combining Apple HIG, M3, and our existing DS_RULES.md into a complete mapping:</p>
+
+<table>
+  <tr><th>Desktop Pattern</th><th>Mobile Adaptation</th><th>Trigger</th><th>Source</th></tr>
+  <tr><td>Side navigation drawer</td><td>Bottom tab bar (3-5 items) + hamburger</td><td>Compact width</td><td>M3 + Apple</td></tr>
+  <tr><td>Side overlay / detail panel</td><td>Bottom sheet (half or full)</td><td>Compact width</td><td>M3 + Apple</td></tr>
+  <tr><td>Hover tooltip</td><td>Tap-reveal tooltip or info button</td><td>Touch device</td><td>Apple</td></tr>
+  <tr><td>Context menu (right-click)</td><td>Long-press context menu</td><td>Touch device</td><td>Apple + M3</td></tr>
+  <tr><td>Data table (many columns)</td><td>Card list (one card per row) or horizontal scroll</td><td>Compact width</td><td>M3</td></tr>
+  <tr><td>Multi-column form</td><td>Single-column stacked form</td><td>Compact width</td><td>All systems</td></tr>
+  <tr><td>Dropdown select</td><td>Full-screen selector or bottom sheet picker</td><td>Compact width</td><td>Apple</td></tr>
+  <tr><td>Horizontal tabs (many)</td><td>Scrollable tabs or dropdown</td><td>Compact width</td><td>M3</td></tr>
+  <tr><td>Dialog (wide)</td><td>Full-screen dialog or bottom sheet</td><td>Compact width</td><td>M3</td></tr>
+  <tr><td>Command palette (Cmd+K)</td><td>Full-screen search overlay</td><td>Compact width</td><td>Custom</td></tr>
+  <tr><td>Breadcrumbs</td><td>Back button + current page title</td><td>Compact width</td><td>Apple + M3</td></tr>
+  <tr><td>Stepper (horizontal)</td><td>Stepper (vertical) or progress indicator</td><td>Compact width</td><td>M3</td></tr>
+  <tr><td>Persistent filters sidebar</td><td>Filter button + bottom sheet with filters</td><td>Compact width</td><td>Custom</td></tr>
+  <tr><td>Split-view (editor + preview)</td><td>Tab toggle between editor and preview</td><td>Compact width</td><td>Apple</td></tr>
+  <tr><td>Fixed toolbar</td><td>Collapsing toolbar (hides on scroll down, shows on scroll up)</td><td>Compact width</td><td>M3</td></tr>
+  <tr><td>AI chat side panel</td><td>Full-screen chat view or swipe-up sheet</td><td>Compact width</td><td>Custom</td></tr>
+</table>
+
+<!-- ============ GESTURES ============ -->
+<h2 id="gestures">Gesture Design</h2>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Standard Gestures</h4>
+    <p><strong>Tap:</strong> Primary action. Equivalent to click.</p>
+    <p><strong>Long press:</strong> Context menu. Equivalent to right-click.</p>
+    <p><strong>Swipe horizontal:</strong> Reveal actions (delete, archive) on list items. Navigate between tabs/pages.</p>
+    <p><strong>Swipe down:</strong> Pull-to-refresh. Dismiss sheet/modal.</p>
+    <p><strong>Swipe from edge:</strong> Back navigation (iOS). Open drawer (Android).</p>
+    <p><strong>Pinch:</strong> Zoom. Used for maps, images, data visualization.</p>
+    <p><strong>Two-finger drag:</strong> Pan within zoomed content.</p>
+  </div>
+  <div class="card">
+    <h4>Gesture RTL Considerations</h4>
+    <p><strong>Swipe to reveal actions:</strong> In LTR, swipe left reveals actions on the right. In RTL, swipe right reveals actions on the left. The gesture direction mirrors.</p>
+    <p><strong>Edge swipe for back:</strong> In LTR (iOS), swipe from left edge to go back. In RTL, swipe from right edge. Apple handles this automatically. Angular apps must implement this explicitly.</p>
+    <p><strong>Swipe between pages:</strong> In LTR, swipe left = next page. In RTL, swipe right = next page. The direction reverses because "forward" reverses.</p>
+    <p><strong>Pull-to-refresh:</strong> Does NOT change in RTL. Vertical gestures are unaffected.</p>
+  </div>
+</div>
+
+<!-- ============ OUR DS ============ -->
+<h2 id="our-ds">Our DS Implementation Status</h2>
+
+<div class="card">
+  <h4>What We Already Have</h4>
+  <p><span class="tag tag-green">Done</span> CSS logical properties mandated in DS_RULES.md</p>
+  <p><span class="tag tag-green">Done</span> <code>dir="rtl"</code> support in globals.css via <code>[data-direction="rtl"]</code></p>
+  <p><span class="tag tag-green">Done</span> 15 desktop-to-mobile adaptation patterns in DS_RULES.md</p>
+  <p><span class="tag tag-green">Done</span> Two viewport modes (mobile/desktop) in token architecture</p>
+  <p><span class="tag tag-green">Done</span> Touch target guidance (48px) in DS_RULES.md</p>
+</div>
+
+<div class="card">
+  <h4>What We Need to Add</h4>
+  <p><span class="tag tag-amber">Needed</span> Navigation rail pattern for medium (tablet) breakpoint</p>
+  <p><span class="tag tag-amber">Needed</span> Icon mirroring audit for HugeIcons (tag each icon as mirror/no-mirror/locale-variant)</p>
+  <p><span class="tag tag-amber">Needed</span> Bidirectional text handling rules for form inputs (<code>dir="auto"</code>)</p>
+  <p><span class="tag tag-amber">Needed</span> Data table RTL specification (row mirrors, numbers stay LTR)</p>
+  <p><span class="tag tag-amber">Needed</span> Calendar/date picker locale-aware first-day-of-week</p>
+  <p><span class="tag tag-amber">Needed</span> Gesture direction reversal documentation for mobile</p>
+  <p><span class="tag tag-amber">Needed</span> Max content width token for ultra-wide screens</p>
+  <p><span class="tag tag-amber">Needed</span> Medium breakpoint tier (600-1023px) with 8-column grid</p>
+</div>
+
+<!-- ============ INDEX ============ -->
+<h2 id="index">Learning Index: Deeper Study</h2>
+
+<table>
+  <tr><th>Topic</th><th>Source</th><th>Priority</th><th>DS Relevance</th></tr>
+  <tr>
+    <td><strong>Apple: Adaptivity and Layout</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/layout" style="color:#60a5fa;">HIG Layout</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Safe area handling, readability margins, split view ratios</td>
+  </tr>
+  <tr>
+    <td><strong>Apple: Right to Left</strong></td>
+    <td><a href="https://developer.apple.com/design/human-interface-guidelines/right-to-left" style="color:#60a5fa;">HIG RTL</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Arabic-specific mirroring exceptions, SF Symbol localization</td>
+  </tr>
+  <tr>
+    <td><strong>WWDC22: Get It Right (to Left)</strong></td>
+    <td><a href="https://developer.apple.com/videos/play/wwdc2022/10107/" style="color:#60a5fa;">WWDC22 Session</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Practical RTL implementation patterns, edge cases, testing tools</td>
+  </tr>
+  <tr>
+    <td><strong>M3: Bidirectionality</strong></td>
+    <td><a href="https://m3.material.io/foundations/layout/understanding-layout/bidirectionality-rtl" style="color:#60a5fa;">M3 Layout</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Icon mirroring decision tree, component RTL specs</td>
+  </tr>
+  <tr>
+    <td><strong>M3: Applying Layout</strong></td>
+    <td><a href="https://m3.material.io/foundations/layout/applying-layout" style="color:#60a5fa;">M3 Layout</a></td>
+    <td><span class="tag tag-purple">Medium</span></td>
+    <td>Canonical layouts (list-detail, supporting pane, feed)</td>
+  </tr>
+  <tr>
+    <td><strong>CSS Logical Properties Guide</strong></td>
+    <td><a href="https://ishadeed.com/article/css-logical-properties/" style="color:#60a5fa;">Ahmad Shadeed</a></td>
+    <td><span class="tag tag-green">High</span></td>
+    <td>Complete physical-to-logical mapping with visual examples</td>
+  </tr>
+  <tr>
+    <td><strong>RTL CSS + React Guide</strong></td>
+    <td><a href="https://better-i18n.com/en/blog/rtl-support-css-react-guide/" style="color:#60a5fa;">better-i18n</a></td>
+    <td><span class="tag tag-purple">Medium</span></td>
+    <td>Implementation patterns applicable to Angular (similar concepts)</td>
+  </tr>
+  <tr>
+    <td><strong>Thumb Zone Research</strong></td>
+    <td><a href="https://www.smashingmagazine.com/2016/09/the-thumb-zone-designing-for-mobile-users/" style="color:#60a5fa;">Smashing Magazine</a></td>
+    <td><span class="tag tag-amber">Lower</span></td>
+    <td>Foundational research on mobile touch ergonomics</td>
+  </tr>
+  <tr>
+    <td><strong>Touch-Friendly Design (Addy Osmani)</strong></td>
+    <td><a href="https://addyosmani.com/blog/touch-friendly-design/" style="color:#60a5fa;">AddyOsmani.com</a></td>
+    <td><span class="tag tag-amber">Lower</span></td>
+    <td>Modern touch design patterns, grip types, content zones</td>
+  </tr>
+  <tr>
+    <td><strong>Finastra RTL Guidelines</strong></td>
+    <td><a href="https://design.fusionfabric.cloud/foundations/rtl" style="color:#60a5fa;">Finastra DS</a></td>
+    <td><span class="tag tag-purple">Medium</span></td>
+    <td>Enterprise financial DS with RTL, relevant to our ERP domain</td>
+  </tr>
+</table>
+
+<!-- ============ TAKEAWAYS ============ -->
+<h2 id="takeaways">Actionable Takeaways for Our DS</h2>
+
+<div class="ds-apply">
+  <p><strong>1. Three-tier responsive grid.</strong> Compact (0-599px, 4 columns, 16px margins), Medium (600-1023px, 8 columns, 24px margins), Expanded (1024px+, 12 columns, 24-32px margins). Add the medium tier to our system; current DS only has mobile/desktop.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>2. Navigation Rail for tablet.</strong> Define the navigation rail component: 72-80px wide, icons-only with optional labels below, persistent on left/right edge. This is the missing navigation tier between bottom tabs (mobile) and full sidebar (desktop).</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>3. 100% CSS logical properties.</strong> Enforce via linting: zero usage of <code>margin-left</code>, <code>margin-right</code>, <code>padding-left</code>, <code>padding-right</code>, <code>left</code>, <code>right</code>, <code>text-align: left/right</code>, <code>float: left/right</code>. All replaced with logical equivalents. This handles 80% of RTL automatically.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>4. Icon mirroring registry.</strong> Audit all HugeIcons used in the DS and tag each with a <code>mirror</code> property: <code>always</code> (directional arrows, navigation), <code>never</code> (physical objects, checkmarks, media controls, charts), or <code>locale-variant</code> (text formatting icons). Store in the AI Component Registry so generative agents respect this.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>5. dir="auto" on all text inputs.</strong> Every <code>&lt;input&gt;</code> and <code>&lt;textarea&gt;</code> must use <code>dir="auto"</code> so the input direction matches the first strong character typed. This handles the common case of Arabic users entering phone numbers (LTR) or Arabic text (RTL) in the same field.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>6. Data table RTL rules.</strong> Row layout mirrors (icon on right, actions on left). Text columns use <code>text-align: start</code>. Number columns use <code>dir="ltr"</code> and <code>text-align: end</code> (visually on the left in RTL, but numbers read left-to-right). Sort indicator arrows mirror. Column order does NOT mirror (columns stay in their defined order).</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>7. Touch targets: 48px minimum, visual can be smaller.</strong> All interactive elements must have a 48x48px minimum touch area, but the visible element can be 24-32px with transparent padding extending the hit area. This matches Material Design and exceeds WCAG AA (24px). Document the pattern: <code>min-height: 48px; min-width: 48px; display: flex; align-items: center; justify-content: center;</code></p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>8. Bottom-zone priority for mobile actions.</strong> Primary actions at screen bottom (easy thumb zone). Secondary at middle. Tertiary at top. Validate every mobile layout against this rule. The FAB, bottom nav, and bottom sheets already follow this. Ensure new patterns do too.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>9. Gesture direction reversal in RTL.</strong> Document in interaction contracts: swipe-to-reveal mirrors direction, edge-back-swipe mirrors, page-swipe mirrors, pull-to-refresh stays vertical (no change). This must be explicit for the Angular implementation.</p>
+</div>
+
+<div class="ds-apply">
+  <p><strong>10. Max content width for ultra-wide.</strong> Add a <code>--content-max-width</code> token (1280px) to prevent content from stretching across ultra-wide monitors. Center the content container with <code>margin-inline: auto</code>. This matches M3's approach and Apple's readability margins.</p>
+</div>
+
+</div>
+</body>
+</html>

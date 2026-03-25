@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Design System Architecture v3 - M3 Foundation Strategy</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #06060c; color: #c8c8d0; font-family: 'Inter', -apple-system, sans-serif; padding: 24px; line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  h1 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .version { display: inline-block; background: #06d6a01a; color: #06d6a0; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
+  .subtitle { font-size: 13px; color: #666; margin-bottom: 32px; }
+  h2 { font-size: 16px; font-weight: 700; color: #fff; margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #1a1a28; }
+
+  /* Strategy diagram */
+  .strategy {
+    display: flex; flex-direction: column; gap: 4px;
+    margin-bottom: 32px;
+  }
+  .strat-layer {
+    border: 1px solid #1a1a28; border-radius: 14px;
+    padding: 16px 18px; background: #0a0a12; position: relative;
+  }
+  .strat-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .strat-badge {
+    padding: 3px 10px; border-radius: 6px;
+    font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .strat-title { font-size: 13px; font-weight: 700; }
+  .strat-subtitle { font-size: 10px; color: #555; margin-left: auto; }
+  .strat-content { display: flex; gap: 10px; flex-wrap: wrap; }
+  .strat-node {
+    flex: 1; min-width: 160px; border-radius: 10px;
+    padding: 12px 14px; border: 1px solid;
+  }
+  .strat-node-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .strat-node-desc { font-size: 10px; line-height: 1.5; opacity: 0.7; }
+
+  .strat-arrow { text-align: center; color: #333; font-size: 14px; padding: 2px 0; }
+
+  /* Layer colors */
+  .l-own .strat-badge { background: #ff006e22; color: #ff006e; }
+  .l-own .strat-title { color: #ff006e; }
+  .l-own .strat-node { background: #ff006e06; border-color: #ff006e22; }
+  .l-own .strat-node-title { color: #ff006e; }
+
+  .l-m3 .strat-badge { background: #4285f422; color: #4285f4; }
+  .l-m3 .strat-title { color: #4285f4; }
+  .l-m3 .strat-node { background: #4285f406; border-color: #4285f422; }
+  .l-m3 .strat-node-title { color: #4285f4; }
+
+  .l-adapt .strat-badge { background: #ff7b0022; color: #ff7b00; }
+  .l-adapt .strat-title { color: #ff7b00; }
+  .l-adapt .strat-node { background: #ff7b0006; border-color: #ff7b0022; }
+  .l-adapt .strat-node-title { color: #ff7b00; }
+
+  .l-impl .strat-badge { background: #06d6a022; color: #06d6a0; }
+  .l-impl .strat-title { color: #06d6a0; }
+  .l-impl .strat-node { background: #06d6a006; border-color: #06d6a022; }
+  .l-impl .strat-node-title { color: #06d6a0; }
+
+  .l-out .strat-badge { background: #8338ec22; color: #8338ec; }
+  .l-out .strat-title { color: #8338ec; }
+  .l-out .strat-node { background: #8338ec06; border-color: #8338ec22; }
+  .l-out .strat-node-title { color: #8338ec; }
+
+  /* Risk mitigation */
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .risk-card {
+    border-radius: 12px; padding: 16px;
+    border: 1px solid #1a1a28; background: #0a0a12;
+    font-size: 11px;
+  }
+  .risk-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+  .risk-card.threat h4 { color: #e94560; }
+  .risk-card.shield h4 { color: #06d6a0; }
+  .risk-item { padding: 5px 0; color: #aaa; line-height: 1.5; border-bottom: 1px solid #0e0e16; }
+  .risk-item:last-child { border-bottom: none; }
+  .risk-item strong { color: #fff; }
+
+  /* What you get / what you build */
+  .split-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .split-card {
+    border-radius: 12px; padding: 16px;
+    border: 1px solid; font-size: 11px;
+  }
+  .split-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+  .split-card.free { border-color: #4285f433; background: #4285f408; }
+  .split-card.free h4 { color: #4285f4; }
+  .split-card.extend { border-color: #ff7b0033; background: #ff7b0008; }
+  .split-card.extend h4 { color: #ff7b00; }
+  .split-card.custom { border-color: #ff006e33; background: #ff006e08; }
+  .split-card.custom h4 { color: #ff006e; }
+  .split-item { padding: 4px 0; color: #aaa; }
+  .split-item strong { color: #ccc; }
+
+  /* White label diagram */
+  .wl-flow {
+    display: flex; align-items: center; gap: 8px;
+    padding: 16px; border: 1px solid #1a1a28;
+    border-radius: 12px; background: #0a0a12;
+    overflow-x: auto; margin-bottom: 16px;
+  }
+  .wl-step {
+    flex-shrink: 0; padding: 12px 16px;
+    border-radius: 10px; text-align: center;
+    min-width: 140px;
+  }
+  .wl-step-title { font-size: 10px; font-weight: 700; margin-bottom: 4px; }
+  .wl-step-desc { font-size: 9px; opacity: 0.7; }
+  .wl-arrow { color: #333; font-size: 16px; flex-shrink: 0; }
+  .wl-s1 { background: #4285f411; border: 1px solid #4285f422; }
+  .wl-s1 .wl-step-title { color: #4285f4; }
+  .wl-s2 { background: #ff7b0011; border: 1px solid #ff7b0022; }
+  .wl-s2 .wl-step-title { color: #ff7b00; }
+  .wl-s3 { background: #06d6a011; border: 1px solid #06d6a022; }
+  .wl-s3 .wl-step-title { color: #06d6a0; }
+  .wl-s4 { background: #8338ec11; border: 1px solid #8338ec22; }
+  .wl-s4 .wl-step-title { color: #8338ec; }
+  .wl-s5 { background: #ff006e11; border: 1px solid #ff006e22; }
+  .wl-s5 .wl-step-title { color: #ff006e; }
+
+  /* Platform matrix */
+  .platform-grid { display: grid; grid-template-columns: 180px 1fr 1fr 1fr; gap: 1px; background: #1a1a28; border-radius: 12px; overflow: hidden; font-size: 11px; }
+  .platform-grid > div { padding: 10px 14px; background: #0a0a12; }
+  .platform-grid .header { background: #0e0e16; font-weight: 700; color: #888; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px; }
+  .platform-grid .label { font-weight: 600; color: #fff; }
+  .platform-grid .val { color: #aaa; }
+  .platform-grid .shared { color: #06d6a0; font-weight: 600; }
+
+  .note-box {
+    padding: 16px; border-radius: 12px;
+    border: 1px solid #ffbe0b33; background: #ffbe0b08;
+    font-size: 11px; color: #ccc; line-height: 1.6; margin-top: 16px;
+  }
+  .note-box strong { color: #ffbe0b; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Architecture v3: M3 Foundation Strategy <span class="version">FINAL</span></h1>
+<p class="subtitle">Own the specification. Fork M3 tokens. Delegate implementation to framework adapters. Future-proof for Flutter, white-label, and direction changes.</p>
+
+<!-- CORE STRATEGY -->
+<h2>The Five-Layer Ownership Model</h2>
+<p style="font-size: 12px; color: #888; margin-bottom: 16px;">Principle: You OWN layers 1-2. You FORK layer 3. You ADAPT layer 4. You IMPLEMENT layer 5. If M3 changes direction, only layers 3-5 are affected. Your intelligence and specifications are untouched.</p>
+
+<div class="strategy">
+
+  <div class="strat-layer l-own">
+    <div class="strat-header">
+      <span class="strat-badge">YOU OWN</span>
+      <span class="strat-title">Intelligence Layer (Knowledge Graph + Contracts + Rules + Agent Bus)</span>
+      <span class="strat-subtitle">Zero M3 dependency. Fully yours. Cannot be disrupted by Google.</span>
+    </div>
+    <div class="strat-content">
+      <div class="strat-node">
+        <div class="strat-node-title">Knowledge Graph</div>
+        <div class="strat-node-desc">Queryable entity-relationship store. Impact analysis, overlap detection. Framework-agnostic. M3 changes cannot touch this.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Component Registry</div>
+        <div class="strat-node-desc">YOUR component specs. Anatomy, slots, states, AI hints, interaction contracts. The registry describes WHAT, not HOW. Implementation is separate.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Rules Engine</div>
+        <div class="strat-node-desc">WCAG AAA/AA per brand. RTL rules. Governance lifecycle. Touch model. These are YOUR business rules, independent of any design framework.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Agent Orchestration</div>
+        <div class="strat-node-desc">ds-copilot, compliance, a11y, frontend, ai-agent. Coordination protocol, conflict resolution. Entirely your IP.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strat-arrow">|</div>
+
+  <div class="strat-layer l-own">
+    <div class="strat-header">
+      <span class="strat-badge">YOU OWN</span>
+      <span class="strat-title">Specification Layer (Registry JSON + Patterns + Templates + Interactions)</span>
+      <span class="strat-subtitle">Framework-agnostic component definitions. Same spec generates Angular, Flutter, or any future target.</span>
+    </div>
+    <div class="strat-content">
+      <div class="strat-node">
+        <div class="strat-node-title">Component Specs</div>
+        <div class="strat-node-desc">Properties defined as abstract types (not Angular signals, not Dart). Angular adapter maps to signals. Flutter adapter maps to widget props. Spec stays the same.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Pattern Compositions</div>
+        <div class="strat-node-desc">AI assistant panel, data table, workflow approval. Defined as component graph (which components compose where). Layout is responsive CSS Grid, works on web and can map to Flutter Row/Column.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Interaction Contracts</div>
+        <div class="strat-node-desc">Trigger, state machine, feedback, error behavior. Platform-neutral. Angular uses RxJS. Flutter uses streams. Contract is the same.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">White-Label Config Schema</div>
+        <div class="strat-node-desc">Enterprise customer picks source color. Dynamic Color generates palette. Config defines: brand name, source color, WCAG level, locale, RTL flag. That is the entire input.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strat-arrow">|</div>
+
+  <div class="strat-layer l-m3">
+    <div class="strat-header">
+      <span class="strat-badge">FORK FROM M3</span>
+      <span class="strat-title">Token Layer (Forked M3 Tokens + Your Brand Overrides + DTCG Format)</span>
+      <span class="strat-subtitle">Clone material-foundation/material-tokens. Add your brands. Build with Style Dictionary v4.</span>
+    </div>
+    <div class="strat-content">
+      <div class="strat-node">
+        <div class="strat-node-title">Reference Tokens (from M3)</div>
+        <div class="strat-node-desc">Cloned from material-tokens repo. Tonal palettes, type scale, motion curves, spring physics. DTCG format ($value, $type). This is your foundation. If M3 changes, you choose whether to pull updates.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">System Tokens (your overrides)</div>
+        <div class="strat-node-desc">Map reference tokens to semantic roles: primary, secondary, surface, error. Each brand (WideBot, Hulul, white-label) defines its own system token set. This is where differentiation happens.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Component Tokens (auto-cascaded)</div>
+        <div class="strat-node-desc">Generated from system tokens via resolver. button-bg = system.primary. Change system.primary, every button updates. M3's cascade logic cloned into your build pipeline.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Dynamic Color Engine</div>
+        <div class="strat-node-desc">M3's algorithmic palette generation. Input: one hex color. Output: 5 key colors, 5 tonal palettes, 50+ tokens with guaranteed AA contrast. Post-process for AAA (WideBot).</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strat-arrow">|</div>
+
+  <div class="strat-layer l-adapt">
+    <div class="strat-header">
+      <span class="strat-badge">ADAPT</span>
+      <span class="strat-title">Framework Adapter Layer (Tokens to Platform-Specific Output)</span>
+      <span class="strat-subtitle">Style Dictionary v4 transforms DTCG tokens to CSS vars, Dart constants, SCSS maps, TypeScript types.</span>
+    </div>
+    <div class="strat-content">
+      <div class="strat-node">
+        <div class="strat-node-title">Web Adapter (Angular)</div>
+        <div class="strat-node-desc">DTCG tokens -> CSS custom properties (--ds-color-primary). SCSS 7-1 architecture. Brand-switchable via [data-brand]. Angular CDK for behaviors.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Mobile Adapter (Flutter)</div>
+        <div class="strat-node-desc">DTCG tokens -> Dart constants (DsColor.primary). MaterialApp theme. ColorScheme.fromSeed() for Dynamic Color. Same source, different format.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Figma Adapter</div>
+        <div class="strat-node-desc">DTCG tokens -> Figma Variables via figma-md-sync. Per-brand collections. Light/Dark modes. LTR+RTL frames with Arabic text.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">White-Label Generator</div>
+        <div class="strat-node-desc">Customer source color -> Dynamic Color -> DTCG tokens -> All adapters. One input, all platforms updated. Brand creation is automated.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strat-arrow">|</div>
+
+  <div class="strat-layer l-impl">
+    <div class="strat-header">
+      <span class="strat-badge">IMPLEMENT</span>
+      <span class="strat-title">Component Implementation (Angular 21 Now, Flutter Later)</span>
+      <span class="strat-subtitle">Components implement the spec using the adapted tokens. CDK for behavior. Your design language for visuals.</span>
+    </div>
+    <div class="strat-content">
+      <div class="strat-node">
+        <div class="strat-node-title">Angular 21 Components</div>
+        <div class="strat-node-desc">Standalone, signal-based, OnPush. CDK for a11y + interactions. Styled with your CSS vars, not M3 defaults. Looks like Quo/Gemini, not Google.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">AI-Native Components</div>
+        <div class="strat-node-desc">Chat bubble, streaming text, assistant panel, tool results. No M3 equivalent exists. Built fully custom with CDK behaviors.</div>
+      </div>
+      <div class="strat-node">
+        <div class="strat-node-title">Flutter Components (Future)</div>
+        <div class="strat-node-desc">Same spec, Dart implementation. Flutter M3 widgets as base where useful (ThemeData, ColorScheme). Custom widgets for AI/ERP.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WHITE LABEL FLOW -->
+<h2>White-Label Enterprise Flow (Dynamic Color)</h2>
+<div class="wl-flow">
+  <div class="wl-step wl-s1">
+    <div class="wl-step-title">Customer Input</div>
+    <div class="wl-step-desc">One hex color<br>(brand primary)</div>
+  </div>
+  <div class="wl-arrow">-></div>
+  <div class="wl-step wl-s2">
+    <div class="wl-step-title">Dynamic Color Engine</div>
+    <div class="wl-step-desc">M3 algorithm generates<br>5 key colors + 5 tonal palettes<br>+ 50+ tokens (AA guaranteed)</div>
+  </div>
+  <div class="wl-arrow">-></div>
+  <div class="wl-step wl-s5">
+    <div class="wl-step-title">AAA Post-Processing</div>
+    <div class="wl-step-desc">If brand.wcagLevel === AAA<br>increase tonal distance<br>validate 7:1 contrast</div>
+  </div>
+  <div class="wl-arrow">-></div>
+  <div class="wl-step wl-s3">
+    <div class="wl-step-title">DTCG Token Generation</div>
+    <div class="wl-step-desc">Style Dictionary v4<br>outputs CSS vars + Dart<br>+ Figma variables</div>
+  </div>
+  <div class="wl-arrow">-></div>
+  <div class="wl-step wl-s4">
+    <div class="wl-step-title">All Platforms Updated</div>
+    <div class="wl-step-desc">Angular web app<br>Flutter mobile app<br>Figma design files<br>All from ONE color</div>
+  </div>
+</div>
+
+<!-- CROSS-PLATFORM SHARING -->
+<h2>Cross-Platform Token Sharing</h2>
+<div class="platform-grid">
+  <div class="header">Layer</div>
+  <div class="header">Angular (Web)</div>
+  <div class="header">Flutter (Mobile)</div>
+  <div class="header">Figma (Design)</div>
+
+  <div class="label">Token Source</div>
+  <div class="shared">DTCG JSON (shared)</div>
+  <div class="shared">DTCG JSON (shared)</div>
+  <div class="shared">DTCG JSON (shared)</div>
+
+  <div class="label">Build Tool</div>
+  <div class="val">Style Dictionary -> CSS vars</div>
+  <div class="val">Style Dictionary -> Dart constants</div>
+  <div class="val">figma-md-sync -> Variables API</div>
+
+  <div class="label">Runtime Format</div>
+  <div class="val">--ds-color-primary</div>
+  <div class="val">DsColor.primary</div>
+  <div class="val">color/primary (collection)</div>
+
+  <div class="label">Theme Switching</div>
+  <div class="val">[data-brand] + [data-theme]</div>
+  <div class="val">ThemeData + ColorScheme</div>
+  <div class="val">Variable modes (Light/Dark)</div>
+
+  <div class="label">Dynamic Color</div>
+  <div class="val">JS: M3 color utils</div>
+  <div class="val">ColorScheme.fromSeed()</div>
+  <div class="val">Material Theme Builder</div>
+
+  <div class="label">Behavior Layer</div>
+  <div class="val">Angular CDK</div>
+  <div class="val">Flutter gestures + a11y</div>
+  <div class="val">N/A (design only)</div>
+
+  <div class="label">Component Spec</div>
+  <div class="shared">Registry JSON (shared)</div>
+  <div class="shared">Registry JSON (shared)</div>
+  <div class="shared">Registry JSON (shared)</div>
+</div>
+
+<!-- WHAT YOU GET FREE vs BUILD vs OWN -->
+<h2>Scope: Free from M3 vs Extend vs Build Custom</h2>
+<div class="split-grid">
+
+<div class="split-card free">
+  <h4>Free from M3 (Clone/Fork)</h4>
+  <div class="split-item"><strong>Reference token hierarchy</strong> - tonal palettes, type scale</div>
+  <div class="split-item"><strong>Dynamic Color algorithm</strong> - one color in, full palette out</div>
+  <div class="split-item"><strong>DTCG token format</strong> - $value, $type, $description</div>
+  <div class="split-item"><strong>Motion token system</strong> - easing curves + spring physics</div>
+  <div class="split-item"><strong>Elevation system</strong> - 5 levels with shadow tokens</div>
+  <div class="split-item"><strong>Typography scale</strong> - 5 roles x 3 sizes</div>
+  <div class="split-item"><strong>Shape system</strong> - corner radius tokens</div>
+  <div class="split-item"><strong>WCAG AA contrast</strong> - built into tonal system</div>
+  <div class="split-item"><strong>Angular CDK behaviors</strong> - drag, scroll, overlay, focus, keyboard</div>
+  <div class="split-item"><strong>Token cascade logic</strong> - ref -> sys -> component propagation</div>
+</div>
+
+<div class="split-card extend">
+  <h4>Extend from M3 (Override/Customize)</h4>
+  <div class="split-item"><strong>Brand tokens</strong> - WideBot, Hulul overrides on M3 system tokens</div>
+  <div class="split-item"><strong>AAA contrast post-processing</strong> - WideBot tonal shifts above AA</div>
+  <div class="split-item"><strong>Custom spacing scale</strong> - denser ERP layouts</div>
+  <div class="split-item"><strong>Custom elevation</strong> - more levels for complex dashboards</div>
+  <div class="split-item"><strong>Extended typography</strong> - Arabic font stacks, RTL adjustments</div>
+  <div class="split-item"><strong>Reduced motion</strong> - per-brand reduced motion alternatives</div>
+  <div class="split-item"><strong>Component density</strong> - compact mode for data-heavy ERP screens</div>
+  <div class="split-item"><strong>White-label config</strong> - Dynamic Color + brand schema</div>
+</div>
+
+<div class="split-card custom">
+  <h4>Build Custom (No M3 Equivalent)</h4>
+  <div class="split-item"><strong>Knowledge graph</strong> - entity-relationship reasoning</div>
+  <div class="split-item"><strong>Component registry</strong> - AI-readable JSON per component</div>
+  <div class="split-item"><strong>Agent orchestration</strong> - 5 agents with permissions</div>
+  <div class="split-item"><strong>Interaction contracts</strong> - trigger/state/feedback/error</div>
+  <div class="split-item"><strong>RTL architecture</strong> - rules, icon mirroring, Arabic text</div>
+  <div class="split-item"><strong>AI-native components</strong> - chat, streaming, tool results</div>
+  <div class="split-item"><strong>Governance lifecycle</strong> - 7-state with approval gates</div>
+  <div class="split-item"><strong>Continuous learning</strong> - signal/evaluate/safeguard/evolve</div>
+  <div class="split-item"><strong>Pattern + template library</strong> - ERP-specific compositions</div>
+  <div class="split-item"><strong>MCP server</strong> - registry queryable by external AI</div>
+  <div class="split-item"><strong>Touch model</strong> - hover>tap, tooltip>sheet rules</div>
+  <div class="split-item"><strong>Multi-entry generation</strong> - 6 entry points</div>
+</div>
+
+</div>
+
+<!-- RISK MITIGATION -->
+<h2>M3 Direction Change Risk Mitigation</h2>
+<div class="risk-grid">
+
+<div class="risk-card threat">
+  <h4>Threats (What Could Go Wrong)</h4>
+  <div class="risk-item"><strong>M3 to M4 breaking change.</strong> Google could release M4 with incompatible token structure, like M2 to M3 transition that broke everything.</div>
+  <div class="risk-item"><strong>Angular Material direction shift.</strong> Angular team could deprioritize Material in favor of CDK-only approach (they hinted at this in 2025 blog posts).</div>
+  <div class="risk-item"><strong>Aesthetic shift.</strong> Google could adopt a drastically different visual direction (glassmorphism, neumorphism) that conflicts with enterprise readability.</div>
+  <div class="risk-item"><strong>Dynamic Color algorithm change.</strong> Palette generation could change, producing different colors from the same input, breaking white-label consistency.</div>
+  <div class="risk-item"><strong>DTCG format evolution.</strong> W3C could release a breaking update to the token format spec.</div>
+</div>
+
+<div class="risk-card shield">
+  <h4>Shields (How We Are Protected)</h4>
+  <div class="risk-item"><strong>Layers 1-2 have zero M3 dependency.</strong> Knowledge graph, registry, rules, agents, specs are entirely yours. M4 cannot touch them.</div>
+  <div class="risk-item"><strong>M3 tokens are FORKED, not linked.</strong> You control when/if to pull upstream changes. A breaking M4 release does not auto-break your system.</div>
+  <div class="risk-item"><strong>Token cascade logic is CLONED into your pipeline.</strong> Even if M3 changes its propagation mechanism, your Style Dictionary config is yours.</div>
+  <div class="risk-item"><strong>Dynamic Color is a BUILD step, not a runtime dependency.</strong> You run it once to generate palettes. White-label tokens are static after generation. Algorithm change does not affect existing brands.</div>
+  <div class="risk-item"><strong>Component implementations are YOUR code.</strong> Angular and Flutter components use your tokens, not mat-* components directly. Google's aesthetic changes do not propagate.</div>
+  <div class="risk-item"><strong>Worst case: replace Layer 3.</strong> If M3 becomes unusable, you replace the token layer only. Layers 1-2 (intelligence) and 4-5 (implementation) are unaffected. Estimated effort: 2-3 weeks.</div>
+</div>
+
+</div>
+
+<div class="note-box">
+  <strong>Key Insight:</strong> The architecture is designed so that Google provides the SCIENCE (color theory, contrast math, motion physics, tonal palettes) and you provide the INTELLIGENCE (knowledge graph, governance, AI generation, multi-brand, RTL, learning). Science is universal and stable. If Google changes their science, the improvements likely benefit you. If they change their aesthetic opinions, you are insulated because your components are custom, not Material widgets.
+</div>
+
+</div>
+</body>
+</html>

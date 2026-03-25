@@ -1,0 +1,2622 @@
+{
+  "$schema": "ai-component-registry/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "brands": ["widebot", "hulul"],
+  "accessibilityLevels": {
+    "widebot": "WCAG AAA",
+    "hulul": "WCAG AA"
+  },
+  "components": [
+    {
+      "name": "button",
+      "displayName": "Button",
+      "purpose": "Interactive element that triggers actions",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["leadingIcon", "label", "trailingIcon"],
+        "description": "Button container with optional icons and label text. Icon sizing scales with size variant."
+      },
+      "properties": {
+        "emphasis": {
+          "type": "enum",
+          "values": ["filled", "tonal", "outlined", "ghost"],
+          "default": "filled"
+        },
+        "colorRole": {
+          "type": "enum",
+          "values": ["primary", "danger", "warning", "success", "neutral", "ai"],
+          "default": "primary"
+        },
+        "size": {
+          "type": "enum",
+          "values": ["xs", "sm", "md", "lg", "xl"],
+          "default": "md"
+        }
+      },
+      "states": ["default", "hover", "focus", "pressed", "disabled", "loading"],
+      "tokens": {
+        "filled": {
+          "background": "--{role}-filled-bg",
+          "foreground": "--{role}-filled-fg"
+        },
+        "tonal": {
+          "background": "--{role}-tonal-bg",
+          "foreground": "--{role}-tonal-fg"
+        },
+        "outlined": {
+          "foreground": "--{role}-outline-fg",
+          "border": "--{role}-outline-border"
+        },
+        "ghost": {
+          "foreground": "--{role}-ghost-fg"
+        },
+        "sizing": {
+          "xs": "--radius-xs",
+          "sm": "--radius-sm",
+          "md": "--radius-md",
+          "lg": "--radius-lg",
+          "xl": "--radius-xl"
+        },
+        "motion": "--motion-fast",
+        "easing": "--ease-standard"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full width in stacked layouts, touch target minimum 44px x 44px",
+        "desktop": "Inline, size as specified"
+      },
+      "accessibility": {
+        "role": "button",
+        "requiredAria": ["aria-label (icon-only buttons)", "aria-disabled (when disabled)"],
+        "keyboardInteraction": ["Enter", "Space"],
+        "focusIndicator": "2px focus ring using --focus-ring token",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "hover": "State layer fade-in with --motion-fast and --ease-standard",
+        "press": "Scale 0.98 with --motion-fast",
+        "loading": "Spinner rotation continuous using --motion-slow"
+      },
+      "interactionRules": [
+        "Never use CSS border for outlined variant. Use box-shadow: inset 0 0 0 1px.",
+        "Radius scales with size (xs=radius-xs through xl=radius-xl).",
+        "No hardcoded colors. All colors via var(--token)."
+      ],
+      "mobileTouchAlternatives": {
+        "hover": "Active state persists on tap until other element focused",
+        "tooltip": "Bottom sheet tooltip on long press (600ms+)"
+      },
+      "aiHints": {
+        "whenToUse": "Primary actions, form submissions, confirmations, call-to-action",
+        "whenNotToUse": "Navigation (use links), toggling state (use Toggle), view switching (use Tabs)",
+        "commonPairings": ["Icon Button", "Dialog", "Card footer", "Form submission"],
+        "generationNotes": "Default to filled/primary/md. Use danger for destructive actions. Use ghost for tertiary actions. Use loading state during async operations."
+      }
+    },
+    {
+      "name": "icon-button",
+      "displayName": "Icon Button",
+      "purpose": "Square interactive element with icon only, no label text",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["icon"],
+        "description": "Square button container with centered icon. No label text allowed."
+      },
+      "properties": {
+        "emphasis": {
+          "type": "enum",
+          "values": ["filled", "tonal", "outlined", "ghost"],
+          "default": "filled"
+        },
+        "colorRole": {
+          "type": "enum",
+          "values": ["primary", "danger", "warning", "success", "neutral", "ai"],
+          "default": "primary"
+        },
+        "size": {
+          "type": "enum",
+          "values": ["xs", "sm", "md", "lg", "xl"],
+          "default": "md"
+        },
+        "toggle": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default", "hover", "focus", "pressed", "disabled", "selected"],
+      "tokens": {
+        "filled": {
+          "background": "--{role}-filled-bg",
+          "foreground": "--{role}-filled-fg"
+        },
+        "tonal": {
+          "background": "--{role}-tonal-bg",
+          "foreground": "--{role}-tonal-fg"
+        },
+        "outlined": {
+          "foreground": "--{role}-outline-fg",
+          "border": "--{role}-outline-border"
+        },
+        "ghost": {
+          "foreground": "--{role}-ghost-fg"
+        },
+        "sizing": {
+          "xs": "--radius-xs",
+          "sm": "--radius-sm",
+          "md": "--radius-md",
+          "lg": "--radius-lg",
+          "xl": "--radius-xl"
+        }
+      },
+      "responsiveBehavior": {
+        "mobile": "Touch target 44px x 44px minimum",
+        "desktop": "Size as specified, hover state visible"
+      },
+      "accessibility": {
+        "role": "button",
+        "requiredAria": ["aria-label (required - describes icon action)"],
+        "keyboardInteraction": ["Enter", "Space"],
+        "focusIndicator": "2px focus ring using --focus-ring token",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "hover": "State layer fade-in with --motion-fast",
+        "press": "Scale 0.96 with --motion-fast",
+        "toggle": "Selected state background transition with --motion-fast"
+      },
+      "interactionRules": [
+        "aria-label is mandatory - no unlabeled icon buttons",
+        "Radius scales with size",
+        "No CSS border for outlined. Use box-shadow: inset 0 0 0 1px."
+      ],
+      "mobileTouchAlternatives": {
+        "hover": "Active state on tap",
+        "tooltip": "Accessible label via aria-label primarily"
+      },
+      "aiHints": {
+        "whenToUse": "Close dialogs, secondary actions, density-constrained layouts, toggle states",
+        "whenNotToUse": "Primary actions (use Button), form labels, navigation",
+        "commonPairings": ["Dialog header", "Card trailing action", "Text field clear"],
+        "generationNotes": "Always include aria-label. Default to tonal emphasis for secondary actions. Use toggle variant for binary states."
+      }
+    },
+    {
+      "name": "badge",
+      "displayName": "Badge",
+      "purpose": "Small status indicator, typically overlaid on other elements",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["content"],
+        "description": "Pill-shaped container, anchored to parent element. Content is number, dot, or icon."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["dot", "count", "max"],
+          "default": "dot"
+        },
+        "colorRole": {
+          "type": "enum",
+          "values": ["primary", "danger", "warning", "success", "neutral", "ai"],
+          "default": "primary"
+        },
+        "size": {
+          "type": "enum",
+          "values": ["sm", "md", "lg"],
+          "default": "md"
+        }
+      },
+      "states": ["default"],
+      "tokens": {
+        "background": "--{role}-filled-bg",
+        "foreground": "--{role}-filled-fg",
+        "radius": "--radius-full",
+        "typography": "--font-size-xs"
+      },
+      "responsiveBehavior": {
+        "mobile": "Smaller badges on compact layouts",
+        "desktop": "Standard sizing"
+      },
+      "accessibility": {
+        "role": "status",
+        "requiredAria": ["aria-label (describing the count or status)"],
+        "keyboardInteraction": [],
+        "focusIndicator": "Not focusable",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "appear": "Scale fade-in with --motion-fast",
+        "update": "Number change animation with --motion-fast"
+      },
+      "interactionRules": [
+        "Badge always uses --radius-full (pill shape). No size-based radius scaling.",
+        "Never use Badge standalone without a parent element to anchor to.",
+        "Badge is positioned absolute/overlay, not in content flow."
+      ],
+      "mobileTouchAlternatives": {},
+      "aiHints": {
+        "whenToUse": "Notification counts, status indicators, unread counts, inventory status",
+        "whenNotToUse": "Detailed status messages (use Alert), persistent notifications (use Toast)",
+        "commonPairings": ["Icon Button", "Tabs", "Nav Rail", "Navigation items"],
+        "generationNotes": "Use role colors for semantic meaning (danger=errors, success=complete). Dot type for simple indicator, count for numbers, max for 99+ overflow."
+      }
+    },
+    {
+      "name": "chip",
+      "displayName": "Chip",
+      "purpose": "Compact element for filters, tags, or selections",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["leadingIcon", "label", "trailingIcon"],
+        "description": "Compact rectangular container with optional icons. Trailing icon is typically remove button (X)."
+      },
+      "properties": {
+        "emphasis": {
+          "type": "enum",
+          "values": ["tonal", "outlined"],
+          "default": "tonal"
+        },
+        "colorRole": {
+          "type": "enum",
+          "values": ["primary", "danger", "warning", "success", "neutral", "ai"],
+          "default": "primary"
+        },
+        "size": {
+          "type": "enum",
+          "values": ["sm", "md", "lg"],
+          "default": "md"
+        }
+      },
+      "states": ["default", "hover", "focus", "pressed", "disabled", "selected"],
+      "tokens": {
+        "tonal": {
+          "background": "--{role}-tonal-bg",
+          "foreground": "--{role}-tonal-fg"
+        },
+        "outlined": {
+          "foreground": "--{role}-outline-fg",
+          "border": "--{role}-outline-border"
+        },
+        "sizing": {
+          "sm": "--radius-xs",
+          "md": "--radius-sm",
+          "lg": "--radius-md"
+        },
+        "state": {
+          "hover": "--state-hover",
+          "focus": "--state-focus",
+          "pressed": "--state-pressed"
+        },
+        "focus": "--focus-ring"
+      },
+      "responsiveBehavior": {
+        "mobile": "Stack vertically in constrained space, wrap behavior",
+        "desktop": "Inline flow, wrap to next line if needed"
+      },
+      "accessibility": {
+        "role": "button",
+        "requiredAria": ["aria-label (if remove button)", "aria-pressed (if toggle chip)"],
+        "keyboardInteraction": ["Enter", "Space", "Backspace (for remove)"],
+        "focusIndicator": "2px focus ring",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "hover": "State layer with --motion-fast",
+        "press": "Scale 0.98 with --motion-fast",
+        "remove": "Fade out with --motion-fast"
+      },
+      "interactionRules": [
+        "Same inset box-shadow rule for outlined variant. No CSS border.",
+        "Radius scales with size (sm=radius-xs through lg=radius-md).",
+        "Must have .hover and .disabled class selectors alongside pseudo-classes."
+      ],
+      "mobileTouchAlternatives": {
+        "hover": "Active state on tap",
+        "remove": "Swipe to remove (optional on mobile)"
+      },
+      "aiHints": {
+        "whenToUse": "Filtering, tag display, filter badges, selection indicators",
+        "whenNotToUse": "Standalone actions (use Button), simple status (use Badge)",
+        "commonPairings": ["Tag Input", "Filter bar", "Data Grid filters"],
+        "generationNotes": "Use tonal for filters, outlined for tags. Include remove icon for dismissible chips. Ensure keyboard support for accessibility."
+      }
+    },
+    {
+      "name": "toggle",
+      "displayName": "Toggle",
+      "purpose": "Binary switch for on/off states",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["track", "thumb", "label"],
+        "description": "Track with sliding thumb. Optional label text adjacent to toggle."
+      },
+      "properties": {
+        "size": {
+          "type": "enum",
+          "values": ["sm", "md", "lg"],
+          "default": "md"
+        },
+        "state": {
+          "type": "enum",
+          "values": ["off", "on"],
+          "default": "off"
+        }
+      },
+      "states": ["off", "on", "disabled"],
+      "tokens": {
+        "trackOn": "--primary-filled-bg",
+        "trackOff": "--neutral-tonal-bg",
+        "thumb": "--surface-default",
+        "radius": "--radius-full",
+        "motion": "--motion-fast",
+        "easing": "--ease-spring"
+      },
+      "responsiveBehavior": {
+        "mobile": "Touch target 44px height minimum",
+        "desktop": "Standard sizing"
+      },
+      "accessibility": {
+        "role": "switch",
+        "requiredAria": ["aria-checked (on/off state)"],
+        "keyboardInteraction": ["Space (toggle state)"],
+        "focusIndicator": "2px focus ring",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "toggle": "Thumb slides smoothly with --motion-fast and --ease-spring",
+        "track": "Background color transition with --motion-fast"
+      },
+      "interactionRules": [
+        "Toggle always uses --radius-full. No size-based radius scaling.",
+        "Never hardcode white for thumb. Use var(--surface-default).",
+        "Thumb must slide, not jump. Smooth animation required."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Single tap to toggle state"
+      },
+      "aiHints": {
+        "whenToUse": "Binary settings (on/off, enabled/disabled), feature toggles",
+        "whenNotToUse": "Multi-state selections (use Radio), checkboxes (use Checkbox)",
+        "commonPairings": ["Form labels", "Settings panel", "Feature toggles"],
+        "generationNotes": "Default to off state. Use aria-checked for accessibility. Ensure smooth animation on state change."
+      }
+    },
+    {
+      "name": "avatar",
+      "displayName": "Avatar",
+      "purpose": "Visual representation of a user or entity",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["image", "initials", "icon", "statusDot"],
+        "description": "Circular container with image, text initials, or icon fallback. Optional status dot in corner."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["image", "initials", "icon"],
+          "default": "image"
+        },
+        "size": {
+          "type": "enum",
+          "values": ["xs", "sm", "md", "lg", "xl"],
+          "default": "md"
+        },
+        "status": {
+          "type": "enum",
+          "values": ["online", "away", "offline", "none"],
+          "default": "none"
+        }
+      },
+      "states": ["default"],
+      "tokens": {
+        "background": "--primary-tonal-bg",
+        "foreground": "--primary-tonal-fg",
+        "radius": "--radius-full",
+        "statusOnline": "--success-filled-bg",
+        "statusAway": "--warning-filled-bg",
+        "statusOffline": "--neutral-filled-bg",
+        "statusBorder": "--surface-default"
+      },
+      "responsiveBehavior": {
+        "mobile": "Scale down to fit compact layouts",
+        "desktop": "Standard sizing"
+      },
+      "accessibility": {
+        "role": "img",
+        "requiredAria": ["aria-label (describing the user/entity)"],
+        "keyboardInteraction": [],
+        "focusIndicator": "Not focusable unless interactive",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "appear": "Fade-in with --motion-fast"
+      },
+      "interactionRules": [
+        "Status dot must use outer wrapper (not inside overflow:hidden avatar).",
+        "Status dot position uses inset-inline-end not right (RTL support).",
+        "Never hardcode white for status dot border. Use var(--surface-default)."
+      ],
+      "mobileTouchAlternatives": {},
+      "aiHints": {
+        "whenToUse": "User profiles, author identification, team lists, chat interfaces",
+        "whenNotToUse": "Generic icons (use Icon), decorative images",
+        "commonPairings": ["Card profile section", "AI Chat", "List items", "Comments"],
+        "generationNotes": "Default to image type with fallback to initials. Use status dot for online/away indicators. Ensure aria-label for accessibility."
+      }
+    },
+    {
+      "name": "divider",
+      "displayName": "Divider",
+      "purpose": "Visual separator between content sections",
+      "layer": "L1",
+      "category": "general",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["label"],
+        "description": "Horizontal or vertical line, optionally with centered label text"
+      },
+      "properties": {
+        "orientation": {
+          "type": "enum",
+          "values": ["horizontal", "vertical"],
+          "default": "horizontal"
+        },
+        "weight": {
+          "type": "enum",
+          "values": ["default", "strong"],
+          "default": "default"
+        },
+        "withLabel": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default"],
+      "tokens": {
+        "defaultWeight": "--border-subtle",
+        "strongWeight": "--border-default",
+        "labelColor": "--content-tertiary",
+        "labelFontSize": "--font-size-xs",
+        "labelGap": "--space-3"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width horizontal divider",
+        "desktop": "Full-width or custom width"
+      },
+      "accessibility": {
+        "role": "separator",
+        "requiredAria": [],
+        "keyboardInteraction": [],
+        "focusIndicator": "Not focusable",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {},
+      "interactionRules": [
+        "Never use Divider as a decorative border on a component.",
+        "Divider is a standalone content separator."
+      ],
+      "mobileTouchAlternatives": {},
+      "aiHints": {
+        "whenToUse": "Separating sections, visual hierarchy, content grouping",
+        "whenNotToUse": "Component borders (use Card/Panel), decorative elements",
+        "commonPairings": ["Panel sections", "List items", "Form sections"],
+        "generationNotes": "Use default weight for subtle separation, strong for emphasis. Optional label for context."
+      }
+    },
+    {
+      "name": "card",
+      "displayName": "Card",
+      "purpose": "Container for grouped content with multiple layout slots",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button", "Badge", "Avatar"],
+      "anatomy": {
+        "slots": ["media", "header", "content", "metric", "profile", "listItem", "footer"],
+        "description": "Rectangular container extending ds-surface with optional header, content, footer. Media is flush-edge image at top."
+      },
+      "properties": {
+        "variant": {
+          "type": "enum",
+          "values": ["elevated", "outlined", "filled"],
+          "default": "elevated"
+        },
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default", "comfortable"],
+          "default": "default"
+        },
+        "interactive": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default", "hover", "focused"],
+      "tokens": {
+        "elevated": {
+          "background": "--surface-raised",
+          "shadow": "--shadow-sm",
+          "shadowHover": "--shadow-md"
+        },
+        "outlined": {
+          "background": "--surface-default",
+          "border": "--border-subtle"
+        },
+        "filled": {
+          "background": "--surface-sunken"
+        },
+        "radius": {
+          "compact": "--radius-md",
+          "default": "--radius-lg",
+          "comfortable": "--radius-xl"
+        },
+        "content": {
+          "primary": "--content-primary",
+          "secondary": "--content-secondary",
+          "tertiary": "--content-tertiary"
+        }
+      },
+      "responsiveBehavior": {
+        "mobile": "Full width with default padding, stack vertically",
+        "desktop": "Width controlled by parent layout, horizontal arrangement possible"
+      },
+      "accessibility": {
+        "role": "article",
+        "requiredAria": [],
+        "keyboardInteraction": ["Enter (if interactive)"],
+        "focusIndicator": "Focus ring on interactive cards",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "hover": "Shadow elevation with --motion-fast (elevated variant)",
+        "focus": "Focus ring with --motion-fast"
+      },
+      "interactionRules": [
+        "Never set width/height on the card. Parent layout controls dimensions.",
+        "Never use size (sm/md/lg). Use density (compact/default/comfortable).",
+        "Never use CSS border for outlined. Use box-shadow: inset 0 0 0 1px.",
+        "Never use status colors on card surface. Cards are neutral containers."
+      ],
+      "mobileTouchAlternatives": {
+        "hover": "Active state on tap for interactive cards"
+      },
+      "aiHints": {
+        "whenToUse": "Content containers, data presentation, grouped information, product/profile cards",
+        "whenNotToUse": "Modal dialogs (use Dialog), floating messages (use Toast/Snackbar)",
+        "commonPairings": ["Button footer", "Avatar profile", "Badge indicators"],
+        "generationNotes": "Default to elevated/default. Use interactive variant for clickable cards with state layer. Slot content semantic to layout (media first, footer last)."
+      }
+    },
+    {
+      "name": "panel",
+      "displayName": "Panel",
+      "purpose": "Persistent content region. Side panel on desktop, bottom sheet on mobile.",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button", "Divider"],
+      "anatomy": {
+        "slots": ["header", "content", "footer"],
+        "description": "Resizable/collapsible panel extending ds-surface. Responsive: side panel (desktop) or bottom sheet (mobile)."
+      },
+      "properties": {
+        "variant": {
+          "type": "enum",
+          "values": ["elevated", "outlined"],
+          "default": "elevated"
+        },
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default", "comfortable"],
+          "default": "default"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": true
+        },
+        "collapsible": {
+          "type": "boolean",
+          "default": false
+        },
+        "resizable": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default", "collapsed", "expanded"],
+      "tokens": {
+        "background": "--surface-raised",
+        "shadow": "--shadow-lg",
+        "border": "--border-subtle",
+        "motion": "--motion-normal",
+        "easeOpen": "--ease-decelerate",
+        "easeClose": "--ease-accelerate"
+      },
+      "responsiveBehavior": {
+        "mobile": "Bottom sheet with drag handle, 3 snap points (25%, 50%, 90%), safe-area-inset-bottom",
+        "desktop": "Side panel (persistent or collapsible), optional resize handle"
+      },
+      "accessibility": {
+        "role": "complementary",
+        "requiredAria": ["aria-label (describing panel purpose)"],
+        "keyboardInteraction": ["Escape (dismiss)", "Tab (focus management)"],
+        "focusIndicator": "Focus trap inside panel",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "open": "Slide-in with --motion-normal and --ease-decelerate",
+        "close": "Slide-out with --motion-normal and --ease-accelerate",
+        "collapse": "Width animate with --motion-normal"
+      },
+      "interactionRules": [
+        "Never build a separate Sheet component. Panel IS the sheet on mobile.",
+        "Never set fixed width. Parent layout controls width on desktop.",
+        "Mobile sheet must respect safe-area-inset-bottom.",
+        "Focus must be trapped inside panel when open."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe down to dismiss bottom sheet"
+      },
+      "aiHints": {
+        "whenToUse": "Navigation sidebars, content filters, detailed views, split-view layouts",
+        "whenNotToUse": "Modal dialogs (use Dialog), small tooltips (use Tooltip)",
+        "commonPairings": ["Filter controls", "List detail", "Navigation"],
+        "generationNotes": "Auto-adapt to desktop (side panel) or mobile (bottom sheet). Include close button in dismissible panels."
+      }
+    },
+    {
+      "name": "dialog",
+      "displayName": "Dialog",
+      "purpose": "Modal overlay requiring user action before continuing",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button"],
+      "anatomy": {
+        "slots": ["header", "content", "footer"],
+        "description": "Modal dialog with backdrop overlay. Always elevated surface with shadow."
+      },
+      "properties": {
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default", "comfortable"],
+          "default": "default"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": true
+        },
+        "scrollable": {
+          "type": "boolean",
+          "default": false
+        },
+        "type": {
+          "type": "enum",
+          "values": ["alert", "confirmation", "form"],
+          "default": "alert"
+        }
+      },
+      "states": ["default", "open", "closed"],
+      "tokens": {
+        "background": "--surface-raised",
+        "shadow": "--shadow-xl",
+        "backdrop": "--surface-overlay",
+        "motionEnter": "--motion-normal",
+        "easeEnter": "--ease-decelerate",
+        "motionExit": "--motion-fast",
+        "easeExit": "--ease-accelerate"
+      },
+      "responsiveBehavior": {
+        "mobile": "Centered modal (compact), bottom sheet (large/form), full-screen for forms",
+        "desktop": "Centered modal, max-width 560px, fixed positioning"
+      },
+      "accessibility": {
+        "role": "alertdialog",
+        "requiredAria": ["aria-labelledby (dialog title)", "aria-describedby (dialog content)"],
+        "keyboardInteraction": ["Escape (close)", "Tab (focus trap)", "Enter (primary action)"],
+        "focusIndicator": "Focus trap, initial focus on first focusable",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "enter": "Fade backdrop + scale dialog with --motion-normal and --ease-decelerate",
+        "exit": "Fade out backdrop + dialog with --motion-fast and --ease-accelerate"
+      },
+      "interactionRules": [
+        "Never allow interaction with content behind dialog while open.",
+        "Focus must be trapped inside dialog.",
+        "ESC key must close dismissible dialogs.",
+        "Backdrop click must close dismissible dialogs (optional, can be disabled)."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe down on mobile bottom sheet dialogs to dismiss"
+      },
+      "aiHints": {
+        "whenToUse": "Confirmations, alerts, form submission, user decisions",
+        "whenNotToUse": "Inline messages (use Alert), persistent sidebars (use Panel)",
+        "commonPairings": ["Button actions", "Form controls", "Confirmation messages"],
+        "generationNotes": "Type: alert=informational, confirmation=destructive action, form=input collection. Primary action button aligned right."
+      }
+    },
+    {
+      "name": "alert",
+      "displayName": "Alert",
+      "purpose": "Inline status message within content flow",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button"],
+      "anatomy": {
+        "slots": ["icon", "title", "description", "action", "dismiss"],
+        "description": "Inline status container extending ds-surface with role-specific color. Icon, title, description, and action button are optional."
+      },
+      "properties": {
+        "emphasis": {
+          "type": "enum",
+          "values": ["tonal", "filled", "outlined"],
+          "default": "tonal"
+        },
+        "role": {
+          "type": "enum",
+          "values": ["danger", "warning", "success", "neutral", "ai"],
+          "default": "neutral"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default"],
+      "tokens": {
+        "tonal": {
+          "background": "--{role}-tonal-bg",
+          "foreground": "--{role}-tonal-fg"
+        },
+        "filled": {
+          "background": "--{role}-filled-bg",
+          "foreground": "--{role}-filled-fg"
+        },
+        "outlined": {
+          "foreground": "--{role}-outline-fg",
+          "border": "--{role}-outline-border"
+        },
+        "radius": "--radius-md"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full width, stack actions vertically if needed",
+        "desktop": "Full width, actions inline"
+      },
+      "accessibility": {
+        "role": "alert",
+        "requiredAria": ["aria-live (polite for non-urgent, assertive for urgent)"],
+        "keyboardInteraction": ["Escape (dismiss if dismissible)"],
+        "focusIndicator": "Focus on dismiss/action buttons",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "appear": "Fade-in with --motion-fast"
+      },
+      "interactionRules": [
+        "Never use Alert for floating/positioned messages. Use Snackbar or Toast.",
+        "Never use primary role for alerts. Primary is for brand actions, not status.",
+        "Alert is always inline. Never position: fixed/absolute.",
+        "Never use CSS border for outlined. Use box-shadow: inset 0 0 0 1px."
+      ],
+      "mobileTouchAlternatives": {},
+      "aiHints": {
+        "whenToUse": "Status messages, validation feedback, important notices, in-page warnings",
+        "whenNotToUse": "Floating notifications (use Toast/Snackbar), background information (use Card)",
+        "commonPairings": ["Form errors", "Validation feedback", "Status updates"],
+        "generationNotes": "Use role color for semantic meaning. Tonal for warnings, filled for errors. Include dismiss button for optional closure."
+      }
+    },
+    {
+      "name": "snackbar",
+      "displayName": "Snackbar",
+      "purpose": "Brief floating message with optional action. Auto-dismisses.",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button"],
+      "anatomy": {
+        "slots": ["icon", "message", "action", "dismiss"],
+        "description": "Single-line floating message with optional action button. Auto-dismisses after timeout."
+      },
+      "properties": {
+        "role": {
+          "type": "enum",
+          "values": ["danger", "warning", "success", "neutral"],
+          "default": "neutral"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default", "visible", "hidden"],
+      "tokens": {
+        "background": "--{role}-filled-bg",
+        "foreground": "--{role}-filled-fg",
+        "motion": "--motion-fast",
+        "easing": "--ease-spring",
+        "shadow": "--shadow-lg"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width bottom, safe-area-inset-bottom",
+        "desktop": "Fixed bottom-start, max-width 400px"
+      },
+      "accessibility": {
+        "role": "status",
+        "requiredAria": ["aria-live (polite)", "aria-label (if no visible message)"],
+        "keyboardInteraction": [],
+        "focusIndicator": "Focus on action button if present",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "enter": "Slide-up + fade-in with --motion-fast and --ease-spring",
+        "exit": "Slide-down + fade-out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never use for persistent messages. Use Alert (inline) or Toast (stacking).",
+        "Max 1 snackbar visible at a time. New snackbar replaces current.",
+        "Never use primary or ai roles. Snackbar is for status feedback.",
+        "Auto-dismiss: 5s for info/success, persistent for danger."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe down to dismiss"
+      },
+      "aiHints": {
+        "whenToUse": "Feedback messages, brief status updates, undo actions",
+        "whenNotToUse": "Multiple simultaneous notifications (use Toast), persistent errors (use Alert)",
+        "commonPairings": ["Action feedback", "Undo messaging"],
+        "generationNotes": "Single snackbar queue - new message replaces existing. Use danger for errors (persistent), success for confirmations (5s timeout)."
+      }
+    },
+    {
+      "name": "toast",
+      "displayName": "Toast",
+      "purpose": "Floating notification with stacking. More persistent than Snackbar.",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button"],
+      "anatomy": {
+        "slots": ["accentStrip", "icon", "title", "description", "action", "dismiss"],
+        "description": "Elevated card with 4px leading accent strip in role color. Supports title, description, action button, and close."
+      },
+      "properties": {
+        "role": {
+          "type": "enum",
+          "values": ["danger", "warning", "success", "neutral", "ai"],
+          "default": "neutral"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": true
+        },
+        "autoDismiss": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": ["default", "visible", "hidden"],
+      "tokens": {
+        "background": "--surface-raised",
+        "shadow": "--shadow-md",
+        "accentStrip": "--{role}-filled-bg",
+        "content": "--content-primary",
+        "contentSecondary": "--content-secondary",
+        "motion": "--motion-fast",
+        "easing": "--ease-spring"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width bottom, stacks vertically, swipe-to-dismiss, safe-area-inset-bottom",
+        "desktop": "Fixed bottom-end, max-width 380px, stacks vertically"
+      },
+      "accessibility": {
+        "role": "status",
+        "requiredAria": ["aria-live (polite)", "aria-label (describing notification)"],
+        "keyboardInteraction": ["Escape (dismiss)"],
+        "focusIndicator": "Focus on action/dismiss buttons",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "enter": "Slide-up + fade-in with --motion-fast and --ease-spring",
+        "exit": "Slide-down + fade-out with --motion-fast",
+        "stack": "Stagger enter animations by 100ms per toast"
+      },
+      "interactionRules": [
+        "Never use role color for entire toast background. Only the accent strip is colored.",
+        "Toast surface is always neutral (elevated). Distinguish from Snackbar which IS role-colored.",
+        "Max 3 toasts visible. Queue additional notifications.",
+        "Default auto-dismiss: 5s (info/success), persistent (danger)."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe left/right to dismiss individual toast"
+      },
+      "aiHints": {
+        "whenToUse": "Stacked notifications, multi-step feedback, persistent notifications, error logs",
+        "whenNotToUse": "Single brief message (use Snackbar), inline feedback (use Alert)",
+        "commonPairings": ["Batch operations", "Background tasks", "Error logging"],
+        "generationNotes": "Use accent strip for semantic role color (danger/warning/success). Surface neutral. Max 3 visible, queue rest."
+      }
+    },
+    {
+      "name": "tooltip",
+      "displayName": "Tooltip",
+      "purpose": "Informational popup triggered by hover or focus",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["content", "arrow"],
+        "description": "Small floating container with arrow pointing to anchor element. Inverted surface (dark on light, light on dark)."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["plain", "rich"],
+          "default": "plain"
+        },
+        "position": {
+          "type": "enum",
+          "values": ["top", "bottom", "start", "end"],
+          "default": "top"
+        }
+      },
+      "states": ["hidden", "visible"],
+      "tokens": {
+        "background": "--neutral-filled-bg",
+        "foreground": "--neutral-filled-fg",
+        "radius": "--radius-sm",
+        "shadow": "--shadow-sm",
+        "typography": "--font-size-xs",
+        "motion": "--motion-fast"
+      },
+      "responsiveBehavior": {
+        "mobile": "Tap-to-reveal, long-press (600ms+) for rich tooltip",
+        "desktop": "Hover/focus triggered, mouse movement away dismisses"
+      },
+      "accessibility": {
+        "role": "tooltip",
+        "requiredAria": ["aria-describedby (linking tooltip to trigger)"],
+        "keyboardInteraction": ["Escape (dismiss)"],
+        "focusIndicator": "Trigger element focus shows tooltip",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "appear": "Fade-in with --motion-fast",
+        "disappear": "Fade-out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never use for critical information. Tooltips are supplementary.",
+        "Touch target of trigger must be 44x44px minimum.",
+        "Position auto-adjusts to avoid viewport overflow."
+      ],
+      "mobileTouchAlternatives": {
+        "longPress": "Long press (600ms) reveals rich tooltip on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Supplementary help text, keyboard shortcuts, abbreviation explanations",
+        "whenNotToUse": "Critical information, complex content (use Popover)",
+        "commonPairings": ["Icon Button", "Form labels", "Keyboard shortcuts"],
+        "generationNotes": "Plain type for text only, rich for title+description+action. Position auto-adjusts. Desktop: hover/focus triggered."
+      }
+    },
+    {
+      "name": "popover",
+      "displayName": "Popover",
+      "purpose": "Anchored floating container for rich content",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button"],
+      "anatomy": {
+        "slots": ["content"],
+        "description": "Floating elevated container anchored to trigger element. Flexible content area."
+      },
+      "properties": {
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default"],
+          "default": "default"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": ["hidden", "visible"],
+      "tokens": {
+        "background": "--surface-raised",
+        "shadow": "--shadow-lg",
+        "radius": "--radius-lg",
+        "motion": "--motion-fast",
+        "easing": "--ease-decelerate"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-screen overlay or bottom sheet depending on content size",
+        "desktop": "Floating anchored container, auto-positioned to avoid overflow"
+      },
+      "accessibility": {
+        "role": "dialog",
+        "requiredAria": ["aria-label (describing popover)"],
+        "keyboardInteraction": ["Escape (close)", "Tab (focus management)"],
+        "focusIndicator": "Focus visible on elements inside popover",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "open": "Fade + scale from trigger with --motion-fast and --ease-decelerate",
+        "close": "Fade out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never use Popover for simple text. Use Tooltip.",
+        "Never use Popover for action lists. Use Menu.",
+        "Must dismiss on outside click.",
+        "Focus trap optional (can be non-modal)."
+      ],
+      "mobileTouchAlternatives": {
+        "fullScreen": "Full-screen overlay on mobile for complex content"
+      },
+      "aiHints": {
+        "whenToUse": "Rich content display, complex forms, inline editors, multi-part interactions",
+        "whenNotToUse": "Simple text (use Tooltip), action lists (use Menu), modal dialogs (use Dialog)",
+        "commonPairings": ["Inline form editing", "Complex filters", "Rich content"],
+        "generationNotes": "Auto-positions to avoid viewport overflow. Dismiss on click-outside. Can contain any complex content."
+      }
+    },
+    {
+      "name": "menu",
+      "displayName": "Menu",
+      "purpose": "Anchored dropdown list of actions or selections",
+      "layer": "L2",
+      "category": "containers",
+      "status": "stable",
+      "dependencies": ["Icon Button", "Divider", "Chip"],
+      "anatomy": {
+        "slots": ["item", "divider", "header"],
+        "description": "Floating list of menu items with optional icons, shortcuts, checkmarks. Supports nesting (desktop only)."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["simple", "selection", "nested"],
+          "default": "simple"
+        },
+        "trigger": {
+          "type": "enum",
+          "values": ["click", "rightClick", "longPress"],
+          "default": "click"
+        }
+      },
+      "states": ["hidden", "visible"],
+      "tokens": {
+        "background": "--surface-raised",
+        "shadow": "--shadow-lg",
+        "itemHover": "--neutral-tonal-bg",
+        "itemSelected": "--primary-tonal-bg",
+        "content": "--content-primary",
+        "contentSecondary": "--content-secondary",
+        "radius": "--radius-md",
+        "motion": "--motion-fast"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-screen selector for long lists (20+), bottom sheet for short lists",
+        "desktop": "Floating anchored dropdown, keyboard navigable (arrow keys + enter)"
+      },
+      "accessibility": {
+        "role": "menu",
+        "requiredAria": ["aria-label (menu purpose)"],
+        "keyboardInteraction": ["Arrow keys (navigate)", "Enter (select)", "Escape (close)"],
+        "focusIndicator": "Focus visible on active menu item",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "open": "Fade-in + slight scale with --motion-fast",
+        "itemHover": "Background change with --motion-fast",
+        "close": "Fade-out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never nest more than 2 levels of submenus.",
+        "Keyboard navigation required: arrow keys, enter, escape.",
+        "Selected item must show checkmark or highlight.",
+        "Mobile: use bottom sheet or full-screen selector, not floating dropdown."
+      ],
+      "mobileTouchAlternatives": {
+        "longPress": "Long-press triggers context menu on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Dropdown actions, context menus, selection dropdowns, primary navigation",
+        "whenNotToUse": "Rich content (use Popover), simple links (use navigation)",
+        "commonPairings": ["Button dropdowns", "Context menus", "Overflow actions"],
+        "generationNotes": "Default trigger: click. Support keyboard navigation. Selected items show checkmark. Mobile: bottom sheet/full-screen, not floating."
+      }
+    },
+    {
+      "name": "text-field",
+      "displayName": "Text Field",
+      "purpose": "Single-line or multi-line text input",
+      "layer": "L3",
+      "category": "inputs",
+      "status": "stable",
+      "dependencies": ["Icon Button", "Badge"],
+      "anatomy": {
+        "slots": ["label", "leadingIcon", "input", "trailingIcon", "helperText", "errorMessage", "characterCounter"],
+        "description": "Text input container with optional label above, supporting icons, helper text, error state, and character counter."
+      },
+      "properties": {
+        "emphasis": {
+          "type": "enum",
+          "values": ["outlined", "filled"],
+          "default": "outlined"
+        },
+        "size": {
+          "type": "enum",
+          "values": ["sm", "md", "lg"],
+          "default": "md"
+        },
+        "type": {
+          "type": "enum",
+          "values": ["text", "password", "search", "textarea"],
+          "default": "text"
+        }
+      },
+      "states": ["empty", "filled", "focused", "error", "disabled", "readOnly"],
+      "tokens": {
+        "outlinedBg": "--surface-default",
+        "filledBg": "--surface-sunken",
+        "borderDefault": "--border-subtle",
+        "borderHover": "--border-default",
+        "borderFocus": "--primary-filled-bg",
+        "borderError": "--danger-outline-border",
+        "content": "--content-primary",
+        "contentSecondary": "--content-secondary",
+        "placeholder": "--content-tertiary",
+        "disabled": "--content-disabled"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width, larger touch target",
+        "desktop": "Width controlled by parent, standard sizing"
+      },
+      "accessibility": {
+        "role": "textbox",
+        "requiredAria": ["aria-label (if no visible label)", "aria-invalid (if error state)"],
+        "keyboardInteraction": ["Tab (navigation)", "Enter (single-line)", "Shift+Enter (textarea newline)"],
+        "focusIndicator": "Focus ring or focus-visible outline",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "focus": "Border color transition + label animation with --motion-fast"
+      },
+      "interactionRules": [
+        "Never use CSS border for outlined variant. Use box-shadow: inset 0 0 0 1px.",
+        "Label must be above the input, never inline/floating.",
+        "Error message replaces helper text, never shown simultaneously.",
+        "Character counter is optional and positioned below input."
+      ],
+      "mobileTouchAlternatives": {
+        "keyboard": "Native mobile keyboard respect input type (email, password, etc.)"
+      },
+      "aiHints": {
+        "whenToUse": "Text input, search fields, password entry, multi-line content",
+        "whenNotToUse": "Simple selects (use Selection Controls), date selection (use Date Picker)",
+        "commonPairings": ["Form layouts", "Search bar", "Tag Input"],
+        "generationNotes": "Default: outlined/md. Type: text, password (with visibility toggle), search (with clear). Label required for accessibility."
+      }
+    },
+    {
+      "name": "selection-controls",
+      "displayName": "Selection Controls",
+      "purpose": "Checkbox, Radio, and Switch for boolean/choice selections",
+      "layer": "L3",
+      "category": "inputs",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["control", "label"],
+        "description": "Three control types: Checkbox (multi-select), Radio (single-select in group), Switch (binary state). Optional label adjacent."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["checkbox", "radio", "switch"],
+          "default": "checkbox"
+        },
+        "state": {
+          "type": "enum",
+          "values": ["unchecked", "checked", "indeterminate", "unselected", "selected", "off", "on"],
+          "default": "unchecked"
+        }
+      },
+      "states": ["default", "hover", "focus", "disabled"],
+      "tokens": {
+        "checkedBackground": "--primary-filled-bg",
+        "border": "--border-default",
+        "background": "--surface-default",
+        "label": "--content-primary",
+        "disabled": "--content-disabled",
+        "radiusCheckbox": "--radius-xs",
+        "radiusRadioSwitch": "--radius-full"
+      },
+      "responsiveBehavior": {
+        "mobile": "Touch target 44x44px minimum",
+        "desktop": "Standard sizing"
+      },
+      "accessibility": {
+        "role": "checkbox/radio/switch",
+        "requiredAria": ["aria-label", "aria-checked"],
+        "keyboardInteraction": ["Space (toggle)", "Tab (navigate)"],
+        "focusIndicator": "2px focus ring visible",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "toggle": "Checkmark/indicator appears with --motion-fast"
+      },
+      "interactionRules": [
+        "Touch target 44x44px minimum even if visual element is smaller.",
+        "Checkbox/Radio must have visible focus ring.",
+        "Never use Switch for selections with more than 2 states.",
+        "Radio must be in a group (2+ options).",
+        "Checkbox supports indeterminate state (mixed selection in group)."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Single tap to toggle state"
+      },
+      "aiHints": {
+        "whenToUse": "Form selections, preferences, consent, multi-select options, binary toggles",
+        "whenNotToUse": "Many independent toggles (use Toggle components), select dropdowns (use Menu)",
+        "commonPairings": ["Form controls", "Preference lists", "Consent agreements"],
+        "generationNotes": "Checkbox for multi-select, Radio for single-select in group, Switch for binary form context. Always include label or aria-label."
+      }
+    },
+    {
+      "name": "slider",
+      "displayName": "Slider",
+      "purpose": "Continuous or discrete value selection along a track",
+      "layer": "L3",
+      "category": "inputs",
+      "status": "stable",
+      "dependencies": ["Tooltip"],
+      "anatomy": {
+        "slots": ["track", "thumb", "valueLabel"],
+        "description": "Horizontal track with draggable thumb. Optional value tooltip above thumb. Support for range (two thumbs)."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["continuous", "discrete", "range"],
+          "default": "continuous"
+        },
+        "hasLabel": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default", "hover", "active", "disabled"],
+      "tokens": {
+        "activeTrack": "--primary-filled-bg",
+        "inactiveTrack": "--neutral-tonal-bg",
+        "thumb": "--surface-default",
+        "thumbShadow": "--shadow-sm",
+        "radius": "--radius-full"
+      },
+      "responsiveBehavior": {
+        "mobile": "Larger touch target for thumb",
+        "desktop": "Standard sizing"
+      },
+      "accessibility": {
+        "role": "slider",
+        "requiredAria": ["aria-label", "aria-valuemin", "aria-valuemax", "aria-valuenow"],
+        "keyboardInteraction": ["Arrow keys (increment/decrement)", "Page Up/Down (step)", "Home/End (min/max)"],
+        "focusIndicator": "Focus ring on thumb",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "drag": "Smooth thumb follow with cursor/touch"
+      },
+      "interactionRules": [
+        "Touch target for thumb: 44x44px minimum.",
+        "Range slider thumbs must not cross each other.",
+        "Discrete slider shows step marks on track.",
+        "Value label tooltip updates during drag."
+      ],
+      "mobileTouchAlternatives": {
+        "touch": "Touch and drag to adjust value"
+      },
+      "aiHints": {
+        "whenToUse": "Value ranges, volume/brightness control, filtering by range",
+        "whenNotToUse": "Precise input (use Text Field), many discrete options (use Select)",
+        "commonPairings": ["Filter controls", "Settings panels"],
+        "generationNotes": "Continuous for smooth ranges, discrete for steps, range for start/end. Include label tooltip for clarity."
+      }
+    },
+    {
+      "name": "date-picker",
+      "displayName": "Date Picker",
+      "purpose": "Calendar-based date or date range selection",
+      "layer": "L3",
+      "category": "inputs",
+      "status": "stable",
+      "dependencies": ["Text Field", "Button", "Icon Button", "Menu"],
+      "anatomy": {
+        "slots": ["input", "calendar", "monthNavigation", "shortcuts"],
+        "description": "Text field trigger with calendar popover. Support for single date, date range, and relative shortcuts."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["singleDate", "dateRange", "relative"],
+          "default": "singleDate"
+        }
+      },
+      "states": ["default", "selected", "focused", "disabled"],
+      "tokens": {
+        "background": "--surface-raised",
+        "shadow": "--shadow-lg",
+        "selectedDate": "--primary-filled-bg",
+        "rangeHighlight": "--primary-tonal-bg",
+        "content": "--content-primary",
+        "outOfMonthText": "--content-tertiary",
+        "border": "--border-subtle"
+      },
+      "responsiveBehavior": {
+        "mobile": "Bottom sheet calendar or native date input",
+        "desktop": "Popover calendar grid below text field"
+      },
+      "accessibility": {
+        "role": "dialog",
+        "requiredAria": ["aria-label (date picker purpose)", "aria-selected (on dates)"],
+        "keyboardInteraction": ["Arrow keys (navigate calendar)", "Enter (select)", "Escape (close)"],
+        "focusIndicator": "Focus on calendar dates",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "open": "Calendar popover fade-in with --motion-fast"
+      },
+      "interactionRules": [
+        "Never use inline calendar without a text field trigger.",
+        "Date format must respect locale.",
+        "Range picker shows highlight on dates between start/end.",
+        "Month/year navigation for jumping forward/backward."
+      ],
+      "mobileTouchAlternatives": {
+        "native": "Native date picker input on mobile when appropriate"
+      },
+      "aiHints": {
+        "whenToUse": "Date selection, date ranges, reporting periods, event dates",
+        "whenNotToUse": "Simple text dates (use Text Field), time selection (separate component)",
+        "commonPairings": ["Filter controls", "Form date fields", "Report date ranges"],
+        "generationNotes": "Type: singleDate (one date), dateRange (start+end with highlight), relative (presets like 'Last 7 days'). Locale-aware formatting."
+      }
+    },
+    {
+      "name": "tag-input",
+      "displayName": "Tag Input",
+      "purpose": "Multi-value input with tag chips and autocomplete",
+      "layer": "L3",
+      "category": "inputs",
+      "status": "stable",
+      "dependencies": ["Chip", "Text Field", "Menu"],
+      "anatomy": {
+        "slots": ["chips", "input", "suggestions"],
+        "description": "Text field with tag chips displayed inline. Suggestions dropdown for autocomplete."
+      },
+      "properties": {
+        "hasAutocomplete": {
+          "type": "boolean",
+          "default": true
+        },
+        "maxTags": {
+          "type": "integer",
+          "default": null
+        }
+      },
+      "states": ["default", "focused", "filled", "error", "disabled"],
+      "tokens": {
+        "chipBackground": "--primary-tonal-bg",
+        "chipForeground": "--primary-tonal-fg",
+        "suggestionsBackground": "--surface-raised"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width, stack chips vertically if many",
+        "desktop": "Chips wrap inline with input field"
+      },
+      "accessibility": {
+        "role": "textbox",
+        "requiredAria": ["aria-label", "aria-describedby (for chip list)"],
+        "keyboardInteraction": ["Tab (navigate)", "Enter (add tag)", "Backspace (remove last tag)", "ArrowDown (suggestions)"],
+        "focusIndicator": "Focus on input field",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "addChip": "Chip appears with --motion-fast",
+        "removeChip": "Chip fades out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never allow duplicate tags.",
+        "Backspace on empty input removes last tag.",
+        "Autocomplete suggestions filter as user types.",
+        "Comma or Enter can trigger tag addition (configurable).",
+        "Max tags display '+N more' if overflow."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap to add tag from suggestions"
+      },
+      "aiHints": {
+        "whenToUse": "Multiple email/tag input, filtering with selections, comma-separated values",
+        "whenNotToUse": "Single selection (use Text Field or Menu), pre-defined lists only (use Checkbox list)",
+        "commonPairings": ["Email recipients", "Filter selections", "Skill/label input"],
+        "generationNotes": "Support autocomplete for efficiency. Prevent duplicates. Allow backspace to remove. Show +N more for overflow."
+      }
+    },
+    {
+      "name": "file-upload",
+      "displayName": "File Upload",
+      "purpose": "Drag-and-drop zone with file list management",
+      "layer": "L3",
+      "category": "inputs",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button", "Badge"],
+      "anatomy": {
+        "slots": ["dropZone", "fileList", "progressBar", "errorMessage"],
+        "description": "Drag-and-drop area with optional file preview. File list shows name, size, progress, and remove button."
+      },
+      "properties": {
+        "state": {
+          "type": "enum",
+          "values": ["idle", "draggingOver", "uploading", "complete", "error"],
+          "default": "idle"
+        },
+        "hasPreview": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["idle", "dragOver", "uploading", "complete", "error"],
+      "tokens": {
+        "idleBorder": "--border-default",
+        "dragOverBorder": "--primary-outline-border",
+        "zoneBg": "--surface-sunken",
+        "progressBar": "--primary-filled-bg",
+        "errorText": "--danger-outline-fg",
+        "radius": "--radius-lg"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width drag zone, stacked file list",
+        "desktop": "Horizontal drag zone with file list below"
+      },
+      "accessibility": {
+        "role": "application",
+        "requiredAria": ["aria-label (describing upload area)"],
+        "keyboardInteraction": ["Tab (browse button)", "Enter (file picker)"],
+        "focusIndicator": "Focus on browse button",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "dragOver": "Border color change with --motion-fast",
+        "upload": "Progress bar fill animation",
+        "complete": "Checkmark animation with --motion-fast"
+      },
+      "interactionRules": [
+        "Always provide a 'Browse' button fallback alongside drag-and-drop.",
+        "File size/type validation must show inline error per file.",
+        "Dashed border (idle), solid border (drag-over), filled (uploading).",
+        "Progress bar shows percentage or indefinite while uploading.",
+        "Uploaded files show checkmark and remove button."
+      ],
+      "mobileTouchAlternatives": {
+        "browse": "Tap browse button for file picker on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "File uploads, document attachment, image uploads, multi-file selection",
+        "whenNotToUse": "Single file selection in form (use input type=file), file management (use File Browser)",
+        "commonPairings": ["Form submissions", "Chat attachments", "Document management"],
+        "generationNotes": "Drag-and-drop + browse button required. Show progress during upload. Validate file type/size inline. Show checkmark on completion."
+      }
+    },
+    {
+      "name": "tabs",
+      "displayName": "Tabs",
+      "purpose": "Horizontal navigation between content sections",
+      "layer": "L4",
+      "category": "navigation",
+      "status": "stable",
+      "dependencies": ["Badge"],
+      "anatomy": {
+        "slots": ["icon", "label", "badge"],
+        "description": "Horizontal tab bar with optional icon and badge. Active indicator is bottom border."
+      },
+      "properties": {
+        "size": {
+          "type": "enum",
+          "values": ["sm", "md", "lg"],
+          "default": "md"
+        },
+        "hasIcon": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default", "hover", "active", "disabled"],
+      "tokens": {
+        "activeText": "--primary-ghost-fg",
+        "inactiveText": "--content-tertiary",
+        "activeIndicator": "--primary-filled-bg",
+        "disabledText": "--content-disabled",
+        "bottomBorder": "--border-subtle",
+        "typography": {
+          "xs": "--font-size-xs",
+          "sm": "--font-size-sm",
+          "base": "--font-size-base"
+        }
+      },
+      "responsiveBehavior": {
+        "mobile": "Scrollable with overflow indicator, partial tab visibility",
+        "desktop": "All tabs visible inline, no scroll"
+      },
+      "accessibility": {
+        "role": "tablist",
+        "requiredAria": ["aria-label (tablist)", "aria-selected (active tab)"],
+        "keyboardInteraction": ["Arrow keys (navigate)", "Home/End (first/last)"],
+        "focusIndicator": "Focus ring on active tab",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "indicatorMove": "Bottom border indicator slides to new tab with --motion-normal",
+        "contentSwitch": "Content fades in/out with --motion-fast"
+      },
+      "interactionRules": [
+        "Tabs are fixed-height atoms. Use size (sm/md/lg) not density.",
+        "Active indicator is a bottom border (::after), not a background fill.",
+        "Icon is optional but must scale with size.",
+        "Badge shows count or notification status."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe left/right to switch tabs on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Section navigation, content switching, filter views, dashboard tabs",
+        "whenNotToUse": "Primary navigation (use Nav Rail/Bottom Nav), many items (use Menu)",
+        "commonPairings": ["Page content sections", "Filter panels", "Data views"],
+        "generationNotes": "Default: md size. Fixed-height, not density-based. Active indicator is bottom border, not background."
+      }
+    },
+    {
+      "name": "breadcrumb",
+      "displayName": "Breadcrumb",
+      "purpose": "Navigation trail showing page hierarchy with overflow collapse",
+      "layer": "L4",
+      "category": "navigation",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["item", "separator", "ellipsis"],
+        "description": "Sequential breadcrumb items with chevron separators. Ellipsis button collapses middle items into popover."
+      },
+      "properties": {
+        "size": {
+          "type": "enum",
+          "values": ["sm", "md", "lg"],
+          "default": "md"
+        }
+      },
+      "states": ["default", "hover", "focus", "current"],
+      "tokens": {
+        "separatorColor": "--content-disabled",
+        "itemColor": "--content-tertiary",
+        "currentItemColor": "--content-primary",
+        "itemHoverBg": "--neutral-tonal-bg",
+        "popoverBg": "--surface-overlay",
+        "popoverBorder": "--border-subtle",
+        "typography": {
+          "xs": "--font-size-xs",
+          "sm": "--font-size-sm",
+          "base": "--font-size-base"
+        }
+      },
+      "responsiveBehavior": {
+        "mobile": "Back-arrow + current page label only (no full trail)",
+        "desktop": "First + last 2 items + ellipsis for middle (max 4 visible)"
+      },
+      "accessibility": {
+        "role": "navigation",
+        "requiredAria": ["aria-label (Breadcrumb)", "aria-current (current page)"],
+        "keyboardInteraction": ["Tab (navigate)", "Enter (select)"],
+        "focusIndicator": "Focus ring on items",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "popoverOpen": "Ellipsis popover fades in with --motion-fast"
+      },
+      "interactionRules": [
+        "Collapse threshold: 4 visible items max. Collapse middle items.",
+        "Always show: first (root) + last 2 (parent + current).",
+        "Ellipsis button opens popover listing collapsed items.",
+        "Label truncation: max-width 160px, ellipsis, title attribute tooltip.",
+        "Mobile: back-arrow + current only, no trail."
+      ],
+      "mobileTouchAlternatives": {
+        "back": "Back arrow navigates to parent (mobile)"
+      },
+      "aiHints": {
+        "whenToUse": "Deep navigation hierarchies, showing current location, breadcrumb trails",
+        "whenNotToUse": "Shallow structures (2-3 levels), primary navigation",
+        "commonPairings": ["Page headers", "Deep content navigation"],
+        "generationNotes": "Auto-collapses at 4+ items. Ellipsis opens popover. Desktop shows trail, mobile shows back + current."
+      }
+    },
+    {
+      "name": "nav-rail",
+      "displayName": "Nav Rail",
+      "purpose": "Collapsible side navigation for desktop",
+      "layer": "L4",
+      "category": "navigation",
+      "status": "stable",
+      "dependencies": ["Badge", "Icon Button"],
+      "anatomy": {
+        "slots": ["item", "badge", "expandCollapse"],
+        "description": "Vertical navigation rail with icon + label (expanded) or icon only (collapsed). Badge count on items."
+      },
+      "properties": {
+        "state": {
+          "type": "enum",
+          "values": ["expanded", "collapsed"],
+          "default": "expanded"
+        }
+      },
+      "states": ["default", "hover", "active", "disabled"],
+      "tokens": {
+        "background": "--surface-default",
+        "border": "--border-subtle",
+        "activeItemBg": "--primary-tonal-bg",
+        "activeItemText": "--primary-tonal-fg",
+        "hoverBg": "--neutral-tonal-bg",
+        "content": "--content-primary",
+        "contentSecondary": "--content-secondary"
+      },
+      "responsiveBehavior": {
+        "mobile": "Never show. Replaced by Bottom Nav on mobile.",
+        "desktop": "Side rail, responsive collapse/expand"
+      },
+      "accessibility": {
+        "role": "navigation",
+        "requiredAria": ["aria-label (navigation purpose)"],
+        "keyboardInteraction": ["Tab (navigate)", "Enter (activate)"],
+        "focusIndicator": "Focus ring on items",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "expandCollapse": "Width transition with --motion-normal",
+        "itemActive": "Background highlight with --motion-fast"
+      },
+      "interactionRules": [
+        "Does NOT extend ds-surface. Standalone component.",
+        "Never show on mobile. Use Bottom Nav instead.",
+        "Active item highlight, optional badge count.",
+        "Collapse/expand toggle button in header."
+      ],
+      "mobileTouchAlternatives": {
+        "none": "Not used on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Desktop application navigation, sidebar menu, main navigation",
+        "whenNotToUse": "Mobile (use Bottom Nav), header navigation (use Tabs)",
+        "commonPairings": ["Page layout", "Main navigation structure"],
+        "generationNotes": "Desktop only. Expand/collapse toggle. Active item highlight. Optional badges for counts."
+      }
+    },
+    {
+      "name": "bottom-nav",
+      "displayName": "Bottom Nav",
+      "purpose": "Mobile navigation bar with icon + label",
+      "layer": "L4",
+      "category": "navigation",
+      "status": "stable",
+      "dependencies": ["Badge"],
+      "anatomy": {
+        "slots": ["item", "badge"],
+        "description": "Fixed bottom bar with icon + label. 4-5 items max. Badge count on items."
+      },
+      "properties": {
+        "itemCount": {
+          "type": "integer",
+          "default": 5,
+          "minimum": 2,
+          "maximum": 5
+        }
+      },
+      "states": ["default", "active"],
+      "tokens": {
+        "background": "--surface-default",
+        "border": "--border-subtle",
+        "activeIndicator": "--primary-filled-bg",
+        "inactiveText": "--content-tertiary",
+        "activeText": "--content-primary"
+      },
+      "responsiveBehavior": {
+        "mobile": "Fixed bottom, full-width, safe-area-inset-bottom",
+        "desktop": "Never show. Replaced by Nav Rail on desktop."
+      },
+      "accessibility": {
+        "role": "navigation",
+        "requiredAria": ["aria-label (navigation purpose)"],
+        "keyboardInteraction": ["Tab (navigate)", "Space/Enter (activate)"],
+        "focusIndicator": "Focus ring on items",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "itemActive": "Background/text color change with --motion-fast"
+      },
+      "interactionRules": [
+        "Does NOT extend ds-surface. Standalone fixed-bottom bar.",
+        "Never show on desktop. Use Nav Rail instead.",
+        "Max 5 items. More items require a 'more' menu.",
+        "Fixed bottom position respects safe-area-inset-bottom.",
+        "Icon + label visible on all items."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap item to navigate"
+      },
+      "aiHints": {
+        "whenToUse": "Mobile app primary navigation, mobile menu",
+        "whenNotToUse": "Desktop (use Nav Rail), header navigation (use Tabs)",
+        "commonPairings": ["Mobile app structure", "Main navigation"],
+        "generationNotes": "Mobile only. Fixed bottom. 4-5 items max. Active item highlighted. Optional badges."
+      }
+    },
+    {
+      "name": "pagination",
+      "displayName": "Pagination",
+      "purpose": "Page navigation for paginated content",
+      "layer": "L4",
+      "category": "navigation",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button", "Menu"],
+      "anatomy": {
+        "slots": ["prevButton", "pageButtons", "nextButton", "rowSelector"],
+        "description": "Navigation controls with prev/next buttons and numbered page indicators. Optional rows-per-page selector."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["numbered", "compact"],
+          "default": "numbered"
+        },
+        "hasRowSelector": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["default"],
+      "tokens": {
+        "currentPageBg": "--primary-filled-bg",
+        "currentPageText": "--primary-filled-fg",
+        "hoverBg": "--neutral-tonal-bg",
+        "disabledButton": "--content-disabled",
+        "radius": "--radius-sm"
+      },
+      "responsiveBehavior": {
+        "mobile": "Compact prev/next + 'Page X of Y' indicator",
+        "desktop": "Full numbered pages with ellipsis for many pages"
+      },
+      "accessibility": {
+        "role": "navigation",
+        "requiredAria": ["aria-label (pagination)", "aria-current (current page)"],
+        "keyboardInteraction": ["Tab (navigate)", "Enter (select)"],
+        "focusIndicator": "Focus ring on buttons",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "pageChange": "Content fade-in/out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never show all pages when total exceeds 7. Use ellipsis truncation.",
+        "Prev/next buttons disabled on first/last page.",
+        "Ellipsis button opens menu to jump to hidden pages.",
+        "Current page highlighted distinctly."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap prev/next or page number to navigate"
+      },
+      "aiHints": {
+        "whenToUse": "Large data lists, search results, tabular data navigation",
+        "whenNotToUse": "Infinite scroll layouts, single page results",
+        "commonPairings": ["Data Grid", "Search results", "List pages"],
+        "generationNotes": "Type: numbered (pages 1-N), compact (prev/next + 'Page X of Y'). Ellipsis at 7+ pages."
+      }
+    },
+    {
+      "name": "stepper",
+      "displayName": "Stepper",
+      "purpose": "Multi-step progress indicator with navigation",
+      "layer": "L4",
+      "category": "navigation",
+      "status": "stable",
+      "dependencies": ["Button", "Badge"],
+      "anatomy": {
+        "slots": ["step", "connector", "label", "description", "contentArea"],
+        "description": "Numbered steps with progress indicator, connecting lines (desktop), and content area. Supports horizontal (desktop) and vertical (mobile)."
+      },
+      "properties": {
+        "orientation": {
+          "type": "enum",
+          "values": ["horizontal", "vertical"],
+          "default": "horizontal"
+        }
+      },
+      "states": ["completed", "active", "upcoming", "error"],
+      "tokens": {
+        "activeCircle": "--primary-filled-bg",
+        "completedCircle": "--primary-filled-bg",
+        "upcomingBorder": "--border-default",
+        "errorCircle": "--danger-filled-bg",
+        "connector": "--border-default",
+        "content": "--content-primary",
+        "contentSecondary": "--content-tertiary",
+        "radius": "--radius-full"
+      },
+      "responsiveBehavior": {
+        "mobile": "Vertical stepper, stacked steps",
+        "desktop": "Horizontal stepper with connecting lines"
+      },
+      "accessibility": {
+        "role": "progressbar",
+        "requiredAria": ["aria-label (stepper progress)", "aria-current (active step)"],
+        "keyboardInteraction": ["Tab (navigate)", "Enter (next/previous)"],
+        "focusIndicator": "Focus ring on buttons",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "stepComplete": "Checkmark appears with --motion-fast",
+        "stepActive": "Circle highlight with --motion-fast"
+      },
+      "interactionRules": [
+        "Never skip steps. Steps must be completed in order unless marked optional.",
+        "Completed steps show checkmark, active shows filled circle, upcoming shows outline.",
+        "Error state shows danger color on circle.",
+        "Connecting lines on desktop, omitted on mobile."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap to navigate to step (if allowed)"
+      },
+      "aiHints": {
+        "whenToUse": "Multi-step forms, onboarding flows, setup wizards, complex workflows",
+        "whenNotToUse": "Linear single-page forms, simple navigation",
+        "commonPairings": ["Form workflows", "Onboarding", "Setup wizards"],
+        "generationNotes": "Horizontal desktop, vertical mobile. Completed=checkmark, Active=filled, Upcoming=outline. Error state in danger color."
+      }
+    },
+    {
+      "name": "list",
+      "displayName": "List",
+      "purpose": "Structured vertical collection of related items",
+      "layer": "L5",
+      "category": "data-display",
+      "status": "stable",
+      "dependencies": ["Avatar", "Badge", "Icon Button", "Divider", "Chip"],
+      "anatomy": {
+        "slots": ["leadingElement", "primaryText", "secondaryText", "tertiaryText", "trailingElement"],
+        "description": "Vertical list of items with optional leading/trailing elements and multi-line text."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["simple", "twoLine", "threeLine", "rich"],
+          "default": "simple"
+        },
+        "divider": {
+          "type": "enum",
+          "values": ["none", "full", "inset"],
+          "default": "full"
+        },
+        "selection": {
+          "type": "enum",
+          "values": ["none", "single", "multi"],
+          "default": "none"
+        },
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default", "comfortable"],
+          "default": "default"
+        }
+      },
+      "states": ["default", "hover", "selected", "disabled"],
+      "tokens": {
+        "background": "--surface-default",
+        "selectedBg": "--surface-raised",
+        "activeIndicator": "--primary-filled-bg",
+        "primaryText": "--content-primary",
+        "secondaryText": "--content-secondary",
+        "tertiaryText": "--content-tertiary",
+        "dividerColor": "--border-subtle",
+        "padding": {
+          "compact": "--space-3",
+          "default": "--space-4",
+          "comfortable": "--space-5"
+        },
+        "radius": "--radius-md"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width, swipe actions for dismiss/archive, minimum 48px touch target",
+        "desktop": "Standard list, hover actions visible on row hover"
+      },
+      "accessibility": {
+        "role": "list",
+        "requiredAria": ["aria-label", "aria-selected (if selectable)"],
+        "keyboardInteraction": ["Arrow keys (navigate)", "Space (select)", "Enter (activate)"],
+        "focusIndicator": "Focus ring on selected item",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "select": "Item highlight with --motion-fast"
+      },
+      "interactionRules": [
+        "Never nest lists more than one level deep. Use Tree View for hierarchical.",
+        "List items must have minimum 48px touch target on mobile.",
+        "Selection: none (view-only), single (radio behavior), multi (checkbox behavior).",
+        "Dividers: full-width, inset (past leading element), or none.",
+        "Mobile swipe actions for common operations (archive, delete)."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe left/right for contextual actions on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Data collections, contact lists, message threads, item listings",
+        "whenNotToUse": "Hierarchical data (use Tree View), tabular data (use Data Grid)",
+        "commonPairings": ["Search results", "Contact lists", "Item collections"],
+        "generationNotes": "Type: simple (text), twoLine (primary+secondary), threeLine (primary+secondary+tertiary), rich (avatar+text+action). Support dividers and selection."
+      }
+    },
+    {
+      "name": "accordion",
+      "displayName": "Accordion",
+      "purpose": "Expandable/collapsible content sections",
+      "layer": "L5",
+      "category": "data-display",
+      "status": "stable",
+      "dependencies": ["Icon Button", "Divider"],
+      "anatomy": {
+        "slots": ["header", "icon", "badge", "content"],
+        "description": "Stack of expandable panels. Header includes icon, label, optional badge. Content area with nested content."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["singleExpand", "multiExpand"],
+          "default": "multiExpand"
+        },
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default", "comfortable"],
+          "default": "default"
+        }
+      },
+      "states": ["collapsed", "expanded", "disabled"],
+      "tokens": {
+        "panelBg": "--surface-default",
+        "dividerColor": "--border-subtle",
+        "headerText": "--content-primary",
+        "contentText": "--content-secondary",
+        "padding": {
+          "compact": "--space-3",
+          "default": "--space-4",
+          "comfortable": "--space-5"
+        },
+        "radius": "--radius-lg",
+        "motion": "--motion-normal",
+        "easing": "--ease-standard"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-width, stacked vertically",
+        "desktop": "Standard accordion layout"
+      },
+      "accessibility": {
+        "role": "region",
+        "requiredAria": ["aria-expanded (header)", "aria-label (header)"],
+        "keyboardInteraction": ["Tab (navigate headers)", "Space/Enter (toggle)"],
+        "focusIndicator": "Focus ring on headers",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "expand": "Height auto-animate with --motion-normal and --ease-standard, chevron rotate",
+        "collapse": "Height auto-animate with --motion-normal"
+      },
+      "interactionRules": [
+        "Never auto-collapse other panels in multi-expand mode.",
+        "Chevron rotates 90deg (LTR) or -90deg (RTL) in sync with expand.",
+        "Accordion headers must be keyboard navigable (arrow keys, Enter/Space).",
+        "Height animation prevents layout shift."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap header to toggle expand/collapse"
+      },
+      "aiHints": {
+        "whenToUse": "FAQ sections, expandable details, grouped collapsible content, form sections",
+        "whenNotToUse": "Always-visible content, simple expanding text (use native details element)",
+        "commonPairings": ["FAQ pages", "Form sections", "Settings groups"],
+        "generationNotes": "Type: singleExpand (one open at a time), multiExpand (multiple open). Chevron icon rotates on expand. Keyboard support required."
+      }
+    },
+    {
+      "name": "data-grid",
+      "displayName": "Data Grid",
+      "purpose": "Enterprise data table with sorting, filtering, pagination, and row actions",
+      "layer": "L5",
+      "category": "data-display",
+      "status": "stable",
+      "dependencies": ["Button", "Icon Button", "Badge", "Chip", "Selection Controls", "Menu", "Pagination", "Text Field"],
+      "anatomy": {
+        "slots": ["header", "row", "cell", "expandableRow", "actions"],
+        "description": "Table-like structure with sticky header/columns, sortable/filterable columns, expandable rows, row selection, and overflow menu."
+      },
+      "properties": {
+        "features": {
+          "type": "array",
+          "values": ["sorting", "filtering", "resizing", "reordering"],
+          "default": ["sorting"]
+        },
+        "selection": {
+          "type": "enum",
+          "values": ["none", "single", "multi"],
+          "default": "none"
+        },
+        "density": {
+          "type": "enum",
+          "values": ["compact", "default", "comfortable"],
+          "default": "default"
+        }
+      },
+      "states": ["default", "loading", "empty", "error"],
+      "tokens": {
+        "background": "--surface-default",
+        "headerBg": "--surface-sunken",
+        "borderColor": "--border-subtle",
+        "selectedRowBg": "--primary-tonal-bg",
+        "cellText": "--content-primary",
+        "cellTextSecondary": "--content-tertiary",
+        "stickyColumnShadow": "--shadow-sm",
+        "padding": {
+          "compact": "--space-2",
+          "default": "--space-3",
+          "comfortable": "--space-4"
+        }
+      },
+      "responsiveBehavior": {
+        "mobile": "Card-based layout per row OR horizontal scroll with column priority (hide low-priority)",
+        "desktop": "Full table with sticky columns and header, horizontal scroll for overflow"
+      },
+      "accessibility": {
+        "role": "table",
+        "requiredAria": ["aria-label", "aria-describedby (for column headers)", "aria-sort (on sortable columns)"],
+        "keyboardInteraction": ["Tab (navigate)", "Space (select row)", "Arrow keys (navigate cells)"],
+        "focusIndicator": "Focus ring on interactive cells",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "rowExpand": "Detail panel slides in with --motion-fast",
+        "sort": "Column indicator animation with --motion-fast"
+      },
+      "interactionRules": [
+        "Never load all data at once. Always paginate or virtualize rows beyond 100.",
+        "Column resize must not shrink below minimum content width.",
+        "Sort indicators must be visible and use aria-sort attribute.",
+        "Sticky first column and header for long tables.",
+        "Expandable rows show nested detail panel below row."
+      ],
+      "mobileTouchAlternatives": {
+        "cardLayout": "Card-based layout showing one row per card on mobile",
+        "swipe": "Swipe right for row actions on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Large data collections, analytics dashboards, admin tables, data-driven UIs",
+        "whenNotToUse": "Simple lists (use List), side-by-side comparisons (use Cards)",
+        "commonPairings": ["Admin dashboards", "Analytics", "Data management"],
+        "generationNotes": "Virtualize/paginate for 100+ rows. Support sorting, filtering, resizing. Sticky columns. Mobile: card layout. Selection: none/single/multi."
+      }
+    },
+    {
+      "name": "tree-view",
+      "displayName": "Tree View",
+      "purpose": "Hierarchical data display with expandable nodes",
+      "layer": "L5",
+      "category": "data-display",
+      "status": "stable",
+      "dependencies": ["Icon Button", "Badge", "Selection Controls"],
+      "anatomy": {
+        "slots": ["node", "icon", "label", "badge", "expandCollapse"],
+        "description": "Hierarchical tree with expandable nodes, indent guides, optional icons/badges, selection/navigation modes."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["navigation", "selection"],
+          "default": "navigation"
+        },
+        "multiSelect": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": ["expanded", "collapsed", "loading", "selected", "disabled"],
+      "tokens": {
+        "background": "--surface-default",
+        "selectedNodeBg": "--primary-tonal-bg",
+        "indentGuideColor": "--border-subtle",
+        "nodeText": "--content-primary",
+        "nodeCountText": "--content-tertiary",
+        "nodeHoverBg": "--neutral-tonal-bg",
+        "nodePadding": "--space-4",
+        "indentPerLevel": "--space-6",
+        "radius": "--radius-md"
+      },
+      "responsiveBehavior": {
+        "mobile": "Reduced indent, drill-down navigation for 4+ nesting levels",
+        "desktop": "Standard tree with indent guides, deep nesting allowed"
+      },
+      "accessibility": {
+        "role": "tree",
+        "requiredAria": ["aria-label (tree purpose)", "aria-expanded (expandable nodes)"],
+        "keyboardInteraction": ["Arrow keys (navigate)", "Space (select)", "Enter (expand/collapse)"],
+        "focusIndicator": "Focus ring on nodes",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "nodeExpand": "Children slide-in with --motion-fast, indent guides draw progressively",
+        "nodeSelect": "Background highlight with --motion-fast"
+      },
+      "interactionRules": [
+        "Never render more than 4 nesting levels on mobile. Switch to drill-down navigation.",
+        "Parent checkbox reflects tri-state (all/some/none children selected).",
+        "Lazy-load children for nodes with 50+ descendants.",
+        "Expand/collapse icons rotate on state change.",
+        "Navigation tree: single-select, selection tree: checkboxes."
+      ],
+      "mobileTouchAlternatives": {
+        "drillDown": "Breadcrumb drill-down for deep nesting on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Hierarchical data, file systems, organizational charts, category trees",
+        "whenNotToUse": "Flat data (use List), tabular data (use Data Grid)",
+        "commonPairings": ["File browsers", "Organization charts", "Category navigation"],
+        "generationNotes": "Navigation: single-select, selection: multi-select with tri-state. Drill-down on mobile for 4+ levels. Lazy-load deep nodes."
+      }
+    },
+    {
+      "name": "timeline",
+      "displayName": "Timeline",
+      "purpose": "Chronological event sequence display",
+      "layer": "L5",
+      "category": "data-display",
+      "status": "stable",
+      "dependencies": ["Avatar", "Badge", "Icon Button"],
+      "anatomy": {
+        "slots": ["node", "connector", "title", "description", "timestamp", "expandableDetail"],
+        "description": "Vertical or horizontal sequence of events with nodes (icon/avatar/dot), connecting line, and event details."
+      },
+      "properties": {
+        "orientation": {
+          "type": "enum",
+          "values": ["vertical", "horizontal"],
+          "default": "vertical"
+        },
+        "alignment": {
+          "type": "enum",
+          "values": ["leftAligned", "alternating"],
+          "default": "leftAligned"
+        }
+      },
+      "states": ["default"],
+      "tokens": {
+        "connectorLine": "--border-default",
+        "nodeActive": "--primary-filled-bg",
+        "nodeCompleted": "--success-filled-bg",
+        "nodeError": "--danger-filled-bg",
+        "nodeWarning": "--warning-filled-bg",
+        "nodeUpcoming": "--neutral-tonal-bg",
+        "title": "--content-primary",
+        "description": "--content-secondary",
+        "timestamp": "--content-tertiary",
+        "nodeSpacing": "--space-4",
+        "nodeRadius": "--radius-full"
+      },
+      "responsiveBehavior": {
+        "mobile": "Always vertical, always left-aligned. Horizontal collapses to vertical.",
+        "desktop": "Vertical or horizontal, alternating alignment available"
+      },
+      "accessibility": {
+        "role": "list",
+        "requiredAria": ["aria-label (timeline purpose)"],
+        "keyboardInteraction": ["Tab (navigate)", "Arrow keys (within timeline)"],
+        "focusIndicator": "Focus ring on expandable details",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "nodeAppear": "Node animates in as scrolled into view"
+      },
+      "interactionRules": [
+        "Never use horizontal timeline on mobile.",
+        "Connecting line must not break between nodes. Use continuous border.",
+        "Timestamps must respect locale formatting.",
+        "Node color reflects state: active (primary), completed (success), error (danger), warning (warning), upcoming (neutral).",
+        "Expandable detail sections below events."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap event to expand detail (mobile)"
+      },
+      "aiHints": {
+        "whenToUse": "Event chronologies, project timelines, status progression, activity feeds",
+        "whenNotToUse": "Parallel events, process flow (use Stepper), simple lists",
+        "commonPairings": ["Activity logs", "Project timelines", "Status updates"],
+        "generationNotes": "Vertical primary orientation. Desktop: horizontal available. Mobile: vertical only. Node color by state. Continuous connector line."
+      }
+    },
+    {
+      "name": "loading",
+      "displayName": "Loading",
+      "purpose": "Progress and loading state indicators",
+      "layer": "L5",
+      "category": "data-display",
+      "status": "stable",
+      "dependencies": [],
+      "anatomy": {
+        "slots": ["spinner", "progressBar", "skeleton", "dots"],
+        "description": "Four types: spinner (circular indeterminate), progress bar (linear determinate/indeterminate), skeleton (content placeholder), dots (typing indicator)."
+      },
+      "properties": {
+        "type": {
+          "type": "enum",
+          "values": ["spinner", "progressBar", "skeleton", "dots"],
+          "default": "spinner"
+        },
+        "overlay": {
+          "type": "enum",
+          "values": ["inline", "fullScreen"],
+          "default": "inline"
+        }
+      },
+      "states": ["loading", "complete"],
+      "tokens": {
+        "spinnerColor": "--primary-filled-bg",
+        "spinnerTrack": "--border-subtle",
+        "progressFill": "--primary-filled-bg",
+        "progressTrack": "--border-subtle",
+        "skeletonBg": "--surface-sunken",
+        "skeletonPulse": "--neutral-tonal-bg",
+        "labelColor": "--content-tertiary",
+        "radius": {
+          "spinner": "--radius-full",
+          "progressBar": "--radius-sm"
+        }
+      },
+      "responsiveBehavior": {
+        "mobile": "Inline spinner in content flow",
+        "desktop": "Standard sizing"
+      },
+      "accessibility": {
+        "role": "progressbar",
+        "requiredAria": ["aria-label (describing loading)", "aria-valuenow (progress bar)", "aria-hidden (decorative spinners)"],
+        "keyboardInteraction": [],
+        "focusIndicator": "Not focusable",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "spinner": "Continuous rotation with --motion-slow infinite",
+        "progressBar": "Shimmer sweep left-to-right (RTL: right-to-left), indeterminate animation",
+        "skeleton": "Pulse opacity with --motion-slow infinite",
+        "dots": "Sequential bounce with --motion-normal"
+      },
+      "interactionRules": [
+        "Never show a loading spinner without an accessible label (aria-label or visually hidden text).",
+        "Skeleton must match the actual content layout it replaces.",
+        "Progress bar percentage must never go backwards.",
+        "Reduced motion: replace spin/pulse with static opacity change.",
+        "Full-screen overlay dims background (optional scrim)."
+      ],
+      "mobileTouchAlternatives": {
+        "none": "Same on mobile and desktop"
+      },
+      "aiHints": {
+        "whenToUse": "Data loading, operation progress, content placeholders, async operations",
+        "whenNotToUse": "Page-level navigation (use navigation loading state), disabled state (use disabled attribute)",
+        "commonPairings": ["Data Grid loading", "Form submission", "Content fetch"],
+        "generationNotes": "Type: spinner (indeterminate), progressBar (determinate), skeleton (placeholder), dots (typing). Require aria-label. Reduced motion: static opacity."
+      }
+    },
+    {
+      "name": "ai-chat",
+      "displayName": "AI Chat",
+      "purpose": "Conversational AI interface with message history, streaming responses, and rich content",
+      "layer": "L6",
+      "category": "composed",
+      "status": "pending",
+      "dependencies": ["Button", "Icon Button", "Avatar", "Badge", "Chip", "Text Field", "Menu", "Loading", "Panel"],
+      "anatomy": {
+        "slots": ["header", "messageList", "messageItem", "input", "suggestedActions"],
+        "description": "Chat interface with message list (user/assistant), input area, suggested actions, typing indicator, and rich content support (markdown, code, images)."
+      },
+      "properties": {
+        "mode": {
+          "type": "enum",
+          "values": ["fullPage", "embeddedPanel", "floatingWidget"],
+          "default": "fullPage"
+        }
+      },
+      "states": ["default", "typing", "streaming"],
+      "tokens": {
+        "chatBg": "--surface-default",
+        "assistantBubble": "--surface-raised",
+        "userBubble": "--primary-tonal-bg",
+        "userText": "--primary-tonal-fg",
+        "assistantText": "--content-primary",
+        "timestamp": "--content-tertiary",
+        "inputBorder": "--border-subtle",
+        "messageGap": "--space-3",
+        "bubblePadding": "--space-4",
+        "bubbleRadius": "--radius-lg",
+        "inputRadius": "--radius-xl",
+        "widgetShadow": "--shadow-md"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-screen, input pinned to bottom with keyboard-aware repositioning",
+        "desktop": "Panel or full-page with 600px max message width centered"
+      },
+      "accessibility": {
+        "role": "main",
+        "requiredAria": ["aria-label (chat purpose)", "aria-live (message feed)"],
+        "keyboardInteraction": ["Tab (navigate)", "Shift+Enter (newline)"],
+        "focusIndicator": "Focus on input field",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "messageAppear": "Fade-up with --motion-fast",
+        "streamingText": "Character-by-character with cursor blink",
+        "typingDots": "Sequential bounce with --motion-normal",
+        "suggestedActions": "Staggered fade-in with --motion-fast"
+      },
+      "interactionRules": [
+        "Never auto-send on Enter without Shift+Enter for newline support.",
+        "Streaming responses must not cause layout shift in message list.",
+        "Message list must preserve scroll position when loading older messages (prepend, not shift).",
+        "Floating widget must not obscure critical page content.",
+        "Support rich content: markdown, code syntax highlighting, tables, images, attachments."
+      ],
+      "mobileTouchAlternatives": {
+        "longPress": "Long-press message for reactions/copy"
+      },
+      "aiHints": {
+        "whenToUse": "AI assistant conversations, chatbots, support chat, interactive help",
+        "whenNotToUse": "Simple Q&A (use Accordion), notification inbox (use Notification Center)",
+        "commonPairings": ["Sidebar assistant", "Full-page chat", "Chat widget"],
+        "generationNotes": "Support streaming text (character-by-character), typing indicator, message reactions. Markdown/code syntax highlight. User: right-align/primary tonal, Assistant: left-align/surface."
+      }
+    },
+    {
+      "name": "command-palette",
+      "displayName": "Command Palette",
+      "purpose": "Global search and action launcher overlay",
+      "layer": "L6",
+      "category": "composed",
+      "status": "pending",
+      "dependencies": ["Text Field", "Menu", "Icon Button", "Badge", "Chip", "Loading", "Dialog"],
+      "anatomy": {
+        "slots": ["searchInput", "resultsList", "footer"],
+        "description": "Overlay with search input, grouped results (pages, actions, recent, components), result items with shortcuts, navigation hints."
+      },
+      "properties": {
+        "mode": {
+          "type": "enum",
+          "values": ["search", "command", "nested"],
+          "default": "search"
+        }
+      },
+      "states": ["open", "closed", "searching"],
+      "tokens": {
+        "paletteBg": "--surface-raised",
+        "paletteShadow": "--shadow-xl",
+        "resultHoverBg": "--surface-default",
+        "resultActiveBg": "--primary-tonal-bg",
+        "resultLabel": "--content-primary",
+        "resultDescription": "--content-secondary",
+        "shortcutBadge": "--content-tertiary",
+        "dividerColor": "--border-subtle",
+        "resultPadding": "--space-3",
+        "paletteRadius": "--radius-xl",
+        "resultRadius": "--radius-md"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-screen overlay with bottom-anchored input",
+        "desktop": "Centered overlay, 640px max width, max 60vh height"
+      },
+      "accessibility": {
+        "role": "combobox",
+        "requiredAria": ["aria-label (command palette)", "aria-expanded", "aria-haspopup"],
+        "keyboardInteraction": ["Arrow keys (navigate)", "Enter (execute)", "Esc (close)"],
+        "focusIndicator": "Focus on search input, active result",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "open": "Scale from 0.95 + fade with --motion-fast",
+        "resultFilter": "Instant, no animation on list changes",
+        "close": "Fade out with --motion-fast"
+      },
+      "interactionRules": [
+        "Never block the shortcut (Cmd+K/Ctrl+K) when a text field is focused. Use modifier key check.",
+        "Results must update within 100ms of keystroke (debounce at 150ms max).",
+        "Must be fully keyboard navigable. Mouse is optional.",
+        "Escape always closes, even from nested views.",
+        "Trigger shortcut (Cmd+K) auto-focuses search input."
+      ],
+      "mobileTouchAlternatives": {
+        "tap": "Tap result to execute"
+      },
+      "aiHints": {
+        "whenToUse": "Global application search, action launcher, keyboard-driven navigation",
+        "whenNotToUse": "In-page search (use Search component), filtered lists (use Menu)",
+        "commonPairings": ["Application header", "Keyboard shortcuts", "Global navigation"],
+        "generationNotes": "Trigger: Cmd+K or Ctrl+K. Auto-focus input on open. Results grouped by category. Shortcuts visible. Keyboard navigable. Escape closes."
+      }
+    },
+    {
+      "name": "notification-center",
+      "displayName": "Notification Center",
+      "purpose": "Centralized notification inbox panel with categorization and actions",
+      "layer": "L6",
+      "category": "composed",
+      "status": "pending",
+      "dependencies": ["Panel", "Button", "Icon Button", "Avatar", "Badge", "Chip", "Divider", "Tabs", "List", "Loading"],
+      "anatomy": {
+        "slots": ["trigger", "panel", "header", "filterTabs", "notificationItem", "footer"],
+        "description": "Bell icon trigger with unread badge. Slide-in panel with filter tabs, notification items, actions, and footer link."
+      },
+      "properties": {
+        "display": {
+          "type": "enum",
+          "values": ["dropdown", "fullScreenSheet"],
+          "default": "dropdown"
+        }
+      },
+      "states": ["default", "unread", "read", "actionable"],
+      "tokens": {
+        "panelBg": "--surface-raised",
+        "panelShadow": "--shadow-lg",
+        "unreadItemBg": "--surface-sunken",
+        "unreadDot": "--primary-filled-bg",
+        "errorBorder": "--danger-outline-border",
+        "warningBorder": "--warning-outline-border",
+        "successBorder": "--success-outline-border",
+        "itemTitle": "--content-primary",
+        "itemDescription": "--content-secondary",
+        "timestamp": "--content-tertiary",
+        "itemDivider": "--border-subtle",
+        "itemPadding": "--space-3",
+        "panelRadius": "--radius-lg"
+      },
+      "responsiveBehavior": {
+        "mobile": "Full-screen bottom sheet with swipe-to-dismiss per notification",
+        "desktop": "400px panel dropdown or slide-in from right edge"
+      },
+      "accessibility": {
+        "role": "region",
+        "requiredAria": ["aria-label (notifications)", "aria-live (new notifications)"],
+        "keyboardInteraction": ["Tab (navigate)", "Escape (close)"],
+        "focusIndicator": "Focus on notification items",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "panelOpen": "Slide from right with --motion-normal and --ease-decelerate",
+        "newNotification": "Fade-in at top with --motion-fast",
+        "markRead": "Dot fade-out with --motion-fast",
+        "dismiss": "Slide-out left with --motion-fast"
+      },
+      "interactionRules": [
+        "Never auto-dismiss notifications from the center. Only Toasts auto-dismiss.",
+        "Unread count badge must sync with actual unread state in real-time.",
+        "Notification actions must be reachable by keyboard.",
+        "Swipe-to-dismiss on mobile must have undo (Snackbar pattern).",
+        "Group notifications by: All, Unread, Mentions, System."
+      ],
+      "mobileTouchAlternatives": {
+        "swipe": "Swipe left/right per notification for dismiss/undo"
+      },
+      "aiHints": {
+        "whenToUse": "Notification management, inbox-style notification center, user alerts",
+        "whenNotToUse": "Brief status messages (use Toast), inline alerts (use Alert)",
+        "commonPairings": ["Header notification bell", "User dashboard", "Settings"],
+        "generationNotes": "Bell trigger with unread count badge. Filter tabs: All/Unread/Mentions/System. Grouping by date/source. Swipe-to-dismiss with undo."
+      }
+    },
+    {
+      "name": "search",
+      "displayName": "Search",
+      "purpose": "Contextual search with filters, suggestions, and results display",
+      "layer": "L6",
+      "category": "composed",
+      "status": "pending",
+      "dependencies": ["Text Field", "Icon Button", "Chip", "Menu", "Loading", "List"],
+      "anatomy": {
+        "slots": ["searchBar", "suggestionsDropdown", "filterBar", "results", "emptyState"],
+        "description": "Search bar with clear button, suggestions dropdown, active filter chips, result list with highlighted matches."
+      },
+      "properties": {
+        "mode": {
+          "type": "enum",
+          "values": ["global", "scoped", "inline"],
+          "default": "global"
+        },
+        "display": {
+          "type": "enum",
+          "values": ["suggestionsOnly", "fullResultsPage", "inlineFilteredList"],
+          "default": "suggestionsOnly"
+        }
+      },
+      "states": ["default", "focused", "searching", "results", "empty"],
+      "tokens": {
+        "searchBarBg": "--surface-default",
+        "suggestionsDropdownBg": "--surface-raised",
+        "dropdownShadow": "--shadow-md",
+        "matchHighlightBg": "--primary-filled-bg",
+        "matchHighlightOpacity": "20%",
+        "resultTitle": "--content-primary",
+        "resultSnippet": "--content-secondary",
+        "metadata": "--content-tertiary",
+        "border": "--border-subtle",
+        "focusRing": "--border-focus",
+        "resultItemPadding": "--space-3",
+        "searchBarRadius": "--radius-lg",
+        "resultItemRadius": "--radius-md"
+      },
+      "responsiveBehavior": {
+        "mobile": "Expandable search bar (icon tap expands to full-width), full-screen results",
+        "desktop": "Search bar in header/toolbar, suggestions dropdown below, results in main content"
+      },
+      "accessibility": {
+        "role": "search",
+        "requiredAria": ["aria-label (search input)", "aria-describedby (suggestions)"],
+        "keyboardInteraction": ["Tab (navigate)", "Arrow keys (suggestions)", "Enter (search)"],
+        "focusIndicator": "Focus ring on search input",
+        "wcagLevel": "AAA (WideBot), AA (Hulul)"
+      },
+      "motionBehavior": {
+        "suggestionsIn": "Fade-in with --motion-fast as user types",
+        "filterChipAddRemove": "Width animate with --motion-fast",
+        "resultsIn": "Fade-in staggered with --motion-fast"
+      },
+      "interactionRules": [
+        "Never submit search on every keystroke. Debounce at 300ms minimum.",
+        "Search must support Escape to clear and close suggestions.",
+        "Highlighted match text must use <mark> element, not just bold.",
+        "Empty results must always suggest corrective action.",
+        "Filter chips show active filters with remove button.",
+        "Voice input button optional (if supported)."
+      ],
+      "mobileTouchAlternatives": {
+        "tapIcon": "Tap search icon to expand to full-width on mobile"
+      },
+      "aiHints": {
+        "whenToUse": "Site/app search, filtering data, finding content, autocomplete suggestions",
+        "whenNotToUse": "Simple selects (use Menu), column filtering (use Data Grid)",
+        "commonPairings": ["Header search", "Page filtering", "Content discovery"],
+        "generationNotes": "Debounce input at 300ms+. Suggestions dropdown on focus. Results page with match highlighting. Filter chips for active filters. Escape to close."
+      }
+    }
+  ]
+}

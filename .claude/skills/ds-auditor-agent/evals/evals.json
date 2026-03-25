@@ -1,0 +1,140 @@
+{
+  "skill_name": "ds-auditor-agent",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm about to build the List component for Sprint D. Generate the pre-build test cases so I know exactly what to verify after building it.",
+      "expected_output": "A comprehensive pre-build QC document covering state matrix, content resilience, RTL checks, accessibility per brand, token validation, CSS architecture rules, motion, and tester integration cases for the List component.",
+      "assertions": [
+        {
+          "name": "contains_state_matrix",
+          "type": "contains",
+          "value": "State Matrix",
+          "description": "Output includes a state matrix section"
+        },
+        {
+          "name": "contains_compound_states",
+          "type": "contains",
+          "value": "Compound States",
+          "description": "Output includes compound state combinations"
+        },
+        {
+          "name": "contains_rtl_checks",
+          "type": "contains",
+          "value": "RTL",
+          "description": "Output includes RTL verification points"
+        },
+        {
+          "name": "contains_hulul_compliance",
+          "type": "contains",
+          "value": "Hulul",
+          "description": "Output includes Hulul AA compliance checks"
+        },
+        {
+          "name": "contains_widebot_compliance",
+          "type": "contains",
+          "value": "WideBot",
+          "description": "Output includes WideBot AAA compliance checks"
+        },
+        {
+          "name": "contains_token_validation",
+          "type": "contains",
+          "value": "Token",
+          "description": "Output includes token validation section"
+        },
+        {
+          "name": "contains_focus_visible",
+          "type": "contains",
+          "value": "focus-visible",
+          "description": "Output mentions focus-visible requirement"
+        },
+        {
+          "name": "contains_content_resilience",
+          "type": "contains",
+          "value": "Overflow",
+          "description": "Output includes content overflow/resilience testing"
+        },
+        {
+          "name": "contains_44px_target",
+          "type": "contains",
+          "value": "44",
+          "description": "Output mentions 44px target size for WideBot AAA"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audit the Slider component. Check everything - use cases, test cases, interactions, tokens, missing rules, brand compliance.",
+      "expected_output": "A post-build audit report for the Slider component with pass/fail results for all 10 gates, brand compliance table for both Hulul and WideBot, list of specific failures with fix instructions, and any new learnings.",
+      "assertions": [
+        {
+          "name": "reads_slider_css",
+          "type": "behavior",
+          "value": "Agent reads the Slider CSS from ds-library.html",
+          "description": "Agent reads actual CSS to perform the audit"
+        },
+        {
+          "name": "contains_gate_results",
+          "type": "contains",
+          "value": "Gate",
+          "description": "Output includes gate-by-gate results"
+        },
+        {
+          "name": "contains_pass_fail",
+          "type": "contains",
+          "value": "PASS",
+          "description": "Output includes pass/fail judgments"
+        },
+        {
+          "name": "contains_brand_table",
+          "type": "contains",
+          "value": "Hulul (AA)",
+          "description": "Output includes brand compliance comparison"
+        },
+        {
+          "name": "contains_fix_instructions",
+          "type": "behavior",
+          "value": "Any failures include specific CSS/JS fix instructions",
+          "description": "Failures come with actionable fixes"
+        },
+        {
+          "name": "references_learning_loop",
+          "type": "behavior",
+          "value": "Agent cross-references DS_LEARNING_LOOP.md decisions",
+          "description": "Agent checks against learned rules"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I just finished building Sprint D (List, Accordion, Data Grid, Tree View, Timeline, Loading). Run the full sprint audit.",
+      "expected_output": "Sprint-level audit covering all 6 components individually plus cross-component consistency check, backport check against previous sprints, and compiled learning loop update.",
+      "assertions": [
+        {
+          "name": "audits_all_six",
+          "type": "behavior",
+          "value": "Agent audits all 6 Sprint D components",
+          "description": "All components in the sprint are covered"
+        },
+        {
+          "name": "contains_cross_component",
+          "type": "contains",
+          "value": "cross-component",
+          "description": "Output includes cross-component consistency check"
+        },
+        {
+          "name": "contains_backport",
+          "type": "contains",
+          "value": "backport",
+          "description": "Output includes backport check for previous sprints"
+        },
+        {
+          "name": "contains_learning_update",
+          "type": "contains",
+          "value": "Learning",
+          "description": "Output includes new learnings for DS_LEARNING_LOOP.md"
+        }
+      ]
+    }
+  ]
+}

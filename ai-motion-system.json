@@ -1,0 +1,1833 @@
+{
+  "$schema": "ai-motion-system/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "description": "Comprehensive token-driven motion system for ERP design system. Defines animation durations, easing curves, and motion patterns for consistent micro-interactions and transitions.",
+  "tokens": {
+    "duration": {
+      "instant": {
+        "value": "0ms",
+        "variable": "--motion-duration-instant",
+        "usage": "Immediate state changes where no animation is needed",
+        "examples": [
+          "Loading spinners starting",
+          "State indicators changing",
+          "Disabled state toggle"
+        ]
+      },
+      "fast": {
+        "value": "150ms",
+        "variable": "--motion-duration-fast",
+        "usage": "Micro-interactions, hover feedback, focus indicators, small element animations",
+        "examples": [
+          "Button hover highlight",
+          "Icon color change",
+          "Focus ring appearance",
+          "Ripple effect initiation",
+          "Checkbox toggle"
+        ]
+      },
+      "normal": {
+        "value": "250ms",
+        "variable": "--motion-duration-normal",
+        "usage": "Standard transitions, panel open/close, visibility changes, modal dismiss",
+        "examples": [
+          "Dropdown menu expansion",
+          "Bottom sheet sliding up",
+          "Card expand/collapse",
+          "FAB menu opening",
+          "Drawer opening",
+          "Tooltip fade in"
+        ]
+      },
+      "slow": {
+        "value": "400ms",
+        "variable": "--motion-duration-slow",
+        "usage": "Page transitions, complex multi-step animations, navigation between views",
+        "examples": [
+          "Page transition (slide and fade)",
+          "Hero image parallax",
+          "Multi-step form animation",
+          "Complex modal entrance"
+        ]
+      },
+      "xslow": {
+        "value": "600ms",
+        "variable": "--motion-duration-xslow",
+        "usage": "Dramatic reveals, onboarding animations, hero sections, cinematic effects",
+        "examples": [
+          "Full-page hero animation on load",
+          "Guided onboarding step transitions",
+          "Celebration/congratulations animation",
+          "Dramatic section reveal"
+        ]
+      }
+    },
+    "easing": {
+      "standard": {
+        "value": "cubic-bezier(0.2, 0, 0, 1)",
+        "variable": "--motion-easing-standard",
+        "name": "Material Standard",
+        "usage": "Default easing for most transitions and animations",
+        "curve": "Accelerates quickly, decelerates smoothly at end",
+        "examples": [
+          "Dropdown menu open/close",
+          "Panel animations",
+          "General visibility changes",
+          "Most UI transitions"
+        ]
+      },
+      "decelerate": {
+        "value": "cubic-bezier(0, 0, 0.2, 1)",
+        "variable": "--motion-easing-decelerate",
+        "name": "Material Decelerate",
+        "usage": "Elements entering the screen from outside, appearing from nothing",
+        "curve": "Fast start, slow finish - gives sense of landing",
+        "examples": [
+          "Page slide in from left/right",
+          "Modal appearing",
+          "Notification slide in",
+          "Drawer opening",
+          "Content fade in"
+        ]
+      },
+      "accelerate": {
+        "value": "cubic-bezier(0.4, 0, 1, 1)",
+        "variable": "--motion-easing-accelerate",
+        "name": "Material Accelerate",
+        "usage": "Elements leaving the screen or disappearing, exiting the viewport",
+        "curve": "Slow start, fast finish - gives sense of departure",
+        "examples": [
+          "Page slide out",
+          "Modal dismissing",
+          "Element fade out",
+          "Drawer closing",
+          "Notification slide away"
+        ]
+      },
+      "spring": {
+        "value": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        "variable": "--motion-easing-spring",
+        "name": "Spring/Bouncy",
+        "usage": "Playful, bouncy motions for celebratory or delightful interactions",
+        "curve": "Elastic rebound with slight overshoot at end",
+        "examples": [
+          "Success animation bounce",
+          "Playful FAB entrance",
+          "Celebration confetti-like animations",
+          "Bouncy button press feedback",
+          "Cheerful loading animation"
+        ]
+      },
+      "sharp": {
+        "value": "cubic-bezier(0.4, 0, 0.6, 1)",
+        "variable": "--motion-easing-sharp",
+        "name": "Sharp",
+        "usage": "Attention-grabbing, snappy interactions that feel responsive",
+        "curve": "Immediate acceleration with slow deceleration",
+        "examples": [
+          "Selection highlight change",
+          "Attention-seeking error animation",
+          "Quick state feedback"
+        ]
+      },
+      "ease-in-out": {
+        "value": "ease-in-out",
+        "variable": "--motion-easing-ease-in-out",
+        "name": "CSS ease-in-out",
+        "usage": "Fallback easing, smooth symmetric animations",
+        "curve": "Standard ease-in-out timing",
+        "examples": [
+          "Legacy browser support",
+          "Simple transitions"
+        ]
+      }
+    },
+    "distance": {
+      "xs": {
+        "value": "2px",
+        "variable": "--motion-distance-xs",
+        "usage": "Minimal movement for subtle micro-interactions",
+        "examples": [
+          "Button press depression",
+          "Slight icon shift on focus",
+          "Subtle nudge feedback"
+        ]
+      },
+      "sm": {
+        "value": "4px",
+        "variable": "--motion-distance-sm",
+        "usage": "Small movements for button presses, subtle reveals",
+        "examples": [
+          "Button scale-down on press",
+          "Checkbox animation offset",
+          "Minor elevation change"
+        ]
+      },
+      "md": {
+        "value": "8px",
+        "variable": "--motion-distance-md",
+        "usage": "Standard movement for panel slides, modest reveals, default transforms",
+        "examples": [
+          "Dropdown slide distance",
+          "Modal slide-in offset",
+          "Toast notification slide",
+          "Page transition Y offset"
+        ]
+      },
+      "lg": {
+        "value": "16px",
+        "variable": "--motion-distance-lg",
+        "usage": "Larger movement for navigation transitions, significant reveals",
+        "examples": [
+          "Full page transition slide distance",
+          "Drawer slide distance",
+          "Parallax movement",
+          "Large card scale transform origin"
+        ]
+      },
+      "xl": {
+        "value": "32px",
+        "variable": "--motion-distance-xl",
+        "usage": "Dramatic movement for hero animations, cinematic effects",
+        "examples": [
+          "Hero section entrance",
+          "Full-screen transition parallax",
+          "Celebratory particle animations"
+        ]
+      },
+      "full": {
+        "value": "100vw or 100vh",
+        "variable": "--motion-distance-full",
+        "usage": "Full viewport movement for complete transitions",
+        "examples": [
+          "Page slide across full viewport",
+          "Drawer opening full width",
+          "Fullscreen modal appearance"
+        ]
+      }
+    },
+    "opacity": {
+      "fade-in-subtle": {
+        "value": "0 to 0.6",
+        "variable": "--motion-opacity-subtle",
+        "usage": "Very subtle fade for secondary content or backgrounds",
+        "examples": [
+          "Disabled element fade",
+          "Placeholder content",
+          "Secondary text emphasis"
+        ]
+      },
+      "fade-in-moderate": {
+        "value": "0 to 0.8",
+        "variable": "--motion-opacity-moderate",
+        "usage": "Standard fade for content appearing, hover states, secondary actions",
+        "examples": [
+          "Content fade-in",
+          "Hover state background",
+          "Helper text appearance",
+          "Secondary button hover"
+        ]
+      },
+      "fade-in-full": {
+        "value": "0 to 1",
+        "variable": "--motion-opacity-full",
+        "usage": "Complete opacity change for primary content, modals, full visibility",
+        "examples": [
+          "Modal backdrop",
+          "Page transition fade",
+          "Primary content appearance",
+          "Icon reveal"
+        ]
+      }
+    },
+    "scale": {
+      "xs": {
+        "value": "0.95",
+        "variable": "--motion-scale-xs",
+        "usage": "Minimal scale change for button press depression or subtle emphasis",
+        "examples": [
+          "Button press effect",
+          "Minor active state scale"
+        ]
+      },
+      "sm": {
+        "value": "0.9",
+        "variable": "--motion-scale-sm",
+        "usage": "Small scale change for card interactions or modest zoom effects",
+        "examples": [
+          "Card tap feedback",
+          "Checkbox scale-down",
+          "Secondary scale transform"
+        ]
+      },
+      "md": {
+        "value": "1.05",
+        "variable": "--motion-scale-md",
+        "usage": "Moderate scale increase for emphasis, hover states, or zoom-in effects",
+        "examples": [
+          "Button hover scale",
+          "Card hover elevation",
+          "Icon emphasis",
+          "FAB hover scale"
+        ]
+      },
+      "lg": {
+        "value": "1.1",
+        "variable": "--motion-scale-lg",
+        "usage": "Larger scale change for attention-grabbing, zoom transitions",
+        "examples": [
+          "Hero image parallax zoom",
+          "Modal entrance scale",
+          "Important element emphasis"
+        ]
+      },
+      "xl": {
+        "value": "1.2",
+        "variable": "--motion-scale-xl",
+        "usage": "Dramatic scale change for cinematic effects, celebratory animations",
+        "examples": [
+          "Celebration bounce",
+          "Success animation scale",
+          "Dramatic entrance effect"
+        ]
+      }
+    },
+    "delay": {
+      "none": {
+        "value": "0ms",
+        "variable": "--motion-delay-none",
+        "usage": "No delay, immediate animation start"
+      },
+      "xs": {
+        "value": "50ms",
+        "variable": "--motion-delay-xs",
+        "usage": "Minimal delay for staggered animations within components"
+      },
+      "sm": {
+        "value": "100ms",
+        "variable": "--motion-delay-sm",
+        "usage": "Small delay for sequential item animations (lists, grids)"
+      },
+      "md": {
+        "value": "150ms",
+        "variable": "--motion-delay-md",
+        "usage": "Standard delay for staggered content reveals or cascading animations"
+      },
+      "lg": {
+        "value": "250ms",
+        "variable": "--motion-delay-lg",
+        "usage": "Larger delay for multi-phase animations or dialog sequences"
+      },
+      "xl": {
+        "value": "400ms",
+        "variable": "--motion-delay-xl",
+        "usage": "Significant delay for dramatic timing effects or attention direction"
+      }
+    }
+  },
+  "patterns": [
+    {
+      "id": "page-transition-standard",
+      "name": "Page Transition - Standard",
+      "category": "navigation",
+      "description": "Transition between full page views with slide and fade effect",
+      "animation": {
+        "enter": {
+          "opacity": "0 -> 1",
+          "transform": "translateY(8px) -> translateY(0)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Page slides up slightly while fading in"
+        },
+        "exit": {
+          "opacity": "1 -> 0",
+          "transform": "translateY(-8px) -> translateY(0)",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Current page fades out and slides up"
+        }
+      },
+      "reducedMotion": {
+        "enter": {
+          "opacity": "0 -> 1",
+          "duration": "instant",
+          "easing": "none"
+        },
+        "exit": {
+          "opacity": "1 -> 0",
+          "duration": "instant",
+          "easing": "none"
+        }
+      },
+      "usedBy": [
+        "all page templates",
+        "router navigation",
+        "tab switching"
+      ],
+      "cssExample": "animation: pageEnter normal decelerate forwards; @keyframes pageEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }"
+    },
+    {
+      "id": "page-transition-slideright",
+      "name": "Page Transition - Slide Right",
+      "category": "navigation",
+      "description": "Transition sliding page from left to right (typically for back navigation)",
+      "animation": {
+        "enter": {
+          "opacity": "0 -> 1",
+          "transform": "translateX(-100%) -> translateX(0)",
+          "duration": "slow",
+          "easing": "decelerate",
+          "description": "New page slides in from left"
+        },
+        "exit": {
+          "opacity": "1 -> 0.5",
+          "transform": "translateX(0) -> translateX(30%)",
+          "duration": "slow",
+          "easing": "accelerate",
+          "description": "Previous page slides right and fades slightly"
+        }
+      },
+      "reducedMotion": {
+        "enter": { "opacity": "0 -> 1", "duration": "instant" },
+        "exit": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "back navigation",
+        "modal dismiss"
+      ]
+    },
+    {
+      "id": "modal-entrance",
+      "name": "Modal Entrance",
+      "category": "container",
+      "description": "Modal or dialog appears with fade and scale effect",
+      "animation": {
+        "backdrop": {
+          "backgroundColor": "rgba(0,0,0,0) -> rgba(0,0,0,0.5)",
+          "duration": "normal",
+          "easing": "standard"
+        },
+        "content": {
+          "opacity": "0 -> 1",
+          "transform": "scale(0.95) -> scale(1)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Modal scales up from 95% to 100% while fading in"
+        }
+      },
+      "reducedMotion": {
+        "backdrop": { "backgroundColor": "rgba(0,0,0,0) -> rgba(0,0,0,0.5)", "duration": "instant" },
+        "content": { "opacity": "0 -> 1", "duration": "instant" }
+      },
+      "usedBy": [
+        "dialog",
+        "modal",
+        "confirmation dialog",
+        "bottom sheet entrance"
+      ]
+    },
+    {
+      "id": "modal-exit",
+      "name": "Modal Exit",
+      "category": "container",
+      "description": "Modal or dialog disappears with fade and scale effect",
+      "animation": {
+        "backdrop": {
+          "backgroundColor": "rgba(0,0,0,0.5) -> rgba(0,0,0,0)",
+          "duration": "fast",
+          "easing": "accelerate"
+        },
+        "content": {
+          "opacity": "1 -> 0",
+          "transform": "scale(1) -> scale(0.95)",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Modal scales down to 95% while fading out"
+        }
+      },
+      "reducedMotion": {
+        "backdrop": { "backgroundColor": "rgba(0,0,0,0.5) -> rgba(0,0,0,0)", "duration": "instant" },
+        "content": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "modal dismiss",
+        "dialog close"
+      ]
+    },
+    {
+      "id": "dropdown-expand",
+      "name": "Dropdown Menu Expand",
+      "category": "container",
+      "description": "Dropdown menu slides down and fades in",
+      "animation": {
+        "menu": {
+          "opacity": "0 -> 1",
+          "transform": "scaleY(0.95) -> scaleY(1) translateY(-8px) -> translateY(0)",
+          "transformOrigin": "top center",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Menu expands from origin point while fading in"
+        }
+      },
+      "reducedMotion": {
+        "menu": { "opacity": "0 -> 1", "duration": "instant" }
+      },
+      "usedBy": [
+        "dropdown menu",
+        "select menu",
+        "filter menu",
+        "sort menu"
+      ]
+    },
+    {
+      "id": "dropdown-collapse",
+      "name": "Dropdown Menu Collapse",
+      "category": "container",
+      "description": "Dropdown menu slides up and fades out",
+      "animation": {
+        "menu": {
+          "opacity": "1 -> 0",
+          "transform": "scaleY(1) -> scaleY(0.95) translateY(0) -> translateY(-8px)",
+          "transformOrigin": "top center",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Menu collapses to origin point while fading out"
+        }
+      },
+      "reducedMotion": {
+        "menu": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "dropdown menu close",
+        "menu dismiss"
+      ]
+    },
+    {
+      "id": "button-hover",
+      "name": "Button Hover State",
+      "category": "micro-feedback",
+      "description": "Button responds to hover with background change and elevation increase",
+      "animation": {
+        "background": {
+          "property": "background-color",
+          "change": "Default -> Hovered shade",
+          "duration": "fast",
+          "easing": "standard"
+        },
+        "elevation": {
+          "property": "box-shadow",
+          "change": "Default -> Elevated shadow",
+          "duration": "fast",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "background": { "duration": "instant" },
+        "elevation": { "duration": "instant" }
+      },
+      "usedBy": [
+        "button",
+        "icon-button",
+        "card",
+        "list-item"
+      ]
+    },
+    {
+      "id": "button-press",
+      "name": "Button Press/Active State",
+      "category": "micro-feedback",
+      "description": "Button responds to press with scale and ripple effect",
+      "animation": {
+        "scale": {
+          "property": "transform",
+          "change": "scale(1) -> scale(0.98)",
+          "duration": "fast",
+          "easing": "standard",
+          "description": "Button slightly compresses on press"
+        },
+        "ripple": {
+          "property": "opacity, transform",
+          "change": "Ripple effect radiates from click point",
+          "duration": "normal",
+          "easing": "accelerate",
+          "description": "Material ripple effect expands outward"
+        }
+      },
+      "reducedMotion": {
+        "scale": { "duration": "instant" },
+        "ripple": { "display": "none" }
+      },
+      "usedBy": [
+        "button",
+        "icon-button",
+        "menu-item",
+        "list-item",
+        "card"
+      ]
+    },
+    {
+      "id": "focus-ring",
+      "name": "Focus Ring Appearance",
+      "category": "micro-feedback",
+      "description": "Focus ring appears around interactive element when keyboard focused",
+      "animation": {
+        "ring": {
+          "property": "opacity, outline",
+          "change": "0 -> 1 (opacity), outline appears",
+          "duration": "fast",
+          "easing": "standard",
+          "description": "Focus ring fades in"
+        }
+      },
+      "reducedMotion": {
+        "ring": { "duration": "instant" }
+      },
+      "usedBy": [
+        "button",
+        "input",
+        "link",
+        "icon-button",
+        "menu-item"
+      ]
+    },
+    {
+      "id": "focus-ring-disappear",
+      "name": "Focus Ring Disappearance",
+      "category": "micro-feedback",
+      "description": "Focus ring disappears when element loses focus",
+      "animation": {
+        "ring": {
+          "property": "opacity",
+          "change": "1 -> 0",
+          "duration": "fast",
+          "easing": "standard",
+          "description": "Focus ring fades out"
+        }
+      },
+      "reducedMotion": {
+        "ring": { "duration": "instant" }
+      },
+      "usedBy": [
+        "all focusable elements"
+      ]
+    },
+    {
+      "id": "checkbox-toggle",
+      "name": "Checkbox Toggle Animation",
+      "category": "micro-feedback",
+      "description": "Checkbox animates when toggled with scale and checkmark animation",
+      "animation": {
+        "box": {
+          "property": "background-color, transform",
+          "change": "Color changes, slight scale animation",
+          "duration": "fast",
+          "easing": "standard"
+        },
+        "checkmark": {
+          "property": "opacity, transform",
+          "change": "Checkmark scales in from center",
+          "duration": "normal",
+          "easing": "spring",
+          "description": "Checkmark appears with bouncy spring animation"
+        }
+      },
+      "reducedMotion": {
+        "box": { "duration": "instant" },
+        "checkmark": { "easing": "standard", "duration": "instant" }
+      },
+      "usedBy": [
+        "checkbox",
+        "checkbox-group"
+      ]
+    },
+    {
+      "id": "radio-button-select",
+      "name": "Radio Button Selection",
+      "category": "micro-feedback",
+      "description": "Radio button animates when selected with fill animation",
+      "animation": {
+        "outer": {
+          "property": "border-color",
+          "change": "Default -> Selected color",
+          "duration": "fast",
+          "easing": "standard"
+        },
+        "inner": {
+          "property": "transform, opacity",
+          "change": "Dot scales in from center",
+          "duration": "normal",
+          "easing": "spring",
+          "description": "Selected indicator appears with spring bounce"
+        }
+      },
+      "reducedMotion": {
+        "outer": { "duration": "instant" },
+        "inner": { "easing": "standard", "duration": "instant" }
+      },
+      "usedBy": [
+        "radio-button",
+        "radio-group"
+      ]
+    },
+    {
+      "id": "toggle-switch",
+      "name": "Toggle Switch Flip",
+      "category": "micro-feedback",
+      "description": "Toggle switch animates thumb sliding to new position",
+      "animation": {
+        "thumb": {
+          "property": "transform",
+          "change": "Thumb slides to new position",
+          "duration": "normal",
+          "easing": "standard",
+          "description": "Smooth slide animation"
+        },
+        "background": {
+          "property": "background-color",
+          "change": "Color changes to indicate state",
+          "duration": "normal",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "thumb": { "duration": "instant" },
+        "background": { "duration": "instant" }
+      },
+      "usedBy": [
+        "toggle-switch",
+        "switch"
+      ]
+    },
+    {
+      "id": "loading-spinner",
+      "name": "Loading Spinner Rotation",
+      "category": "feedback",
+      "description": "Continuous rotating spinner for loading states",
+      "animation": {
+        "rotation": {
+          "property": "transform",
+          "change": "rotate(0deg) -> rotate(360deg)",
+          "duration": "1500ms",
+          "easing": "linear",
+          "iterations": "infinite",
+          "description": "Continuous smooth rotation"
+        }
+      },
+      "reducedMotion": {
+        "rotation": { "display": "none", "backgroundColor": "show instead" }
+      },
+      "usedBy": [
+        "loader",
+        "progress-spinner",
+        "pending state"
+      ]
+    },
+    {
+      "id": "progress-bar-fill",
+      "name": "Progress Bar Fill Animation",
+      "category": "feedback",
+      "description": "Progress bar animates as progress value increases",
+      "animation": {
+        "width": {
+          "property": "width",
+          "change": "Current -> New progress value",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Smooth width expansion"
+        }
+      },
+      "reducedMotion": {
+        "width": { "duration": "instant" }
+      },
+      "usedBy": [
+        "progress-bar",
+        "linear-progress"
+      ]
+    },
+    {
+      "id": "skeleton-loading-shimmer",
+      "name": "Skeleton Shimmer Effect",
+      "category": "feedback",
+      "description": "Shimmer effect on skeleton loading placeholder",
+      "animation": {
+        "shimmer": {
+          "property": "background-position",
+          "change": "Gradient background position shift",
+          "duration": "2000ms",
+          "easing": "linear",
+          "iterations": "infinite",
+          "description": "Left-to-right shimmer wave"
+        }
+      },
+      "reducedMotion": {
+        "shimmer": { "iterations": "0", "opacity": "0.6" }
+      },
+      "usedBy": [
+        "skeleton-loader",
+        "content-placeholder"
+      ]
+    },
+    {
+      "id": "snackbar-enter",
+      "name": "Snackbar Slide Up",
+      "category": "container",
+      "description": "Snackbar slides up from bottom with fade effect",
+      "animation": {
+        "enter": {
+          "opacity": "0 -> 1",
+          "transform": "translateY(100%) -> translateY(0)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Snackbar slides in from bottom"
+        }
+      },
+      "reducedMotion": {
+        "enter": { "opacity": "0 -> 1", "duration": "instant" }
+      },
+      "usedBy": [
+        "snackbar",
+        "bottom-notification"
+      ]
+    },
+    {
+      "id": "snackbar-exit",
+      "name": "Snackbar Slide Down",
+      "category": "container",
+      "description": "Snackbar slides down and disappears",
+      "animation": {
+        "exit": {
+          "opacity": "1 -> 0",
+          "transform": "translateY(0) -> translateY(100%)",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Snackbar slides down out of view"
+        }
+      },
+      "reducedMotion": {
+        "exit": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "snackbar dismiss",
+        "notification auto-dismiss"
+      ]
+    },
+    {
+      "id": "toast-enter",
+      "name": "Toast Slide In",
+      "category": "container",
+      "description": "Toast notification slides in from top",
+      "animation": {
+        "enter": {
+          "opacity": "0 -> 1",
+          "transform": "translateY(-100%) -> translateY(0)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Toast slides down from top"
+        }
+      },
+      "reducedMotion": {
+        "enter": { "opacity": "0 -> 1", "duration": "instant" }
+      },
+      "usedBy": [
+        "toast",
+        "top-notification"
+      ]
+    },
+    {
+      "id": "toast-exit",
+      "name": "Toast Slide Out",
+      "category": "container",
+      "description": "Toast notification slides away",
+      "animation": {
+        "exit": {
+          "opacity": "1 -> 0",
+          "transform": "translateY(0) -> translateY(-100%)",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Toast slides up out of view"
+        }
+      },
+      "reducedMotion": {
+        "exit": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "toast auto-dismiss",
+        "notification exit"
+      ]
+    },
+    {
+      "id": "drawer-slide-in",
+      "name": "Drawer Slide In",
+      "category": "container",
+      "description": "Navigation drawer slides in from side with backdrop fade",
+      "animation": {
+        "drawer": {
+          "property": "transform",
+          "change": "translateX(-100%) -> translateX(0) or translateX(100%) -> translateX(0)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Drawer slides in from left or right"
+        },
+        "backdrop": {
+          "property": "background-color",
+          "change": "rgba(0,0,0,0) -> rgba(0,0,0,0.5)",
+          "duration": "normal",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "drawer": { "duration": "instant" },
+        "backdrop": { "duration": "instant" }
+      },
+      "usedBy": [
+        "drawer",
+        "navigation drawer",
+        "side-panel"
+      ]
+    },
+    {
+      "id": "drawer-slide-out",
+      "name": "Drawer Slide Out",
+      "category": "container",
+      "description": "Navigation drawer slides out with backdrop fade",
+      "animation": {
+        "drawer": {
+          "property": "transform",
+          "change": "translateX(0) -> translateX(-100%) or translateX(0) -> translateX(100%)",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Drawer slides out to left or right"
+        },
+        "backdrop": {
+          "property": "background-color",
+          "change": "rgba(0,0,0,0.5) -> rgba(0,0,0,0)",
+          "duration": "fast",
+          "easing": "accelerate"
+        }
+      },
+      "reducedMotion": {
+        "drawer": { "duration": "instant" },
+        "backdrop": { "duration": "instant" }
+      },
+      "usedBy": [
+        "drawer dismiss",
+        "navigation close"
+      ]
+    },
+    {
+      "id": "bottom-sheet-slide",
+      "name": "Bottom Sheet Slide Up",
+      "category": "container",
+      "description": "Bottom sheet slides up from bottom with backdrop",
+      "animation": {
+        "sheet": {
+          "property": "transform",
+          "change": "translateY(100%) -> translateY(0)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Sheet slides up from bottom"
+        },
+        "backdrop": {
+          "property": "background-color",
+          "change": "rgba(0,0,0,0) -> rgba(0,0,0,0.5)",
+          "duration": "normal",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "sheet": { "duration": "instant" },
+        "backdrop": { "duration": "instant" }
+      },
+      "usedBy": [
+        "bottom-sheet",
+        "mobile-picker",
+        "action-menu"
+      ]
+    },
+    {
+      "id": "bottom-sheet-slide-down",
+      "name": "Bottom Sheet Slide Down",
+      "category": "container",
+      "description": "Bottom sheet slides down and disappears",
+      "animation": {
+        "sheet": {
+          "property": "transform",
+          "change": "translateY(0) -> translateY(100%)",
+          "duration": "fast",
+          "easing": "accelerate",
+          "description": "Sheet slides down out of view"
+        },
+        "backdrop": {
+          "property": "background-color",
+          "change": "rgba(0,0,0,0.5) -> rgba(0,0,0,0)",
+          "duration": "fast",
+          "easing": "accelerate"
+        }
+      },
+      "reducedMotion": {
+        "sheet": { "duration": "instant" },
+        "backdrop": { "duration": "instant" }
+      },
+      "usedBy": [
+        "bottom-sheet dismiss",
+        "picker close"
+      ]
+    },
+    {
+      "id": "expand-collapse",
+      "name": "Expand/Collapse Animation",
+      "category": "container",
+      "description": "Content expands or collapses with smooth height animation",
+      "animation": {
+        "expand": {
+          "property": "max-height, opacity",
+          "change": "0 -> full height, 0 -> 1",
+          "duration": "normal",
+          "easing": "decelerate",
+          "description": "Content smoothly expands into view"
+        },
+        "collapse": {
+          "property": "max-height, opacity",
+          "change": "Full height -> 0, 1 -> 0",
+          "duration": "normal",
+          "easing": "accelerate",
+          "description": "Content smoothly collapses"
+        }
+      },
+      "reducedMotion": {
+        "expand": { "duration": "instant" },
+        "collapse": { "duration": "instant" }
+      },
+      "usedBy": [
+        "expandable-section",
+        "accordion",
+        "disclosure",
+        "disclosure-triangle"
+      ]
+    },
+    {
+      "id": "notification-badge-pulse",
+      "name": "Notification Badge Pulse",
+      "category": "micro-feedback",
+      "description": "Badge pulses to draw attention to notifications",
+      "animation": {
+        "pulse": {
+          "property": "opacity, transform",
+          "change": "Scale and opacity pulse",
+          "duration": "2000ms",
+          "easing": "standard",
+          "keyframes": "0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); }",
+          "description": "Subtle pulse animation"
+        }
+      },
+      "reducedMotion": {
+        "pulse": { "iterations": "0" }
+      },
+      "usedBy": [
+        "notification-badge",
+        "unread-indicator"
+      ]
+    },
+    {
+      "id": "fab-entrance",
+      "name": "Floating Action Button Entrance",
+      "category": "action",
+      "description": "FAB scales and fades in from bottom-right",
+      "animation": {
+        "enter": {
+          "property": "opacity, transform",
+          "change": "0 -> 1, scale(0) -> scale(1)",
+          "duration": "normal",
+          "easing": "spring",
+          "description": "FAB bounces in with spring animation"
+        }
+      },
+      "reducedMotion": {
+        "enter": { "easing": "standard", "duration": "instant" }
+      },
+      "usedBy": [
+        "FAB",
+        "action-button"
+      ]
+    },
+    {
+      "id": "fab-speed-dial",
+      "name": "Speed Dial Menu Expansion",
+      "category": "action",
+      "description": "Speed dial menu items rotate and scale in sequence",
+      "animation": {
+        "rotation": {
+          "property": "transform",
+          "change": "rotate(0deg) -> rotate(45deg) (FAB icon)",
+          "duration": "normal",
+          "easing": "standard"
+        },
+        "items": {
+          "property": "opacity, transform",
+          "change": "Each item scales and fades in with staggered delay",
+          "duration": "normal",
+          "easing": "spring",
+          "staggerDelay": "50ms per item",
+          "description": "Items appear in sequence with spring animation"
+        }
+      },
+      "reducedMotion": {
+        "rotation": { "duration": "instant" },
+        "items": { "easing": "standard", "staggerDelay": "0ms", "duration": "instant" }
+      },
+      "usedBy": [
+        "speed-dial",
+        "FAB menu"
+      ]
+    },
+    {
+      "id": "list-item-stagger",
+      "name": "List Item Staggered Entrance",
+      "category": "data-display",
+      "description": "List items fade and slide in with staggered timing",
+      "animation": {
+        "items": {
+          "property": "opacity, transform",
+          "change": "0 -> 1, translateY(8px) -> translateY(0)",
+          "duration": "normal",
+          "easing": "decelerate",
+          "staggerDelay": "30ms per item",
+          "description": "Each item appears in sequence from top"
+        }
+      },
+      "reducedMotion": {
+        "items": { "staggerDelay": "0ms", "duration": "instant" }
+      },
+      "usedBy": [
+        "list",
+        "data-grid",
+        "search-results",
+        "dynamic-content"
+      ]
+    },
+    {
+      "id": "error-shake",
+      "name": "Error Shake Animation",
+      "category": "feedback",
+      "description": "Element shakes to indicate error",
+      "animation": {
+        "shake": {
+          "property": "transform",
+          "change": "Rapid left-right movement",
+          "duration": "400ms",
+          "easing": "standard",
+          "keyframes": "0%, 100% { translateX(0); } 10%, 30%, 50%, 70%, 90% { translateX(-5px); } 20%, 40%, 60%, 80% { translateX(5px); }",
+          "description": "Quick back-and-forth shake motion"
+        }
+      },
+      "reducedMotion": {
+        "shake": { "iterations": "0", "backgroundColor": "highlight background instead" }
+      },
+      "usedBy": [
+        "form-field (validation error)",
+        "input-error",
+        "invalid-state"
+      ]
+    },
+    {
+      "id": "success-celebration",
+      "name": "Success Celebration Animation",
+      "category": "feedback",
+      "description": "Celebratory animation for successful completion",
+      "animation": {
+        "scale": {
+          "property": "transform",
+          "change": "scale(0) -> scale(1.2) -> scale(1)",
+          "duration": "xslow",
+          "easing": "spring",
+          "description": "Bouncy scale-up with spring overshoot"
+        },
+        "rotate": {
+          "property": "transform",
+          "change": "rotate(-5deg) -> rotate(5deg) -> rotate(0deg)",
+          "duration": "xslow",
+          "easing": "spring",
+          "description": "Slight rotation with bounce"
+        }
+      },
+      "reducedMotion": {
+        "scale": { "easing": "standard", "duration": "instant" },
+        "rotate": { "duration": "instant" }
+      },
+      "usedBy": [
+        "success-screen",
+        "form-submission-success",
+        "completion-animation"
+      ]
+    },
+    {
+      "id": "ai-response-streaming",
+      "name": "AI Response Streaming Animation",
+      "category": "feedback",
+      "description": "Animated indicator showing AI response is being generated",
+      "animation": {
+        "cursor": {
+          "property": "opacity",
+          "change": "1 -> 0 (blinking)",
+          "duration": "500ms",
+          "easing": "standard",
+          "iterations": "infinite",
+          "description": "Blinking cursor at end of message"
+        },
+        "typing": {
+          "property": "opacity",
+          "change": "Dot animation pattern",
+          "duration": "1500ms",
+          "keyframes": "0%, 20% { opacity: 0.4; } 50% { opacity: 1; } 80%, 100% { opacity: 0.4; }",
+          "description": "Sequential dot fade pattern (ellipsis effect)"
+        }
+      },
+      "reducedMotion": {
+        "cursor": { "iterations": "0", "opacity": "1" },
+        "typing": { "iterations": "0", "opacity": "1" }
+      },
+      "usedBy": [
+        "ai-response-indicator",
+        "chat-message (generating)",
+        "streaming-content"
+      ]
+    },
+    {
+      "id": "ai-response-complete",
+      "name": "AI Response Completion Flash",
+      "category": "feedback",
+      "description": "Flash effect when AI response completes and appears fully",
+      "animation": {
+        "flash": {
+          "property": "background-color",
+          "change": "Subtle highlight color flash",
+          "duration": "fast",
+          "easing": "decelerate",
+          "description": "Brief highlight flash on message completion"
+        }
+      },
+      "reducedMotion": {
+        "flash": { "duration": "instant" }
+      },
+      "usedBy": [
+        "chat-message-complete",
+        "generated-content"
+      ]
+    },
+    {
+      "id": "form-input-focus",
+      "name": "Form Input Focus State",
+      "category": "micro-feedback",
+      "description": "Form input responds to focus with border color and shadow change",
+      "animation": {
+        "border": {
+          "property": "border-color",
+          "change": "Default -> Focus color",
+          "duration": "fast",
+          "easing": "standard"
+        },
+        "shadow": {
+          "property": "box-shadow",
+          "change": "None -> Colored shadow",
+          "duration": "fast",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "border": { "duration": "instant" },
+        "shadow": { "duration": "instant" }
+      },
+      "usedBy": [
+        "input-field",
+        "textarea",
+        "select"
+      ]
+    },
+    {
+      "id": "form-validation-success",
+      "name": "Form Field Validation Success",
+      "category": "feedback",
+      "description": "Form field shows success state with checkmark animation",
+      "animation": {
+        "checkmark": {
+          "property": "opacity, transform",
+          "change": "Checkmark scales in from center",
+          "duration": "normal",
+          "easing": "spring",
+          "description": "Bouncy checkmark entrance"
+        }
+      },
+      "reducedMotion": {
+        "checkmark": { "easing": "standard", "duration": "instant" }
+      },
+      "usedBy": [
+        "form-field (validated)",
+        "input-success"
+      ]
+    },
+    {
+      "id": "form-validation-error",
+      "name": "Form Field Validation Error",
+      "category": "feedback",
+      "description": "Form field shows error state with shake and color change",
+      "animation": {
+        "shake": {
+          "property": "transform",
+          "change": "Rapid left-right movement",
+          "duration": "400ms",
+          "easing": "standard",
+          "iterations": "1"
+        },
+        "highlight": {
+          "property": "background-color, border-color",
+          "change": "Error color highlight",
+          "duration": "normal",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "shake": { "iterations": "0" },
+        "highlight": { "duration": "instant" }
+      },
+      "usedBy": [
+        "form-field (error)",
+        "input-error",
+        "validation-error"
+      ]
+    },
+    {
+      "id": "tooltip-enter",
+      "name": "Tooltip Appear",
+      "category": "container",
+      "description": "Tooltip fades and scales in near trigger element",
+      "animation": {
+        "enter": {
+          "property": "opacity, transform",
+          "change": "0 -> 1, scale(0.8) -> scale(1)",
+          "duration": "fast",
+          "easing": "decelerate",
+          "transformOrigin": "Trigger element position"
+        }
+      },
+      "reducedMotion": {
+        "enter": { "opacity": "0 -> 1", "duration": "instant" }
+      },
+      "usedBy": [
+        "tooltip",
+        "help-text",
+        "info-popover"
+      ]
+    },
+    {
+      "id": "tooltip-exit",
+      "name": "Tooltip Disappear",
+      "category": "container",
+      "description": "Tooltip fades and scales out",
+      "animation": {
+        "exit": {
+          "property": "opacity, transform",
+          "change": "1 -> 0, scale(1) -> scale(0.8)",
+          "duration": "fast",
+          "easing": "accelerate"
+        }
+      },
+      "reducedMotion": {
+        "exit": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "tooltip dismiss",
+        "help-text-hide"
+      ]
+    },
+    {
+      "id": "popover-enter",
+      "name": "Popover Appear",
+      "category": "container",
+      "description": "Popover fades and slides in from trigger element",
+      "animation": {
+        "enter": {
+          "property": "opacity, transform",
+          "change": "0 -> 1, translateY(-8px) -> translateY(0)",
+          "duration": "normal",
+          "easing": "decelerate"
+        }
+      },
+      "reducedMotion": {
+        "enter": { "opacity": "0 -> 1", "duration": "instant" }
+      },
+      "usedBy": [
+        "popover",
+        "context-popover"
+      ]
+    },
+    {
+      "id": "popover-exit",
+      "name": "Popover Disappear",
+      "category": "container",
+      "description": "Popover fades and slides out",
+      "animation": {
+        "exit": {
+          "property": "opacity, transform",
+          "change": "1 -> 0, translateY(0) -> translateY(-8px)",
+          "duration": "fast",
+          "easing": "accelerate"
+        }
+      },
+      "reducedMotion": {
+        "exit": { "opacity": "1 -> 0", "duration": "instant" }
+      },
+      "usedBy": [
+        "popover dismiss"
+      ]
+    },
+    {
+      "id": "badge-pulse-alert",
+      "name": "Badge Alert Pulse",
+      "category": "micro-feedback",
+      "description": "Badge pulses with color emphasis for alerts or critical updates",
+      "animation": {
+        "pulse": {
+          "property": "box-shadow",
+          "change": "Shadow expands and contracts",
+          "duration": "1500ms",
+          "easing": "standard",
+          "iterations": "infinite",
+          "keyframes": "0%, 100% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 50% { box-shadow: 0 0 0 10px rgba(255,0,0,0); }",
+          "description": "Expanding and contracting glow effect"
+        }
+      },
+      "reducedMotion": {
+        "pulse": { "iterations": "0" }
+      },
+      "usedBy": [
+        "alert-badge",
+        "critical-notification"
+      ]
+    },
+    {
+      "id": "parallax-scroll",
+      "name": "Parallax Scroll Effect",
+      "category": "visual-effect",
+      "description": "Background elements move slower than foreground during scroll",
+      "animation": {
+        "parallax": {
+          "property": "transform",
+          "change": "Y position based on scroll velocity",
+          "duration": "Continuous with scroll",
+          "easing": "linear",
+          "description": "Depth effect from differential scroll speeds"
+        }
+      },
+      "reducedMotion": {
+        "parallax": { "disabled": true }
+      },
+      "usedBy": [
+        "hero-section",
+        "background-image",
+        "depth-effect"
+      ]
+    },
+    {
+      "id": "image-reveal",
+      "name": "Image Reveal Animation",
+      "category": "visual-effect",
+      "description": "Image reveals with crossfade or slide from placeholder",
+      "animation": {
+        "crossfade": {
+          "property": "opacity",
+          "change": "Placeholder 1 -> Loaded image 1",
+          "duration": "normal",
+          "easing": "decelerate"
+        }
+      },
+      "reducedMotion": {
+        "crossfade": { "duration": "instant" }
+      },
+      "usedBy": [
+        "image-load",
+        "lazy-image",
+        "responsive-image"
+      ]
+    },
+    {
+      "id": "data-grid-row-select",
+      "name": "Data Grid Row Selection",
+      "category": "micro-feedback",
+      "description": "Data grid row highlights smoothly when selected",
+      "animation": {
+        "highlight": {
+          "property": "background-color",
+          "change": "Default -> Selected background",
+          "duration": "fast",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "highlight": { "duration": "instant" }
+      },
+      "usedBy": [
+        "data-grid",
+        "table-row-select"
+      ]
+    },
+    {
+      "id": "menu-item-hover",
+      "name": "Menu Item Hover State",
+      "category": "micro-feedback",
+      "description": "Menu item highlights on hover with smooth transition",
+      "animation": {
+        "highlight": {
+          "property": "background-color",
+          "change": "Default -> Hover background",
+          "duration": "fast",
+          "easing": "standard"
+        }
+      },
+      "reducedMotion": {
+        "highlight": { "duration": "instant" }
+      },
+      "usedBy": [
+        "menu-item",
+        "navigation-item"
+      ]
+    }
+  ],
+  "accessibilityRules": {
+    "prefersReducedMotion": {
+      "mediaQuery": "@media (prefers-reduced-motion: reduce)",
+      "strategy": "Remove transform animations (translate, scale, rotate), keep opacity changes, use instant durations",
+      "implementation": "@media (prefers-reduced-motion: reduce) { * { animation-duration: 0s !important; transition-duration: 0s !important; } }",
+      "exceptions": "Loading spinners and critical feedback still use minimal animation",
+      "testing": "Always test with prefers-reduced-motion enabled in system settings"
+    },
+    "vestibularDisorders": {
+      "recommendation": "Never use parallax, large-scale transforms, or continuous rotation for decorative purposes",
+      "specificGuidelines": [
+        "Avoid parallax scroll effects",
+        "No rapid flashing or strobing (>3 flashes per second)",
+        "No continuous spinning for decorative elements",
+        "Limit large-scale zoom effects",
+        "Avoid overly complex multi-layer animations"
+      ]
+    },
+    "visuallyImpaired": {
+      "screenReader": "All animated state changes must be announced via ARIA live regions",
+      "contrast": "Animated elements must maintain sufficient color contrast before, during, and after animation",
+      "duration": "Animations should not be so fast that content is missed (minimum 200ms for perceivable animations)"
+    },
+    "cognitiveLoadReduction": {
+      "guidance": "Too many simultaneous animations can overwhelm users",
+      "maxSimultaneous": "Limit to 1-2 animations at same time",
+      "staggering": "Stagger animations to present information sequentially",
+      "clarity": "Animations must clarify relationships, not obscure content"
+    }
+  },
+  "componentMotionMap": {
+    "button": {
+      "default": "Static, no motion on idle",
+      "hover": "button-hover (color and elevation change)",
+      "active": "button-press (scale 0.98 and ripple)",
+      "disabled": "No motion feedback",
+      "loading": "Kept in active state, parent may show loading spinner"
+    },
+    "icon-button": {
+      "default": "Static",
+      "hover": "button-hover (color change with ripple)",
+      "active": "button-press (ripple with color change)",
+      "focus": "focus-ring appearance"
+    },
+    "link": {
+      "default": "Static",
+      "hover": "Color change (fast 150ms) and optional underline",
+      "active": "Color shift and ripple",
+      "focus": "focus-ring appearance"
+    },
+    "input-field": {
+      "focus": "form-input-focus (border color and shadow change)",
+      "blur": "Border color fade back to default",
+      "error": "form-validation-error (shake and color highlight)",
+      "success": "form-validation-success (checkmark animation)"
+    },
+    "textarea": {
+      "focus": "form-input-focus",
+      "blur": "Border color fade",
+      "resize": "No animation, just resize"
+    },
+    "checkbox": {
+      "uncheck-to-check": "checkbox-toggle (scale and checkmark spring animation)",
+      "check-to-uncheck": "checkbox-toggle (scale and checkmark animation reversed)",
+      "hover": "Subtle background highlight (fast 150ms)",
+      "disabled": "No motion feedback"
+    },
+    "radio-button": {
+      "unselected-to-selected": "radio-button-select (dot scales in with spring animation)",
+      "hover": "Subtle background highlight (fast 150ms)",
+      "disabled": "No motion feedback"
+    },
+    "toggle-switch": {
+      "on-to-off": "toggle-switch (thumb slides with color change)",
+      "off-to-on": "toggle-switch (thumb slides with color change)",
+      "hover": "No specific hover motion",
+      "disabled": "Opacity reduction, no motion"
+    },
+    "slider": {
+      "drag": "Thumb follows drag with smooth motion, tooltip appears/updates",
+      "release": "If snap-to-value, snap animation with decelerate easing",
+      "hover": "Thumb highlights, optional tooltip preview"
+    },
+    "dropdown": {
+      "open": "dropdown-expand (scale-in with decelerate easing)",
+      "close": "dropdown-collapse (scale-out with accelerate easing)",
+      "hover-item": "menu-item-hover (background highlight)",
+      "select-item": "ripple effect on selection"
+    },
+    "select": {
+      "open": "dropdown-expand on desktop; bottom-sheet-slide on mobile",
+      "close": "dropdown-collapse on desktop; bottom-sheet-slide-down on mobile"
+    },
+    "date-picker": {
+      "open": "modal-entrance on desktop; bottom-sheet-slide on mobile",
+      "close": "modal-exit on desktop; bottom-sheet-slide-down on mobile",
+      "month-navigation": "Smooth fade and slide between months"
+    },
+    "time-picker": {
+      "open": "modal-entrance on desktop; bottom-sheet-slide on mobile",
+      "close": "modal-exit on desktop; bottom-sheet-slide-down on mobile",
+      "wheel-spin": "Smooth rotation of picker wheel values"
+    },
+    "modal": {
+      "open": "modal-entrance (scale and fade in)",
+      "close": "modal-exit (scale and fade out)",
+      "backdrop": "Fades in and out with modal"
+    },
+    "dialog": {
+      "open": "modal-entrance",
+      "close": "modal-exit"
+    },
+    "popover": {
+      "open": "popover-enter (slide and fade)",
+      "close": "popover-exit (slide and fade)",
+      "reposition": "Instant reposition if viewport changes"
+    },
+    "tooltip": {
+      "show": "tooltip-enter (fade and scale in)",
+      "hide": "tooltip-exit (fade and scale out)",
+      "delay": "100ms before show animation begins"
+    },
+    "card": {
+      "default": "Static",
+      "hover": "button-hover (elevation increase and subtle background change)",
+      "active": "card has tap actions, tap-reveal reveals them"
+    },
+    "expandable-section": {
+      "expand": "expand-collapse (max-height and opacity animation)",
+      "collapse": "expand-collapse (max-height and opacity animation)",
+      "chevron": "Rotate 180 degrees with fast easing"
+    },
+    "accordion": {
+      "expand-panel": "expand-collapse animation",
+      "collapse-panel": "expand-collapse animation",
+      "collapse-previous": "If single-open, previous panel collapses as new opens"
+    },
+    "disclosure": {
+      "reveal": "expand-collapse (smooth height animation)",
+      "hide": "expand-collapse (smooth height animation)",
+      "indicator": "Rotate indicator if present"
+    },
+    "menu": {
+      "open": "dropdown-expand (scale from origin)",
+      "close": "dropdown-collapse",
+      "item-hover": "menu-item-hover (background highlight)"
+    },
+    "context-menu": {
+      "appear": "popover-enter (appear near cursor or tap point)",
+      "disappear": "popover-exit"
+    },
+    "snackbar": {
+      "enter": "snackbar-enter (slide up from bottom)",
+      "exit": "snackbar-exit (slide down)",
+      "autoExit": "After timeout, automatically triggers exit animation"
+    },
+    "toast": {
+      "enter": "toast-enter (slide down from top)",
+      "exit": "toast-exit (slide up)",
+      "autoExit": "After timeout, automatically triggers exit animation"
+    },
+    "bottom-sheet": {
+      "open": "bottom-sheet-slide (slide up with backdrop)",
+      "close": "bottom-sheet-slide-down (slide down with backdrop)",
+      "swipe-dismiss": "Spring physics for natural swipe-to-dismiss gesture"
+    },
+    "drawer": {
+      "open": "drawer-slide-in (slide from side with backdrop fade)",
+      "close": "drawer-slide-out (slide to side with backdrop fade)",
+      "swipe-dismiss": "Spring physics for natural swipe gesture"
+    },
+    "FAB": {
+      "enter": "fab-entrance (scale and fade in with spring animation)",
+      "hover": "Subtle scale increase (1.05x) and shadow elevation",
+      "press": "Scale down to 0.95x with ripple"
+    },
+    "speed-dial": {
+      "open": "fab-speed-dial (items rotate and scale in sequence)",
+      "close": "fab-speed-dial (items rotate and scale out, FAB icon rotates back)"
+    },
+    "list": {
+      "render": "list-item-stagger (items fade and slide in with delays)",
+      "scroll": "Momentum scroll enabled"
+    },
+    "list-item": {
+      "hover": "list-item-hover (background highlight)",
+      "active": "Ripple effect and highlight",
+      "swipe-action": "Swipe reveals leading or trailing actions"
+    },
+    "data-grid": {
+      "row-hover": "data-grid-row-select (background highlight)",
+      "row-select": "Checkmark or highlight animation",
+      "cell-edit": "Input focus animation (border and shadow)",
+      "scroll": "Momentum scroll, optional parallax on headers"
+    },
+    "table": {
+      "row-hover": "Subtle background highlight (fast)",
+      "sort-change": "Sorted column animates slightly (pulse or emphasize)"
+    },
+    "badge": {
+      "notification": "badge-pulse-alert (glow pulse effect)",
+      "default": "Static, no animation"
+    },
+    "tag": {
+      "add": "Scale in with spring animation",
+      "remove": "Scale out with accelerate easing",
+      "hover": "Background highlight and remove icon appears"
+    },
+    "chip": {
+      "hover": "Background highlight",
+      "remove": "Scale out when delete icon tapped"
+    },
+    "search-field": {
+      "focus": "form-input-focus (border and shadow)",
+      "clear": "Clear icon fades in/out",
+      "results": "Results list-item-stagger animation"
+    },
+    "image": {
+      "load": "image-reveal (crossfade with placeholder)",
+      "tap-fullscreen": "Image expands with page-transition-slow easing"
+    },
+    "map": {
+      "zoom": "Smooth zoom with decelerate easing on pinch complete",
+      "pan": "Momentum pan animation"
+    },
+    "chart": {
+      "render": "Values animate from 0 to final with staggered timing",
+      "zoom": "Smooth zoom transition",
+      "hover": "Tooltip appears with fast fade"
+    },
+    "gantt-chart": {
+      "render": "Bars animate with staggered entrance",
+      "drag-task": "Smooth follow animation during drag",
+      "resize-task": "Smooth width animation when resizing"
+    },
+    "timeline": {
+      "render": "Items stagger in from left/right",
+      "zoom": "Smooth zoom transition",
+      "event-click": "Event details appear with modal-entrance animation"
+    },
+    "notification-badge": {
+      "appear": "Scale in with spring animation",
+      "pulse": "notification-badge-pulse (continuous pulsing)"
+    },
+    "progress-bar": {
+      "update": "progress-bar-fill (smooth width increase with decelerate)"
+    },
+    "skeleton-loader": {
+      "display": "skeleton-loading-shimmer (left-to-right shimmer)",
+      "replace": "Skeleton fades out, content fades in (crossfade)"
+    },
+    "loading-spinner": {
+      "display": "loading-spinner (continuous smooth rotation)",
+      "hide": "Fade out with fast easing"
+    },
+    "segmented-control": {
+      "switch": "Indicator slides to new position with smooth easing",
+      "item-hover": "Background highlight on hover"
+    },
+    "status-indicator": {
+      "online": "Green color, optional subtle pulse",
+      "offline": "Gray color, no pulse",
+      "busy": "Orange/red color, optional pulse"
+    },
+    "header": {
+      "sticky": "No animation, but smooth scroll behavior"
+    },
+    "footer": {
+      "sticky": "No animation, but smooth scroll behavior"
+    },
+    "dialog-title": {
+      "appear": "Fades in with dialog entrance animation"
+    },
+    "dialog-content": {
+      "appear": "Slight delay (50-100ms) after title, then fades in"
+    },
+    "dialog-actions": {
+      "appear": "Slight delay (100-150ms) after content, then fade in"
+    },
+    "form": {
+      "submit": "Button press animation on submit",
+      "error": "Form shake if global error; individual fields shake on validation"
+    }
+  },
+  "motionImplementationGuides": {
+    "css": {
+      "description": "Pure CSS animations using @keyframes and transition properties",
+      "example": "transition: opacity 250ms cubic-bezier(0.2, 0, 0, 1), transform 250ms cubic-bezier(0.2, 0, 0, 1);",
+      "advantages": "Lightweight, GPU-accelerated, good browser support",
+      "limitations": "Limited to predefined duration, difficulty with dynamic values"
+    },
+    "javascript": {
+      "description": "JavaScript-driven animations with Web Animations API or libraries",
+      "example": "element.animate([{opacity: 0}, {opacity: 1}], { duration: 250, easing: 'cubic-bezier(...)' });",
+      "advantages": "Full control, dynamic values, complex sequencing",
+      "limitations": "Slightly heavier performance impact, requires polyfills for older browsers"
+    },
+    "library": {
+      "description": "Third-party animation library (Framer Motion, React Spring, etc.)",
+      "example": "motion.div animate={{ opacity: 1 }} transition={{ duration: 0.25 }}",
+      "advantages": "Intuitive API, easy sequencing, gesture support",
+      "limitations": "Added dependency, bundle size increase"
+    }
+  },
+  "performanceConsiderations": {
+    "gpuAcceleration": {
+      "recommendation": "Use transform and opacity for animations (GPU-accelerated)",
+      "examples": [
+        "transform: translateY()",
+        "transform: scale()",
+        "transform: rotate()",
+        "opacity"
+      ],
+      "avoid": [
+        "Animating position (left, top, right, bottom)",
+        "Animating width/height directly (use transform: scale instead)",
+        "Animating color (use opacity with pre-rendered colors)"
+      ]
+    },
+    "willChange": {
+      "guidance": "Use will-change: transform; on elements about to animate",
+      "caution": "Remove will-change after animation completes to avoid memory overhead"
+    },
+    "renderOptimization": {
+      "staggering": "Stagger list animations to avoid too many simultaneous renders",
+      "virtualization": "For long lists, virtualize off-screen items to avoid animating unseen elements"
+    }
+  },
+  "bestPractices": {
+    "consistency": "Use the same motion pattern for the same interaction type across entire app",
+    "meaning": "Motion should convey spatial relationships and state changes, not distract",
+    "restraint": "Use motion sparingly and purposefully; not every interaction needs animation",
+    "feedback": "Always provide immediate visual feedback for user interactions",
+    "hierarchy": "Quick micro-interactions for secondary feedback; slower animations for primary navigation",
+    "testing": "Test animations with prefers-reduced-motion enabled and on lower-end devices",
+    "a11y": "Always provide non-motion alternatives and test with screen readers"
+  }
+}

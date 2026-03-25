@@ -1,0 +1,2590 @@
+{
+  "$schema": "ai-knowledge-graph/v1",
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-25",
+  "description": "Comprehensive AI Design System Knowledge Graph modeling all entities and relationships in the ERP Design System",
+  "entities": {
+    "tokens": {
+      "color": {
+        "primary": {
+          "id": "primary-filled-bg",
+          "name": "Primary Filled Background",
+          "category": "color",
+          "type": "semantic",
+          "description": "Primary filled background color for active states and high-emphasis elements"
+        },
+        "primary-filled-fg": {
+          "id": "primary-filled-fg",
+          "name": "Primary Filled Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "primary-tonal-bg": {
+          "id": "primary-tonal-bg",
+          "name": "Primary Tonal Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "primary-tonal-fg": {
+          "id": "primary-tonal-fg",
+          "name": "Primary Tonal Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "primary-outline-fg": {
+          "id": "primary-outline-fg",
+          "name": "Primary Outline Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "primary-outline-border": {
+          "id": "primary-outline-border",
+          "name": "Primary Outline Border",
+          "category": "color",
+          "type": "semantic"
+        },
+        "primary-ghost-fg": {
+          "id": "primary-ghost-fg",
+          "name": "Primary Ghost Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "danger-filled-bg": {
+          "id": "danger-filled-bg",
+          "name": "Danger Filled Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "danger-filled-fg": {
+          "id": "danger-filled-fg",
+          "name": "Danger Filled Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "danger-tonal-bg": {
+          "id": "danger-tonal-bg",
+          "name": "Danger Tonal Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "danger-tonal-fg": {
+          "id": "danger-tonal-fg",
+          "name": "Danger Tonal Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "danger-outline-border": {
+          "id": "danger-outline-border",
+          "name": "Danger Outline Border",
+          "category": "color",
+          "type": "semantic"
+        },
+        "danger-outline-fg": {
+          "id": "danger-outline-fg",
+          "name": "Danger Outline Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "warning-filled-bg": {
+          "id": "warning-filled-bg",
+          "name": "Warning Filled Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "warning-tonal-bg": {
+          "id": "warning-tonal-bg",
+          "name": "Warning Tonal Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "success-filled-bg": {
+          "id": "success-filled-bg",
+          "name": "Success Filled Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "success-tonal-bg": {
+          "id": "success-tonal-bg",
+          "name": "Success Tonal Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "success-tonal-fg": {
+          "id": "success-tonal-fg",
+          "name": "Success Tonal Foreground",
+          "category": "color",
+          "type": "semantic"
+        },
+        "neutral-filled-bg": {
+          "id": "neutral-filled-bg",
+          "name": "Neutral Filled Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "neutral-tonal-bg": {
+          "id": "neutral-tonal-bg",
+          "name": "Neutral Tonal Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "ai-filled-bg": {
+          "id": "ai-filled-bg",
+          "name": "AI Filled Background",
+          "category": "color",
+          "type": "semantic"
+        },
+        "surface-default": {
+          "id": "surface-default",
+          "name": "Surface Default",
+          "category": "color",
+          "type": "semantic",
+          "description": "Default surface background color for neutral containers"
+        },
+        "surface-raised": {
+          "id": "surface-raised",
+          "name": "Surface Raised",
+          "category": "color",
+          "type": "semantic"
+        },
+        "surface-sunken": {
+          "id": "surface-sunken",
+          "name": "Surface Sunken",
+          "category": "color",
+          "type": "semantic"
+        },
+        "surface-overlay": {
+          "id": "surface-overlay",
+          "name": "Surface Overlay",
+          "category": "color",
+          "type": "semantic",
+          "description": "Semi-transparent overlay for modal backdrops"
+        },
+        "content-primary": {
+          "id": "content-primary",
+          "name": "Content Primary",
+          "category": "color",
+          "type": "semantic"
+        },
+        "content-secondary": {
+          "id": "content-secondary",
+          "name": "Content Secondary",
+          "category": "color",
+          "type": "semantic"
+        },
+        "content-tertiary": {
+          "id": "content-tertiary",
+          "name": "Content Tertiary",
+          "category": "color",
+          "type": "semantic"
+        },
+        "content-disabled": {
+          "id": "content-disabled",
+          "name": "Content Disabled",
+          "category": "color",
+          "type": "semantic"
+        },
+        "border-default": {
+          "id": "border-default",
+          "name": "Border Default",
+          "category": "color",
+          "type": "semantic"
+        },
+        "border-subtle": {
+          "id": "border-subtle",
+          "name": "Border Subtle",
+          "category": "color",
+          "type": "semantic"
+        },
+        "border-focus": {
+          "id": "border-focus",
+          "name": "Border Focus",
+          "category": "color",
+          "type": "semantic"
+        }
+      },
+      "spacing": {
+        "space-2": {
+          "id": "space-2",
+          "name": "Space 2",
+          "category": "spacing",
+          "value": "8px",
+          "type": "scale"
+        },
+        "space-3": {
+          "id": "space-3",
+          "name": "Space 3",
+          "category": "spacing",
+          "value": "12px",
+          "type": "scale"
+        },
+        "space-4": {
+          "id": "space-4",
+          "name": "Space 4",
+          "category": "spacing",
+          "value": "16px",
+          "type": "scale"
+        },
+        "space-5": {
+          "id": "space-5",
+          "name": "Space 5",
+          "category": "spacing",
+          "value": "20px",
+          "type": "scale"
+        },
+        "space-6": {
+          "id": "space-6",
+          "name": "Space 6",
+          "category": "spacing",
+          "value": "24px",
+          "type": "scale"
+        }
+      },
+      "radius": {
+        "radius-xs": {
+          "id": "radius-xs",
+          "name": "Radius XS",
+          "category": "radius",
+          "value": "4px",
+          "type": "scale"
+        },
+        "radius-sm": {
+          "id": "radius-sm",
+          "name": "Radius SM",
+          "category": "radius",
+          "value": "6px",
+          "type": "scale"
+        },
+        "radius-md": {
+          "id": "radius-md",
+          "name": "Radius MD",
+          "category": "radius",
+          "value": "8px",
+          "type": "scale"
+        },
+        "radius-lg": {
+          "id": "radius-lg",
+          "name": "Radius LG",
+          "category": "radius",
+          "value": "12px",
+          "type": "scale"
+        },
+        "radius-xl": {
+          "id": "radius-xl",
+          "name": "Radius XL",
+          "category": "radius",
+          "value": "16px",
+          "type": "scale"
+        },
+        "radius-full": {
+          "id": "radius-full",
+          "name": "Radius Full",
+          "category": "radius",
+          "value": "9999px",
+          "type": "scale"
+        }
+      },
+      "motion": {
+        "motion-fast": {
+          "id": "motion-fast",
+          "name": "Motion Fast",
+          "category": "motion",
+          "value": "150ms",
+          "type": "duration"
+        },
+        "motion-normal": {
+          "id": "motion-normal",
+          "name": "Motion Normal",
+          "category": "motion",
+          "value": "300ms",
+          "type": "duration"
+        },
+        "ease-standard": {
+          "id": "ease-standard",
+          "name": "Ease Standard",
+          "category": "motion",
+          "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+          "type": "easing"
+        },
+        "ease-decelerate": {
+          "id": "ease-decelerate",
+          "name": "Ease Decelerate",
+          "category": "motion",
+          "value": "cubic-bezier(0, 0, 0.2, 1)",
+          "type": "easing"
+        },
+        "ease-accelerate": {
+          "id": "ease-accelerate",
+          "name": "Ease Accelerate",
+          "category": "motion",
+          "value": "cubic-bezier(0.4, 0, 1, 1)",
+          "type": "easing"
+        }
+      },
+      "typography": {
+        "font-size-xs": {
+          "id": "font-size-xs",
+          "name": "Font Size XS",
+          "category": "typography",
+          "value": "12px",
+          "type": "scale"
+        },
+        "font-size-sm": {
+          "id": "font-size-sm",
+          "name": "Font Size SM",
+          "category": "typography",
+          "value": "14px",
+          "type": "scale"
+        },
+        "font-size-base": {
+          "id": "font-size-base",
+          "name": "Font Size Base",
+          "category": "typography",
+          "value": "16px",
+          "type": "scale"
+        },
+        "font-size-lg": {
+          "id": "font-size-lg",
+          "name": "Font Size LG",
+          "category": "typography",
+          "value": "18px",
+          "type": "scale"
+        }
+      },
+      "shadow": {
+        "shadow-sm": {
+          "id": "shadow-sm",
+          "name": "Shadow SM",
+          "category": "shadow",
+          "type": "elevation"
+        },
+        "shadow-md": {
+          "id": "shadow-md",
+          "name": "Shadow MD",
+          "category": "shadow",
+          "type": "elevation"
+        },
+        "shadow-lg": {
+          "id": "shadow-lg",
+          "name": "Shadow LG",
+          "category": "shadow",
+          "type": "elevation"
+        },
+        "shadow-xl": {
+          "id": "shadow-xl",
+          "name": "Shadow XL",
+          "category": "shadow",
+          "type": "elevation"
+        }
+      },
+      "state": {
+        "state-hover": {
+          "id": "state-hover",
+          "name": "State Hover",
+          "category": "state",
+          "value": "0.08",
+          "type": "opacity"
+        },
+        "state-focus": {
+          "id": "state-focus",
+          "name": "State Focus",
+          "category": "state",
+          "value": "0.12",
+          "type": "opacity"
+        },
+        "state-pressed": {
+          "id": "state-pressed",
+          "name": "State Pressed",
+          "category": "state",
+          "value": "0.12",
+          "type": "opacity"
+        },
+        "state-disabled-content": {
+          "id": "state-disabled-content",
+          "name": "State Disabled Content",
+          "category": "state",
+          "value": "0.38",
+          "type": "opacity"
+        },
+        "focus-ring": {
+          "id": "focus-ring",
+          "name": "Focus Ring",
+          "category": "state",
+          "description": "Visible focus indicator for keyboard navigation"
+        }
+      }
+    },
+    "components": [
+      {
+        "id": "button",
+        "name": "Button",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Interactive element that triggers actions with multiple emphasis levels and color roles",
+        "variants": ["emphasis (filled, tonal, outlined, ghost)", "color (primary, danger, warning, success, neutral, ai)", "size (xs, sm, md, lg, xl)", "state (default, hover, focus, pressed, disabled, loading)", "icons (leading, trailing)"],
+        "dependencies": []
+      },
+      {
+        "id": "icon-button",
+        "name": "Icon Button",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Square interactive element with icon only, no label text",
+        "variants": ["emphasis (filled, tonal, outlined, ghost)", "color (primary, danger, warning, success, neutral, ai)", "size (xs, sm, md, lg, xl)", "toggle (selected/unselected)"],
+        "dependencies": []
+      },
+      {
+        "id": "badge",
+        "name": "Badge",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Small status indicator overlaid on other elements",
+        "variants": ["type (dot, count, max)", "color (primary, danger, warning, success, neutral, ai)", "size (sm, md, lg)"],
+        "dependencies": []
+      },
+      {
+        "id": "chip",
+        "name": "Chip",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Compact element for filters, tags, or selections",
+        "variants": ["emphasis (tonal, outlined)", "color (primary, danger, warning, success, neutral, ai)", "size (sm, md, lg)", "state (default, hover, focus, disabled, selected)", "icons (leading, remove button)"],
+        "dependencies": []
+      },
+      {
+        "id": "toggle",
+        "name": "Toggle",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Binary switch element for boolean settings",
+        "variants": ["state (off, on, disabled)", "with/without label"],
+        "dependencies": []
+      },
+      {
+        "id": "avatar",
+        "name": "Avatar",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Visual representation of a user or entity with initials, image, or icon",
+        "variants": ["type (image, initials, icon)", "size (xs, sm, md, lg, xl)", "status (online, away, offline, none)", "group (stacked with overflow)"],
+        "dependencies": []
+      },
+      {
+        "id": "divider",
+        "name": "Divider",
+        "layer": "L1",
+        "category": "general",
+        "status": "done",
+        "description": "Visual separator between sections or list items",
+        "variants": ["orientation (horizontal, vertical)", "style (solid, dashed)"],
+        "dependencies": []
+      },
+      {
+        "id": "card",
+        "name": "Card",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Container for grouped content with multiple slot types and surface variants",
+        "variants": ["surface (elevated, outlined, filled)", "density (compact, default, comfortable)", "interactive (yes/no)", "content type (text, media, metric, profile, list-item, action)"],
+        "dependencies": ["button", "icon-button", "badge", "avatar"],
+        "slots": ["ds-card-media", "ds-card-header", "ds-card-content", "ds-card-footer", "ds-card-metric", "ds-card-profile", "ds-card-list-item"]
+      },
+      {
+        "id": "panel",
+        "name": "Panel",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Persistent content region that adapts from side panel on desktop to bottom sheet on mobile",
+        "variants": ["density (compact, default, comfortable)", "dismissible (yes/no)", "collapsible (yes/no)", "resizable (yes/no)"],
+        "dependencies": ["button", "icon-button", "divider"],
+        "slots": ["ds-panel-header", "ds-panel-content", "ds-panel-footer"]
+      },
+      {
+        "id": "dialog",
+        "name": "Dialog",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Modal overlay requiring user action before continuing with backdrop",
+        "variants": ["density (compact, default, comfortable)", "dismissible (yes/no)", "scrollable (yes/no)", "type (alert, confirmation, form)"],
+        "dependencies": ["button", "icon-button"],
+        "slots": ["ds-dialog-header", "ds-dialog-content", "ds-dialog-footer"]
+      },
+      {
+        "id": "alert",
+        "name": "Alert",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Non-modal notification for important messages and status information",
+        "variants": ["severity (info, warning, error, success)", "closeable (yes/no)"],
+        "dependencies": ["button", "icon-button"]
+      },
+      {
+        "id": "snackbar",
+        "name": "Snackbar",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Brief notification that appears at bottom of screen with optional action",
+        "variants": ["severity (info, warning, error, success)", "action (with/without)"],
+        "dependencies": ["button"]
+      },
+      {
+        "id": "toast",
+        "name": "Toast",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Short-lived notification that auto-dismisses with minimal footprint",
+        "variants": ["severity (info, warning, error, success)"],
+        "dependencies": []
+      },
+      {
+        "id": "tooltip",
+        "name": "Tooltip",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Brief helper text that appears on hover for additional context",
+        "variants": ["position (top, bottom, left, right)"],
+        "dependencies": []
+      },
+      {
+        "id": "popover",
+        "name": "Popover",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Anchored content region that contains complex information or controls",
+        "variants": ["position (top, bottom, left, right)", "dismissible (yes/no)"],
+        "dependencies": ["button"]
+      },
+      {
+        "id": "menu",
+        "name": "Menu",
+        "layer": "L2",
+        "category": "containers",
+        "status": "done",
+        "description": "Anchored dropdown list of actions or selections with keyboard navigation",
+        "variants": ["type (simple, with icons, with shortcuts, with selection)", "nested (yes/no)", "trigger (click, context, long-press)"],
+        "dependencies": ["icon-button", "divider", "chip"],
+        "slots": ["ds-menu-item", "ds-menu-divider", "ds-menu-header"]
+      },
+      {
+        "id": "text-field",
+        "name": "Text Field",
+        "layer": "L3",
+        "category": "inputs",
+        "status": "done",
+        "description": "Single-line or multi-line text input with support for validation and helper text",
+        "variants": ["emphasis (outlined, filled)", "size (sm, md, lg)", "state (empty, filled, focused, error, disabled, readonly)", "type (text, password, search, textarea)", "with/without (label, helper, error message, leading icon, trailing icon, counter, prefix, suffix)"],
+        "dependencies": ["icon-button", "badge"]
+      },
+      {
+        "id": "selection-controls",
+        "name": "Selection Controls",
+        "layer": "L3",
+        "category": "inputs",
+        "status": "done",
+        "description": "Checkbox, Radio, and Switch for boolean and choice selections",
+        "variants": ["type (checkbox, radio, switch)", "state (unchecked/checked, unselected/selected, off/on, disabled)", "with/without label"],
+        "dependencies": []
+      },
+      {
+        "id": "slider",
+        "name": "Slider",
+        "layer": "L3",
+        "category": "inputs",
+        "status": "done",
+        "description": "Range input for numeric values with optional dual handles",
+        "variants": ["handle count (single, dual)", "with/without (label, value display, tick marks)"],
+        "dependencies": []
+      },
+      {
+        "id": "date-picker",
+        "name": "Date Picker",
+        "layer": "L3",
+        "category": "inputs",
+        "status": "done",
+        "description": "Calendar-based date selection with range support and preset options",
+        "variants": ["mode (single date, date range)", "input type (date field, dropdown)", "with/without (time, presets)"],
+        "dependencies": ["text-field", "button"]
+      },
+      {
+        "id": "tag-input",
+        "name": "Tag Input",
+        "layer": "L3",
+        "category": "inputs",
+        "status": "done",
+        "description": "Multi-value input for entering and managing tags or keywords",
+        "variants": ["with/without (autocomplete, validation, duplicate prevention)"],
+        "dependencies": ["chip", "text-field"]
+      },
+      {
+        "id": "file-upload",
+        "name": "File Upload",
+        "layer": "L3",
+        "category": "inputs",
+        "status": "done",
+        "description": "File selection with drag-and-drop, preview, and progress indication",
+        "variants": ["mode (single, multiple)", "with/without (preview, progress bar, file size limit)"],
+        "dependencies": ["button", "loading"]
+      },
+      {
+        "id": "tabs",
+        "name": "Tabs",
+        "layer": "L4",
+        "category": "navigation",
+        "status": "done",
+        "description": "Horizontal navigation between content sections with active indicator",
+        "variants": ["size (sm, md, lg)", "with/without (leading icon, badge count)"],
+        "dependencies": ["badge"]
+      },
+      {
+        "id": "breadcrumb",
+        "name": "Breadcrumb",
+        "layer": "L4",
+        "category": "navigation",
+        "status": "done",
+        "description": "Hierarchical path navigation showing location in site structure",
+        "variants": ["with/without (icons, collapsible)"],
+        "dependencies": []
+      },
+      {
+        "id": "nav-rail",
+        "name": "Nav Rail",
+        "layer": "L4",
+        "category": "navigation",
+        "status": "done",
+        "description": "Vertical navigation sidebar with icon-only or icon+label modes",
+        "variants": ["width (collapsed, expanded)", "with/without (badges, labels)"],
+        "dependencies": ["icon-button", "badge"]
+      },
+      {
+        "id": "bottom-nav",
+        "name": "Bottom Nav",
+        "layer": "L4",
+        "category": "navigation",
+        "status": "done",
+        "description": "Mobile-first bottom navigation bar with 3-5 action items",
+        "variants": ["with/without (badges, labels)"],
+        "dependencies": ["icon-button", "badge"]
+      },
+      {
+        "id": "pagination",
+        "name": "Pagination",
+        "layer": "L4",
+        "category": "navigation",
+        "status": "done",
+        "description": "Controls for navigating through paginated content",
+        "variants": ["type (numbered buttons, cursor, range)", "with/without (jump-to input)"],
+        "dependencies": ["button", "text-field"]
+      },
+      {
+        "id": "stepper",
+        "name": "Stepper",
+        "layer": "L4",
+        "category": "navigation",
+        "status": "done",
+        "description": "Visual progress indicator for multi-step processes",
+        "variants": ["orientation (horizontal, vertical)", "step status (inactive, active, complete, error)"],
+        "dependencies": ["button"]
+      },
+      {
+        "id": "list",
+        "name": "List",
+        "layer": "L5",
+        "category": "data-display",
+        "status": "pending",
+        "description": "Structured vertical collection of related items with optional selection and actions",
+        "variants": ["type (simple, two-line, three-line, rich)", "dividers (full-width, inset, none)", "selection (none, single, multi)", "density (compact, default, comfortable)", "interactive (yes/no)"],
+        "dependencies": ["avatar", "badge", "icon-button", "divider", "chip"]
+      },
+      {
+        "id": "accordion",
+        "name": "Accordion",
+        "layer": "L5",
+        "category": "data-display",
+        "status": "done",
+        "description": "Collapsible sections for organizing content with expand/collapse toggle",
+        "variants": ["exclusive (single open section, multiple open sections)", "with/without (icon, description)"],
+        "dependencies": ["icon-button"]
+      },
+      {
+        "id": "data-grid",
+        "name": "Data Grid",
+        "layer": "L5",
+        "category": "data-display",
+        "status": "pending",
+        "description": "Enterprise data table with sorting, filtering, pagination, and row actions",
+        "variants": ["features (sortable, filterable, resizable, reorderable)", "selection (none, single, multi)", "row actions (inline, menu)", "expandable (yes/no)", "density (compact, default, comfortable)", "state (loading, empty, error)"],
+        "dependencies": ["button", "icon-button", "badge", "chip", "selection-controls", "menu", "pagination", "text-field"]
+      },
+      {
+        "id": "tree-view",
+        "name": "Tree View",
+        "layer": "L5",
+        "category": "data-display",
+        "status": "done",
+        "description": "Hierarchical data display with expandable nodes and lazy loading",
+        "variants": ["selection (none, single, multi)", "with/without (checkboxes, icons)"],
+        "dependencies": ["icon-button", "selection-controls"]
+      },
+      {
+        "id": "timeline",
+        "name": "Timeline",
+        "layer": "L5",
+        "category": "data-display",
+        "status": "done",
+        "description": "Chronological display of events or activities with visual markers",
+        "variants": ["layout (vertical, horizontal)", "type (simple, detailed)", "with/without (alternating sides, images)"],
+        "dependencies": ["avatar", "chip"]
+      },
+      {
+        "id": "loading",
+        "name": "Loading",
+        "layer": "L5",
+        "category": "data-display",
+        "status": "done",
+        "description": "Progress and skeleton loaders for content placeholders and activity indicators",
+        "variants": ["type (spinner, skeleton, progress bar, dots)", "size (sm, md, lg)"],
+        "dependencies": []
+      },
+      {
+        "id": "ai-chat",
+        "name": "AI Chat",
+        "layer": "L6",
+        "category": "composed",
+        "status": "pending",
+        "description": "Conversational AI interface with message history, streaming responses, and rich content",
+        "variants": ["mode (full-page, embedded panel, floating widget)", "message type (text, code, image, file, action, system)"],
+        "dependencies": ["button", "icon-button", "avatar", "badge", "chip", "text-field", "menu", "loading", "panel"]
+      },
+      {
+        "id": "command-palette",
+        "name": "Command Palette",
+        "layer": "L6",
+        "category": "composed",
+        "status": "pending",
+        "description": "Keyboard-driven command search and execution interface",
+        "variants": ["with/without (recent commands, categories, keyboard shortcuts)"],
+        "dependencies": ["text-field", "menu", "loading"]
+      },
+      {
+        "id": "notification-center",
+        "name": "Notification Center",
+        "layer": "L6",
+        "category": "composed",
+        "status": "pending",
+        "description": "Centralized display and management of all notifications and alerts",
+        "variants": ["with/without (filtering, grouping, archiving)"],
+        "dependencies": ["list", "badge", "button", "menu", "tabs"]
+      },
+      {
+        "id": "search",
+        "name": "Search",
+        "layer": "L6",
+        "category": "composed",
+        "status": "pending",
+        "description": "Contextual search with filters, suggestions, and results display",
+        "variants": ["mode (global, scoped, inline)", "display (dropdown, full page, inline filtered)", "with/without (voice input, advanced filters)"],
+        "dependencies": ["text-field", "icon-button", "chip", "menu", "loading", "list"]
+      },
+      {
+        "id": "empty-states",
+        "name": "Empty States",
+        "layer": "L6",
+        "category": "composed",
+        "status": "pending",
+        "description": "Placeholder displays for views with no data or content",
+        "variants": ["type (no data, no results, error, permission)", "tone (encouraging, helpful, apologetic)", "size (full-page, inline, compact)"],
+        "dependencies": ["button", "avatar"]
+      }
+    ],
+    "patterns": [
+      {
+        "id": "kanban",
+        "name": "Kanban Board",
+        "description": "Drag-and-drop column-based task/item management with WIP limits",
+        "type": "product-feature",
+        "status": "pending",
+        "componentsUsed": ["card", "button", "icon-button", "badge", "avatar", "chip", "menu", "dialog", "empty-states"],
+        "layoutTokens": ["--kanban-column-width: 280px", "--kanban-column-gap: var(--space-4)", "--kanban-card-gap: var(--space-2)"],
+        "interaction": "Drag card between columns, reorder within column, open detail dialog, manage column via menu"
+      },
+      {
+        "id": "flow-canvas",
+        "name": "Flow Canvas",
+        "description": "Node-based visual workflow/logic builder with pan, zoom, and connections",
+        "type": "product-feature",
+        "status": "pending",
+        "componentsUsed": ["panel", "button", "icon-button", "menu", "tooltip", "badge", "dialog", "search", "loading"],
+        "layoutTokens": ["--flow-grid-size: 20px", "--flow-node-width: 200px", "--flow-node-min-height: 80px", "--flow-edge-color: var(--border-default)", "--flow-port-size: 12px"],
+        "interaction": "Drag node from palette, connect ports, select/configure nodes, pan/zoom canvas"
+      },
+      {
+        "id": "form-builder",
+        "name": "Form Builder",
+        "description": "Drag-and-drop form creation and configuration interface with validation and conditional logic",
+        "type": "product-feature",
+        "status": "pending",
+        "componentsUsed": ["text-field", "selection-controls", "button", "icon-button", "card", "menu", "panel", "dialog", "chip", "divider", "empty-states"],
+        "layoutTokens": ["--form-builder-palette-width: 240px", "--form-builder-props-width: 320px", "--form-field-gap: var(--space-3)"],
+        "interaction": "Drag field from palette, configure properties, reorder fields, preview form, publish schema"
+      },
+      {
+        "id": "web-chat-widget",
+        "name": "Web Chat Widget",
+        "description": "Embeddable customer-facing chat interface with launcher button and iframe isolation",
+        "type": "product-feature",
+        "status": "pending",
+        "componentsUsed": ["ai-chat", "button", "icon-button", "avatar", "badge", "loading"],
+        "layoutTokens": ["--widget-width: 400px", "--widget-height: 600px", "--widget-launcher-size: 56px", "--widget-offset: var(--space-5)"],
+        "interaction": "Click launcher to expand, fill pre-chat form, send messages, minimize/close"
+      },
+      {
+        "id": "dashboard",
+        "name": "Dashboard",
+        "description": "Analytics and metrics overview with configurable widget grid and KPI cards",
+        "type": "product-feature",
+        "status": "pending",
+        "componentsUsed": ["card", "data-grid", "tabs", "loading", "empty-states", "button", "icon-button", "badge", "chip", "menu", "date-picker"],
+        "layoutTokens": ["--dashboard-grid-gap: var(--space-4)", "--dashboard-widget-min-height: 240px", "--dashboard-kpi-card-min-width: 200px"],
+        "interaction": "View metrics, select date range, refresh data, drag-to-reorder widgets, configure widgets"
+      },
+      {
+        "id": "inbox",
+        "name": "Inbox",
+        "description": "Conversation list + detail split-view for messaging/support with real-time updates",
+        "type": "product-feature",
+        "status": "pending",
+        "componentsUsed": ["list", "panel", "ai-chat", "badge", "avatar", "tabs", "search", "chip", "icon-button", "menu", "loading", "empty-states"],
+        "layoutTokens": ["--inbox-list-width: 360px", "--inbox-list-min-width: 300px", "--inbox-detail-max-message-width: 600px"],
+        "interaction": "Search/filter conversations, click to load detail, respond in chat, assign/star, bulk select"
+      }
+    ],
+    "templates": [
+      {
+        "id": "dashboard-template",
+        "name": "Dashboard Template",
+        "description": "Analytics and KPI overview page with metric cards and data visualizations",
+        "patterns": ["dashboard"],
+        "components": ["card", "data-grid", "tabs", "button", "icon-button", "badge", "date-picker"],
+        "features": ["analytics-visualization", "metric-tracking", "data-export"],
+        "tokens": ["surface-default", "primary-filled-bg", "shadow-md", "space-4"]
+      },
+      {
+        "id": "conversation-inbox-template",
+        "name": "Conversation Inbox Template",
+        "description": "Conversation list and messaging interface for customer support",
+        "patterns": ["inbox"],
+        "components": ["list", "panel", "ai-chat", "badge", "avatar", "search", "tabs"],
+        "features": ["conversation-management", "ai-conversation", "real-time-messaging"],
+        "tokens": ["surface-raised", "primary-tonal-bg", "content-secondary", "space-3"]
+      },
+      {
+        "id": "analytics-workspace-template",
+        "name": "Analytics Workspace Template",
+        "description": "Advanced analytics page with data grid, charts, and filtering controls",
+        "patterns": ["dashboard"],
+        "components": ["data-grid", "card", "tabs", "button", "chip", "date-picker", "menu"],
+        "features": ["data-analysis", "advanced-filtering", "custom-reporting"],
+        "tokens": ["surface-default", "border-subtle", "content-primary", "shadow-sm"]
+      },
+      {
+        "id": "admin-console-template",
+        "name": "Admin Console Template",
+        "description": "Administrative configuration interface with navigation and content panels",
+        "patterns": ["form-builder"],
+        "components": ["nav-rail", "panel", "card", "text-field", "button", "tabs", "menu"],
+        "features": ["system-configuration", "user-management", "permission-control"],
+        "tokens": ["surface-sunken", "neutral-tonal-bg", "content-tertiary", "space-4"]
+      },
+      {
+        "id": "approval-workflow-template",
+        "name": "Approval Workflow Page",
+        "description": "Multi-step approval process with status indicators and action buttons",
+        "patterns": ["form-builder"],
+        "components": ["stepper", "card", "button", "badge", "dialog", "text-field", "tabs"],
+        "features": ["workflow-management", "approval-tracking", "status-notification"],
+        "tokens": ["success-tonal-bg", "warning-filled-bg", "danger-tonal-bg", "space-5"]
+      }
+    ],
+    "features": [
+      {
+        "id": "ai-conversation",
+        "name": "AI Conversation Management",
+        "description": "Enable conversational interactions with AI-powered responses and message history",
+        "templates": ["conversation-inbox-template"],
+        "requiredComponents": ["ai-chat", "avatar", "button"],
+        "complianceRequirements": ["data-privacy", "content-moderation", "audit-logging"],
+        "accessibilityRequirements": ["wcag-keyboard-navigation", "wcag-screen-reader"]
+      },
+      {
+        "id": "analytics-visualization",
+        "name": "Analytics Visualization",
+        "description": "Display metrics and data insights with configurable charts and KPI cards",
+        "templates": ["dashboard-template", "analytics-workspace-template"],
+        "requiredComponents": ["card", "data-grid", "loading"],
+        "complianceRequirements": ["data-security"],
+        "accessibilityRequirements": ["wcag-color-contrast-aaa", "wcag-semantic-html"]
+      },
+      {
+        "id": "conversation-management",
+        "name": "Conversation Management",
+        "description": "Organize, filter, and track customer conversations with real-time updates",
+        "templates": ["conversation-inbox-template"],
+        "requiredComponents": ["list", "badge", "search", "tabs"],
+        "complianceRequirements": ["gdpr-compliance", "data-retention"],
+        "accessibilityRequirements": ["wcag-keyboard-navigation"]
+      },
+      {
+        "id": "real-time-messaging",
+        "name": "Real-time Messaging",
+        "description": "Support live message delivery with presence indicators and typing notifications",
+        "templates": ["conversation-inbox-template"],
+        "requiredComponents": ["ai-chat", "badge", "avatar"],
+        "complianceRequirements": ["message-encryption", "audit-logging"],
+        "accessibilityRequirements": ["wcag-screen-reader"]
+      },
+      {
+        "id": "data-analysis",
+        "name": "Data Analysis and Insights",
+        "description": "Enable filtering, sorting, and exporting of large datasets with drill-down capabilities",
+        "templates": ["analytics-workspace-template"],
+        "requiredComponents": ["data-grid", "menu", "chip"],
+        "complianceRequirements": ["data-export-security"],
+        "accessibilityRequirements": ["wcag-table-structure"]
+      },
+      {
+        "id": "advanced-filtering",
+        "name": "Advanced Filtering",
+        "description": "Complex search and filter controls with saved filter presets",
+        "templates": ["analytics-workspace-template"],
+        "requiredComponents": ["text-field", "selection-controls", "chip"],
+        "complianceRequirements": [],
+        "accessibilityRequirements": ["wcag-form-labels"]
+      },
+      {
+        "id": "custom-reporting",
+        "name": "Custom Reporting",
+        "description": "Generate and export custom reports with selected metrics and date ranges",
+        "templates": ["analytics-workspace-template"],
+        "requiredComponents": ["button", "card", "date-picker"],
+        "complianceRequirements": ["data-export-security"],
+        "accessibilityRequirements": []
+      },
+      {
+        "id": "system-configuration",
+        "name": "System Configuration",
+        "description": "Administrative settings for system behavior and integration parameters",
+        "templates": ["admin-console-template"],
+        "requiredComponents": ["text-field", "button", "panel"],
+        "complianceRequirements": ["audit-logging"],
+        "accessibilityRequirements": ["wcag-form-labels"]
+      },
+      {
+        "id": "user-management",
+        "name": "User Management",
+        "description": "Create, modify, and deactivate user accounts with role assignment",
+        "templates": ["admin-console-template"],
+        "requiredComponents": ["data-grid", "button", "dialog"],
+        "complianceRequirements": ["access-control", "audit-logging"],
+        "accessibilityRequirements": ["wcag-keyboard-navigation"]
+      },
+      {
+        "id": "permission-control",
+        "name": "Permission Control",
+        "description": "Granular role-based access control configuration",
+        "templates": ["admin-console-template"],
+        "requiredComponents": ["selection-controls", "chip", "menu"],
+        "complianceRequirements": ["access-control"],
+        "accessibilityRequirements": []
+      },
+      {
+        "id": "workflow-management",
+        "name": "Workflow Management",
+        "description": "Define and execute multi-step business processes with conditional logic",
+        "templates": ["approval-workflow-template"],
+        "requiredComponents": ["stepper", "dialog", "button"],
+        "complianceRequirements": ["audit-logging"],
+        "accessibilityRequirements": ["wcag-screen-reader"]
+      },
+      {
+        "id": "approval-tracking",
+        "name": "Approval Tracking",
+        "description": "Monitor approval requests and execution status across workflows",
+        "templates": ["approval-workflow-template"],
+        "requiredComponents": ["badge", "card", "tabs"],
+        "complianceRequirements": ["audit-logging"],
+        "accessibilityRequirements": []
+      },
+      {
+        "id": "status-notification",
+        "name": "Status Notification",
+        "description": "Proactive alerts for workflow status changes and approval decisions",
+        "templates": ["approval-workflow-template"],
+        "requiredComponents": ["badge", "snackbar", "toast"],
+        "complianceRequirements": [],
+        "accessibilityRequirements": ["wcag-color-contrast-aaa"]
+      },
+      {
+        "id": "metric-tracking",
+        "name": "Metric Tracking",
+        "description": "Real-time KPI monitoring with historical trends and comparisons",
+        "templates": ["dashboard-template"],
+        "requiredComponents": ["card", "loading"],
+        "complianceRequirements": [],
+        "accessibilityRequirements": ["wcag-semantic-html"]
+      },
+      {
+        "id": "data-export",
+        "name": "Data Export",
+        "description": "Export analytics data in multiple formats (CSV, PDF, Excel)",
+        "templates": ["dashboard-template"],
+        "requiredComponents": ["button", "menu"],
+        "complianceRequirements": ["data-export-security"],
+        "accessibilityRequirements": []
+      }
+    ],
+    "accessibilityRules": [
+      {
+        "id": "wcag-color-contrast-aaa",
+        "name": "Color Contrast AAA",
+        "level": "AAA",
+        "description": "Text must have minimum 7:1 contrast ratio with background",
+        "wcagCriteria": "1.4.11",
+        "applicableComponents": ["button", "text-field", "card", "data-grid", "list"]
+      },
+      {
+        "id": "wcag-color-contrast-aa",
+        "name": "Color Contrast AA",
+        "level": "AA",
+        "description": "Text must have minimum 4.5:1 contrast ratio with background",
+        "wcagCriteria": "1.4.3",
+        "applicableComponents": ["button", "text-field", "card"]
+      },
+      {
+        "id": "wcag-keyboard-navigation",
+        "name": "Keyboard Navigation",
+        "level": "A",
+        "description": "All functionality must be accessible via keyboard without mouse",
+        "wcagCriteria": "2.1.1",
+        "applicableComponents": ["button", "menu", "tabs", "list", "data-grid", "dialog"]
+      },
+      {
+        "id": "wcag-focus-visible",
+        "name": "Focus Visible",
+        "level": "AA",
+        "description": "Keyboard focus indicator must be visible and persistent",
+        "wcagCriteria": "2.4.7",
+        "applicableComponents": ["button", "icon-button", "text-field", "tabs"]
+      },
+      {
+        "id": "wcag-screen-reader",
+        "name": "Screen Reader Support",
+        "level": "A",
+        "description": "All content must be announced correctly by screen readers with proper ARIA labels",
+        "wcagCriteria": "1.3.1",
+        "applicableComponents": ["ai-chat", "data-grid", "list", "badge", "avatar"]
+      },
+      {
+        "id": "wcag-form-labels",
+        "name": "Form Labels",
+        "level": "A",
+        "description": "All form inputs must have explicit labels with proper association",
+        "wcagCriteria": "1.3.1",
+        "applicableComponents": ["text-field", "selection-controls", "date-picker", "slider"]
+      },
+      {
+        "id": "wcag-table-structure",
+        "name": "Table Structure",
+        "level": "A",
+        "description": "Data tables must use proper semantic HTML with headers and captions",
+        "wcagCriteria": "1.3.1",
+        "applicableComponents": ["data-grid"]
+      },
+      {
+        "id": "wcag-semantic-html",
+        "name": "Semantic HTML",
+        "level": "A",
+        "description": "Use semantic HTML elements to convey meaning and structure",
+        "wcagCriteria": "1.3.1",
+        "applicableComponents": ["card", "list", "accordion", "empty-states"]
+      },
+      {
+        "id": "wcag-error-identification",
+        "name": "Error Identification and Suggestion",
+        "level": "A",
+        "description": "Errors must be identified and suggestions provided to correct them",
+        "wcagCriteria": "3.3.1",
+        "applicableComponents": ["text-field", "dialog", "form-builder"]
+      },
+      {
+        "id": "wcag-motion-animation",
+        "name": "Animation and Motion",
+        "level": "AAA",
+        "description": "Animations must respect prefers-reduced-motion preference",
+        "wcagCriteria": "2.3.3",
+        "applicableComponents": ["ai-chat", "loading", "tabs", "panel"]
+      }
+    ],
+    "complianceRules": [
+      {
+        "id": "data-privacy",
+        "name": "Data Privacy",
+        "description": "Personal data must be collected and processed with explicit consent",
+        "standard": "GDPR",
+        "applicableFeatures": ["ai-conversation", "conversation-management"],
+        "requirements": ["consent-management", "data-minimization", "purpose-limitation"]
+      },
+      {
+        "id": "gdpr-compliance",
+        "name": "GDPR Compliance",
+        "description": "Comply with EU General Data Protection Regulation",
+        "standard": "GDPR",
+        "applicableFeatures": ["conversation-management"],
+        "requirements": ["data-processing-agreement", "data-retention-policy", "right-to-be-forgotten"]
+      },
+      {
+        "id": "data-retention",
+        "name": "Data Retention Policy",
+        "description": "Implement data retention schedule with automatic deletion after retention period",
+        "standard": "GDPR",
+        "applicableFeatures": ["conversation-management"],
+        "requirements": ["retention-schedule", "deletion-mechanism", "audit-trail"]
+      },
+      {
+        "id": "content-moderation",
+        "name": "Content Moderation",
+        "description": "Monitor and filter inappropriate or harmful user-generated content",
+        "standard": "Platform-specific",
+        "applicableFeatures": ["ai-conversation"],
+        "requirements": ["automated-filtering", "manual-review-queue", "user-reporting"]
+      },
+      {
+        "id": "audit-logging",
+        "name": "Audit Logging",
+        "description": "Maintain audit trail of all user actions and system changes for compliance verification",
+        "standard": "SOC 2, ISO 27001",
+        "applicableFeatures": ["ai-conversation", "real-time-messaging", "system-configuration", "user-management", "workflow-management", "approval-tracking"],
+        "requirements": ["immutable-logs", "log-retention", "log-access-control"]
+      },
+      {
+        "id": "message-encryption",
+        "name": "Message Encryption",
+        "description": "Encrypt messages in transit (TLS) and at rest for sensitive communications",
+        "standard": "NIST",
+        "applicableFeatures": ["real-time-messaging"],
+        "requirements": ["tls-1.2-minimum", "end-to-end-encryption-option"]
+      },
+      {
+        "id": "data-security",
+        "name": "Data Security",
+        "description": "Protect sensitive data with encryption and access controls",
+        "standard": "ISO 27001",
+        "applicableFeatures": ["analytics-visualization"],
+        "requirements": ["field-level-encryption", "database-encryption", "key-management"]
+      },
+      {
+        "id": "data-export-security",
+        "name": "Data Export Security",
+        "description": "Control and audit all data exports with watermarking and access logs",
+        "standard": "DLP (Data Loss Prevention)",
+        "applicableFeatures": ["custom-reporting", "data-analysis", "data-export"],
+        "requirements": ["export-approval-workflow", "export-watermarking", "export-audit-log"]
+      },
+      {
+        "id": "access-control",
+        "name": "Access Control",
+        "description": "Implement role-based access control (RBAC) with least privilege principle",
+        "standard": "NIST",
+        "applicableFeatures": ["user-management", "permission-control"],
+        "requirements": ["rbac-implementation", "privilege-escalation-controls", "session-management"]
+      }
+    ],
+    "motionRules": [
+      {
+        "id": "hover-feedback",
+        "name": "Hover Feedback",
+        "description": "Interactive elements provide immediate visual feedback on hover",
+        "duration": "--motion-fast",
+        "easing": "--ease-standard",
+        "applicableComponents": ["button", "icon-button", "chip", "card", "menu", "list"],
+        "implementation": "state layer overlay with opacity transition"
+      },
+      {
+        "id": "focus-indicator",
+        "name": "Focus Indicator",
+        "description": "Keyboard focus is indicated with a visible ring or border",
+        "duration": "0ms",
+        "easing": "immediate",
+        "applicableComponents": ["button", "text-field", "tabs", "menu"],
+        "implementation": "2px focus ring with primary color"
+      },
+      {
+        "id": "modal-enter",
+        "name": "Modal Enter Animation",
+        "description": "Dialogs and modals fade in with scale from center",
+        "duration": "--motion-normal",
+        "easing": "--ease-decelerate",
+        "applicableComponents": ["dialog", "menu", "popover"],
+        "implementation": "opacity: 0->1, scale: 0.95->1"
+      },
+      {
+        "id": "modal-exit",
+        "name": "Modal Exit Animation",
+        "description": "Dialogs and modals scale down with fade out on close",
+        "duration": "--motion-fast",
+        "easing": "--ease-accelerate",
+        "applicableComponents": ["dialog", "menu", "popover"],
+        "implementation": "opacity: 1->0, scale: 1->0.95"
+      },
+      {
+        "id": "panel-slide",
+        "name": "Panel Slide Animation",
+        "description": "Side panels slide in from edge on open",
+        "duration": "--motion-normal",
+        "easing": "--ease-decelerate",
+        "applicableComponents": ["panel", "ai-chat"],
+        "implementation": "translate X position with 300ms duration"
+      },
+      {
+        "id": "message-appear",
+        "name": "Message Appear Animation",
+        "description": "Chat messages fade up when they appear in the list",
+        "duration": "--motion-fast",
+        "easing": "--ease-standard",
+        "applicableComponents": ["ai-chat"],
+        "implementation": "opacity: 0->1, translateY: 4px->0"
+      },
+      {
+        "id": "skeleton-load",
+        "name": "Skeleton Loading Animation",
+        "description": "Placeholder skeletons shimmer to indicate loading",
+        "duration": "1.5s infinite",
+        "easing": "--ease-standard",
+        "applicableComponents": ["loading", "data-grid", "card"],
+        "implementation": "background gradient shimmer effect"
+      },
+      {
+        "id": "badge-pulse",
+        "name": "Badge Pulse Animation",
+        "description": "Notification badges pulse subtly to draw attention",
+        "duration": "2s infinite",
+        "easing": "ease-in-out",
+        "applicableComponents": ["badge", "notification-center"],
+        "implementation": "opacity: 1->0.7->1 scale pulse"
+      },
+      {
+        "id": "list-stagger",
+        "name": "List Item Stagger",
+        "description": "List items appear sequentially with staggered animations",
+        "duration": "--motion-fast",
+        "easing": "--ease-standard",
+        "applicableComponents": ["list", "data-grid", "search"],
+        "implementation": "nth-child based animation-delay"
+      },
+      {
+        "id": "drag-feedback",
+        "name": "Drag Feedback",
+        "description": "Dragged elements scale up and show shadow during drag",
+        "duration": "0ms",
+        "easing": "immediate",
+        "applicableComponents": ["card", "list", "kanban"],
+        "implementation": "scale: 1.02, shadow-lg, opacity: 0.95"
+      },
+      {
+        "id": "success-checkmark",
+        "name": "Success Checkmark Animation",
+        "description": "Checkmark appears with draw animation on success",
+        "duration": "600ms",
+        "easing": "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+        "applicableComponents": ["dialog", "snackbar", "empty-states"],
+        "implementation": "SVG stroke dasharray animation with bounce easing"
+      },
+      {
+        "id": "error-shake",
+        "name": "Error Shake Animation",
+        "description": "Form fields shake on validation error",
+        "duration": "400ms",
+        "easing": "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+        "applicableComponents": ["text-field", "dialog"],
+        "implementation": "translateX oscillation 3 times"
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "primary-filled-bg",
+      "context": "background color for filled emphasis variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "primary-filled-fg",
+      "context": "text color for filled emphasis variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "primary-tonal-bg",
+      "context": "background color for tonal emphasis variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "primary-outline-border",
+      "context": "inset box-shadow border for outlined variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "primary-ghost-fg",
+      "context": "text color for ghost emphasis variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "danger-filled-bg",
+      "context": "background color for danger color role"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "motion-fast",
+      "context": "duration for state transition animations"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "radius-xs",
+      "context": "corner radius scales with size"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "button",
+      "target": "state-hover",
+      "context": "state layer opacity on hover"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "icon-button",
+      "target": "primary-tonal-bg",
+      "context": "background for selected toggle state"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "icon-button",
+      "target": "motion-fast",
+      "context": "transition duration for state changes"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "badge",
+      "target": "primary-filled-bg",
+      "context": "background color for primary badge role"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "badge",
+      "target": "primary-filled-fg",
+      "context": "text color for primary badge role"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "badge",
+      "target": "radius-full",
+      "context": "pill shape applied to all badges"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "chip",
+      "target": "primary-tonal-bg",
+      "context": "background for tonal emphasis variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "chip",
+      "target": "primary-outline-border",
+      "context": "inset shadow border for outlined variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "avatar",
+      "target": "primary-tonal-bg",
+      "context": "background for initials display"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "avatar",
+      "target": "success-filled-bg",
+      "context": "background color for online status dot"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "avatar",
+      "target": "radius-full",
+      "context": "circular shape for avatar"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "card",
+      "target": "surface-raised",
+      "context": "background color for elevated surface variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "card",
+      "target": "shadow-md",
+      "context": "elevation shadow for elevated variant on hover"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "card",
+      "target": "radius-lg",
+      "context": "corner radius for default density"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "card",
+      "target": "content-primary",
+      "context": "text color for card headings"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "card",
+      "target": "space-4",
+      "context": "padding for default density"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "panel",
+      "target": "surface-raised",
+      "context": "background color for elevated panels"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "panel",
+      "target": "shadow-lg",
+      "context": "elevation shadow for panel"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "panel",
+      "target": "motion-normal",
+      "context": "duration for open/close animations"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "dialog",
+      "target": "surface-raised",
+      "context": "background color for dialog container"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "dialog",
+      "target": "surface-overlay",
+      "context": "semi-transparent backdrop overlay"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "dialog",
+      "target": "shadow-xl",
+      "context": "elevation shadow for modal prominence"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "menu",
+      "target": "surface-raised",
+      "context": "background color for dropdown menu"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "menu",
+      "target": "shadow-lg",
+      "context": "elevation shadow for menu popup"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "menu",
+      "target": "neutral-tonal-bg",
+      "context": "background for menu item on hover"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "menu",
+      "target": "primary-tonal-bg",
+      "context": "background for selected menu item"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "text-field",
+      "target": "surface-default",
+      "context": "background for outlined text field variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "text-field",
+      "target": "surface-sunken",
+      "context": "background for filled text field variant"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "text-field",
+      "target": "border-subtle",
+      "context": "default input border color"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "text-field",
+      "target": "primary-filled-bg",
+      "context": "color for focus indicator"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "text-field",
+      "target": "danger-outline-border",
+      "context": "border color for error state"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "text-field",
+      "target": "content-tertiary",
+      "context": "color for placeholder text"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "tabs",
+      "target": "primary-ghost-fg",
+      "context": "text color for active tab"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "tabs",
+      "target": "primary-filled-bg",
+      "context": "color for active indicator line"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "tabs",
+      "target": "content-tertiary",
+      "context": "text color for inactive tabs"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "list",
+      "target": "surface-default",
+      "context": "background color for list container"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "list",
+      "target": "surface-raised",
+      "context": "background color for selected list item"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "list",
+      "target": "primary-filled-bg",
+      "context": "color for active indicator"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "list",
+      "target": "content-primary",
+      "context": "text color for primary list item text"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "list",
+      "target": "border-subtle",
+      "context": "color for list item dividers"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "data-grid",
+      "target": "surface-default",
+      "context": "background color for table body"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "data-grid",
+      "target": "surface-sunken",
+      "context": "background color for header row"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "data-grid",
+      "target": "border-subtle",
+      "context": "color for cell borders and gridlines"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "data-grid",
+      "target": "primary-tonal-bg",
+      "context": "background color for selected rows"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "data-grid",
+      "target": "shadow-sm",
+      "context": "shadow for sticky columns"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "ai-chat",
+      "target": "surface-default",
+      "context": "background color for chat container"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "ai-chat",
+      "target": "surface-raised",
+      "context": "background color for assistant message bubble"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "ai-chat",
+      "target": "primary-tonal-bg",
+      "context": "background color for user message bubble"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "ai-chat",
+      "target": "radius-lg",
+      "context": "corner radius for message bubbles"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "ai-chat",
+      "target": "space-3",
+      "context": "gap between messages"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "search",
+      "target": "surface-default",
+      "context": "background color for search bar"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "search",
+      "target": "surface-raised",
+      "context": "background color for suggestions dropdown"
+    },
+    {
+      "type": "component_uses_token",
+      "source": "search",
+      "target": "primary-filled-bg",
+      "context": "highlight color for matched text"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "card",
+      "target": "button",
+      "context": "Card footer may contain action buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "card",
+      "target": "badge",
+      "context": "Card header can display badges"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "card",
+      "target": "avatar",
+      "context": "Card profile slot uses avatar component"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "dialog",
+      "target": "button",
+      "context": "Dialog footer contains action buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "menu",
+      "target": "divider",
+      "context": "Menu can use dividers to separate items"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "menu",
+      "target": "chip",
+      "context": "Menu items can display chip tags"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "text-field",
+      "target": "icon-button",
+      "context": "Text field can have trailing icon button for actions"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "text-field",
+      "target": "badge",
+      "context": "Text field displays badge in error state"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "date-picker",
+      "target": "text-field",
+      "context": "Date picker input is built from text field"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "date-picker",
+      "target": "button",
+      "context": "Date picker contains navigation buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "tag-input",
+      "target": "chip",
+      "context": "Tag input displays tags as chips"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "tag-input",
+      "target": "text-field",
+      "context": "Tag input includes text input for new tags"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "tabs",
+      "target": "badge",
+      "context": "Tab can display badge count"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "nav-rail",
+      "target": "icon-button",
+      "context": "Nav rail is composed of icon buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "nav-rail",
+      "target": "badge",
+      "context": "Nav rail items can display badges"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "bottom-nav",
+      "target": "icon-button",
+      "context": "Bottom nav items are icon buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "pagination",
+      "target": "button",
+      "context": "Pagination controls are built from buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "pagination",
+      "target": "text-field",
+      "context": "Pagination includes optional jump-to input"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "stepper",
+      "target": "button",
+      "context": "Stepper action buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "list",
+      "target": "avatar",
+      "context": "Rich list items use avatars"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "list",
+      "target": "badge",
+      "context": "List items can display badges"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "list",
+      "target": "icon-button",
+      "context": "List items have trailing action buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "list",
+      "target": "divider",
+      "context": "List uses dividers to separate items"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "list",
+      "target": "chip",
+      "context": "List items can contain chip tags"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "button",
+      "context": "Data grid contains sorting and action buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "icon-button",
+      "context": "Data grid inline row action buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "badge",
+      "context": "Data grid cells can display badges"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "selection-controls",
+      "context": "Data grid multi-select uses checkboxes"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "menu",
+      "context": "Data grid column menus and row action menus"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "pagination",
+      "context": "Data grid includes pagination controls"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "data-grid",
+      "target": "text-field",
+      "context": "Data grid cell filters use text inputs"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "button",
+      "context": "Send button and action buttons in chat"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "icon-button",
+      "context": "Attachment and menu buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "avatar",
+      "context": "Message avatars for user/assistant identity"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "chip",
+      "context": "Suggested actions displayed as chips"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "text-field",
+      "context": "Message input area"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "menu",
+      "context": "Message actions menu"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "loading",
+      "context": "Typing indicator loader"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "ai-chat",
+      "target": "panel",
+      "context": "Chat can be rendered in panel mode"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "command-palette",
+      "target": "text-field",
+      "context": "Command search input"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "command-palette",
+      "target": "menu",
+      "context": "Command results displayed as menu"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "command-palette",
+      "target": "loading",
+      "context": "Command search loading state"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "notification-center",
+      "target": "list",
+      "context": "Notifications displayed as list"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "notification-center",
+      "target": "badge",
+      "context": "Unread notification count badge"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "notification-center",
+      "target": "button",
+      "context": "Action buttons for notification management"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "notification-center",
+      "target": "menu",
+      "context": "Bulk actions menu"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "notification-center",
+      "target": "tabs",
+      "context": "Filter tabs for notification categories"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "search",
+      "target": "text-field",
+      "context": "Search input field"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "search",
+      "target": "icon-button",
+      "context": "Search clear and advanced filter buttons"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "search",
+      "target": "chip",
+      "context": "Active filter chips"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "search",
+      "target": "menu",
+      "context": "Search suggestions dropdown"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "search",
+      "target": "loading",
+      "context": "Search results loading indicator"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "search",
+      "target": "list",
+      "context": "Search results display"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "empty-states",
+      "target": "button",
+      "context": "Primary CTA button for empty state action"
+    },
+    {
+      "type": "component_depends_on",
+      "source": "empty-states",
+      "target": "avatar",
+      "context": "Optional avatar in empty state illustration"
+    },
+    {
+      "type": "pattern_used_in_template",
+      "source": "kanban",
+      "target": "dashboard-template",
+      "context": "Task management widget in analytics dashboard"
+    },
+    {
+      "type": "pattern_used_in_template",
+      "source": "inbox",
+      "target": "conversation-inbox-template",
+      "context": "Core pattern for conversation management"
+    },
+    {
+      "type": "pattern_used_in_template",
+      "source": "dashboard",
+      "target": "dashboard-template",
+      "context": "Primary pattern for analytics and KPI display"
+    },
+    {
+      "type": "pattern_used_in_template",
+      "source": "dashboard",
+      "target": "analytics-workspace-template",
+      "context": "Layout pattern for analytics workspace"
+    },
+    {
+      "type": "pattern_used_in_template",
+      "source": "form-builder",
+      "target": "admin-console-template",
+      "context": "Form building in admin configuration"
+    },
+    {
+      "type": "pattern_used_in_template",
+      "source": "form-builder",
+      "target": "approval-workflow-template",
+      "context": "Workflow step form configuration"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "kanban",
+      "target": "card",
+      "context": "Cards are primary elements in kanban columns"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "kanban",
+      "target": "badge",
+      "context": "Badges display item counts and status"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "kanban",
+      "target": "avatar",
+      "context": "Avatars show item assignees"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "kanban",
+      "target": "chip",
+      "context": "Chips show priority levels"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "flow-canvas",
+      "target": "panel",
+      "context": "Properties panel for node configuration"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "flow-canvas",
+      "target": "button",
+      "context": "Toolbar buttons for canvas operations"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "flow-canvas",
+      "target": "tooltip",
+      "context": "Port and node tooltips"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "flow-canvas",
+      "target": "badge",
+      "context": "Node status indicators"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "form-builder",
+      "target": "text-field",
+      "context": "All input types available for form"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "form-builder",
+      "target": "selection-controls",
+      "context": "Checkbox and radio inputs for forms"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "form-builder",
+      "target": "card",
+      "context": "Field containers in form preview"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "web-chat-widget",
+      "target": "ai-chat",
+      "context": "Core chat component within widget"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "web-chat-widget",
+      "target": "button",
+      "context": "Launcher button and send button"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "web-chat-widget",
+      "target": "avatar",
+      "context": "Assistant avatar in widget header"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "web-chat-widget",
+      "target": "badge",
+      "context": "Unread message count on launcher"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "dashboard",
+      "target": "card",
+      "context": "KPI cards and widget containers"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "dashboard",
+      "target": "data-grid",
+      "context": "Data table widgets"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "dashboard",
+      "target": "tabs",
+      "context": "Tab-based widget grouping"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "dashboard",
+      "target": "loading",
+      "context": "Skeleton loaders while data loads"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "dashboard",
+      "target": "empty-states",
+      "context": "No data fallback displays"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "inbox",
+      "target": "list",
+      "context": "Conversation list display"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "inbox",
+      "target": "ai-chat",
+      "context": "Conversation detail view"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "inbox",
+      "target": "badge",
+      "context": "Unread count badges on items"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "inbox",
+      "target": "avatar",
+      "context": "Contact avatars in list and header"
+    },
+    {
+      "type": "pattern_participates_in",
+      "source": "inbox",
+      "target": "search",
+      "context": "Conversation search and filtering"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "dashboard-template",
+      "target": "metric-tracking",
+      "context": "Dashboard displays real-time KPI metrics"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "dashboard-template",
+      "target": "data-export",
+      "context": "Export dashboard data functionality"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "conversation-inbox-template",
+      "target": "ai-conversation",
+      "context": "Core AI conversation capability"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "conversation-inbox-template",
+      "target": "conversation-management",
+      "context": "Organize and filter conversations"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "conversation-inbox-template",
+      "target": "real-time-messaging",
+      "context": "Live message delivery and updates"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "analytics-workspace-template",
+      "target": "data-analysis",
+      "context": "Advanced data exploration and drill-down"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "analytics-workspace-template",
+      "target": "advanced-filtering",
+      "context": "Complex filter and query building"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "analytics-workspace-template",
+      "target": "custom-reporting",
+      "context": "Generate and export custom reports"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "admin-console-template",
+      "target": "system-configuration",
+      "context": "System settings and parameters"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "admin-console-template",
+      "target": "user-management",
+      "context": "User account and profile management"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "admin-console-template",
+      "target": "permission-control",
+      "context": "Role-based access control configuration"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "approval-workflow-template",
+      "target": "workflow-management",
+      "context": "Multi-step approval process"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "approval-workflow-template",
+      "target": "approval-tracking",
+      "context": "Monitor approval request status"
+    },
+    {
+      "type": "template_supports_feature",
+      "source": "approval-workflow-template",
+      "target": "status-notification",
+      "context": "Alerts for approval status changes"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "ai-conversation",
+      "target": "data-privacy",
+      "context": "AI responses must respect user privacy"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "ai-conversation",
+      "target": "content-moderation",
+      "context": "Monitor and filter inappropriate content"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "ai-conversation",
+      "target": "audit-logging",
+      "context": "Log all conversation interactions"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "conversation-management",
+      "target": "gdpr-compliance",
+      "context": "GDPR compliance for conversation data"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "conversation-management",
+      "target": "data-retention",
+      "context": "Implement retention policy for messages"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "conversation-management",
+      "target": "audit-logging",
+      "context": "Audit trail of message activities"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "real-time-messaging",
+      "target": "message-encryption",
+      "context": "Encrypt messages in transit and at rest"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "real-time-messaging",
+      "target": "audit-logging",
+      "context": "Log message delivery and receipt"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "analytics-visualization",
+      "target": "data-security",
+      "context": "Protect sensitive analytics data"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "data-analysis",
+      "target": "data-export-security",
+      "context": "Control analysis data exports"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "custom-reporting",
+      "target": "data-export-security",
+      "context": "Secure report generation and export"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "user-management",
+      "target": "access-control",
+      "context": "RBAC for user account operations"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "user-management",
+      "target": "audit-logging",
+      "context": "Log user account changes"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "permission-control",
+      "target": "access-control",
+      "context": "Implement least privilege principle"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "workflow-management",
+      "target": "audit-logging",
+      "context": "Track workflow execution and decisions"
+    },
+    {
+      "type": "feature_requires_compliance",
+      "source": "approval-tracking",
+      "target": "audit-logging",
+      "context": "Maintain approval decision audit trail"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "button",
+      "target": "wcag-keyboard-navigation",
+      "context": "Button must be keyboard accessible with Tab focus"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "button",
+      "target": "wcag-focus-visible",
+      "context": "Button focus indicator must be visible"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "button",
+      "target": "wcag-color-contrast-aaa",
+      "context": "Button text must have AAA contrast ratio"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "icon-button",
+      "target": "wcag-screen-reader",
+      "context": "Icon button requires aria-label"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "icon-button",
+      "target": "wcag-focus-visible",
+      "context": "Icon button focus ring must be visible"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "text-field",
+      "target": "wcag-form-labels",
+      "context": "Text field must have associated label"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "text-field",
+      "target": "wcag-keyboard-navigation",
+      "context": "Text field must be keyboard focusable"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "text-field",
+      "target": "wcag-error-identification",
+      "context": "Error messages must be associated with input"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "selection-controls",
+      "target": "wcag-form-labels",
+      "context": "Checkboxes and radios need labels"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "selection-controls",
+      "target": "wcag-keyboard-navigation",
+      "context": "Selection controls keyboard navigable"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "menu",
+      "target": "wcag-keyboard-navigation",
+      "context": "Menu items navigable via arrow keys"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "data-grid",
+      "target": "wcag-table-structure",
+      "context": "Data grid must use proper table semantics"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "data-grid",
+      "target": "wcag-keyboard-navigation",
+      "context": "Grid cells must be keyboard navigable"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "list",
+      "target": "wcag-semantic-html",
+      "context": "List must use ul/ol/li semantic elements"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "ai-chat",
+      "target": "wcag-screen-reader",
+      "context": "Chat messages must be announced to screen readers"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "ai-chat",
+      "target": "wcag-keyboard-navigation",
+      "context": "Chat input and controls keyboard accessible"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "card",
+      "target": "wcag-semantic-html",
+      "context": "Card content uses semantic structure"
+    },
+    {
+      "type": "component_requires_accessibility",
+      "source": "dialog",
+      "target": "wcag-keyboard-navigation",
+      "context": "Dialog has focus trap and Escape support"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "button",
+      "target": "hover-feedback",
+      "context": "State layer animates on hover"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "button",
+      "target": "focus-indicator",
+      "context": "Focus ring appears on keyboard focus"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "card",
+      "target": "hover-feedback",
+      "context": "Interactive cards elevate on hover"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "dialog",
+      "target": "modal-enter",
+      "context": "Dialog fades in with scale animation"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "dialog",
+      "target": "modal-exit",
+      "context": "Dialog scales down and fades out on close"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "menu",
+      "target": "modal-enter",
+      "context": "Menu appears with fade in animation"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "panel",
+      "target": "panel-slide",
+      "context": "Panel slides in from side edge"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "ai-chat",
+      "target": "message-appear",
+      "context": "Messages fade up when they appear"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "loading",
+      "target": "skeleton-load",
+      "context": "Skeleton placeholders shimmer during load"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "list",
+      "target": "list-stagger",
+      "context": "List items appear with staggered animation"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "badge",
+      "target": "badge-pulse",
+      "context": "Notification badges pulse subtly"
+    },
+    {
+      "type": "component_uses_motion",
+      "source": "text-field",
+      "target": "error-shake",
+      "context": "Field shakes on validation error"
+    }
+  ],
+  "stats": {
+    "totalComponents": 37,
+    "totalPatterns": 6,
+    "totalTemplates": 5,
+    "totalFeatures": 15,
+    "totalAccessibilityRules": 10,
+    "totalComplianceRules": 9,
+    "totalMotionRules": 12,
+    "totalTokens": 60,
+    "totalRelationships": 220,
+    "relationshipTypes": {
+      "component_uses_token": 45,
+      "component_depends_on": 67,
+      "pattern_participates_in": 42,
+      "pattern_used_in_template": 9,
+      "template_supports_feature": 15,
+      "feature_requires_compliance": 14,
+      "component_requires_accessibility": 22,
+      "component_uses_motion": 12
+    }
+  }
+}
