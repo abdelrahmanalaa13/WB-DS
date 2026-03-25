@@ -11,16 +11,45 @@
 - **Name:** Grand Master
 - **Email:** mohamed.mostafa@widebot.net
 
+## Versioning Convention
+
+Use semantic versioning: vMAJOR.MINOR.PATCH
+
+- MAJOR: breaking changes to tokens, component schemas, or knowledge graph structure
+- MINOR: new components, patterns, templates, or features added
+- PATCH: fixes, documentation updates, token adjustments, small refinements
+
+Commit message format:
+```
+[vX.Y.Z] Short description of what changed
+
+- Bullet list of specific changes
+```
+
+Examples:
+```
+[v1.1.0] Add notification-center and command-palette components
+[v1.0.1] Fix button token mapping for Hulul dark theme
+[v2.0.0] Restructure token architecture to flat namespace
+```
+
+Rules:
+- Never reuse a version number
+- Never skip versions without explanation
+- Always tag the version in the commit message
+- Keep a running VERSION file at the repo root tracking the current version
+- Before committing, check the last version used in git log to determine the next one
+
 ## Release Workflow
 
 After every approved version, release, or significant batch of changes:
 
-1. Ask the user: "Ready to sync and push to GitHub?"
-2. On approval, sync all files to the local repo clone
-3. Commit with a clear message describing what changed
-4. Push to origin/main
+1. Determine the correct next version based on the type of changes (major/minor/patch)
+2. Summarize what changed and present the proposed version number to the user
+3. Ask the user: "Ready to sync and push vX.Y.Z to GitHub?"
+4. On approval, update the VERSION file, sync all files, commit with the versioned message, and push
 
-Never push without explicit user approval. Always confirm what will be included in the commit before pushing.
+Never push without explicit user approval. Always confirm the version number and what will be included in the commit before pushing.
 
 ## Push Procedure
 
