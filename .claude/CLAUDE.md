@@ -61,8 +61,10 @@ Never push without explicit user approval. Always confirm the version number and
 ## Push Procedure
 
 ```bash
-cd /sessions/jolly-friendly-mendel/wb-ds-repo
-rsync -a --exclude='.git' --exclude='.DS_Store' /sessions/jolly-friendly-mendel/mnt/erp-ds-builder/ .
+# Clone if not already cloned
+git clone https://github.com/abdelrahmanalaa13/WB-DS.git wb-ds-repo 2>/dev/null || true
+cd wb-ds-repo
+rsync -a --delete --exclude='.git' --exclude='.DS_Store' <workspace-folder>/ .
 git add -A
 git -c user.name="Grand Master" -c user.email="mohamed.mostafa@widebot.net" commit -m "<message>"
 git push origin main

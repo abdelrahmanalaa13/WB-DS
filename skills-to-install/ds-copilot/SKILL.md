@@ -74,7 +74,7 @@ When replacing a component: identify replacement, document migration path, annou
 
 ## U1-U19 Enforcement Protocol
 
-Reference: /sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS_UNIVERSAL_CHECKLIST.md
+Reference: DS_UNIVERSAL_CHECKLIST.md (in repo root)
 
 Run through ALL 19 rules during construction, not after. For every component implementation:
 
@@ -202,16 +202,18 @@ Validate graph consistency: all referenced components exist in COMPONENT_ROADMAP
 ## Key File References
 
 **This agent reads and writes:**
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ds-library.html` - Implementation source
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS_UNIVERSAL_CHECKLIST.md` - Build rules
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS_LEARNING_LOOP.md` - Learned patterns
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS-COMPONENTS/COMPONENT_ROADMAP.md` - Registry
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-component-registry.json` - Machine-readable registry
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-knowledge-graph.json` - Relationship graph
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-interaction-contracts.json` - Interaction models
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-motion-system.json` - Animation specs
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-mobile-touch-model.json` - Mobile behavior
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-page-templates.json` - Page layouts
+- `ds-library.html` - Implementation source (single source of truth)
+- `DS_UNIVERSAL_CHECKLIST.md` - Build rules (U1-U19 governance)
+- `DS_LEARNING_LOOP.md` - Learned patterns and fixes
+- `DS-COMPONENTS/COMPONENT_ROADMAP.md` - Component registry
+- `ai-component-registry.json` - Machine-readable component registry
+- `ai-knowledge-graph.json` - Relationship graph
+- `ai-interaction-contracts.json` - Interaction models
+- `ai-motion-system.json` - Animation specs
+- `ai-mobile-touch-model.json` - Mobile behavior
+- `ai-generative-ui-registry.json` - Generative UI contracts
+- `ai-governance-lifecycle.json` - Governance lifecycle phases
+- `ai-responsive-system.json` - Responsive behavior specs
 
 ## How to Invoke This Skill
 

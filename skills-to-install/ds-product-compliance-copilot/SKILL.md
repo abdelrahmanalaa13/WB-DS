@@ -129,7 +129,7 @@ This agent participates in ai-governance-lifecycle.json phases:
 
 ## Key File References
 
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/DS_UNIVERSAL_CHECKLIST.md` - U1-U19 rules
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-component-registry.json` - Component compliance metadata
-- `/sessions/modest-zealous-maxwell/mnt/erp-ds-builder/ai-governance-lifecycle.json` - Lifecycle phases
+- `DS_UNIVERSAL_CHECKLIST.md` - U1-U19 governance rules
+- `ai-component-registry.json` - Component compliance metadata
+- `ai-governance-lifecycle.json` - Lifecycle phases
 - WCAG 2.1 Level AAA and Level AA specifications
