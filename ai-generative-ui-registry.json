@@ -1,0 +1,677 @@
+{
+  "$schema": "ai-generative-ui-registry/v1",
+  "generatedFrom": "ai-component-registry.json",
+  "generatedAt": "2026-03-26",
+  "description": "Maps agent UI proposals to DS components. Agent says WHAT, DS decides HOW. Following AG-UI pattern where agents propose intent+data, frontend decides rendering via DS component library.",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "showConfirmation",
+      "description": "Display a confirmation dialog to the user for critical actions",
+      "proposedComponent": "ds-dialog",
+      "requiredData": {
+        "title": { "type": "string", "required": true, "description": "Dialog title" },
+        "message": { "type": "string", "required": true, "description": "Confirmation message" },
+        "confirmLabel": { "type": "string", "default": "Confirm", "description": "Confirmation button text" },
+        "cancelLabel": { "type": "string", "default": "Cancel", "description": "Cancel button text" },
+        "severity": { "type": "string", "enum": ["info", "warning", "danger"], "default": "info", "description": "Dialog severity level" }
+      },
+      "outputSchema": {
+        "confirmed": { "type": "boolean", "description": "Whether user confirmed" },
+        "timestamp": { "type": "string", "format": "iso8601", "description": "Confirmation timestamp" }
+      },
+      "interruptRequired": true,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showNotification",
+      "description": "Display a transient notification to the user",
+      "proposedComponent": "ds-toast",
+      "requiredData": {
+        "message": { "type": "string", "required": true, "description": "Notification message" },
+        "severity": { "type": "string", "enum": ["info", "success", "warning", "error"], "default": "info", "description": "Notification type" },
+        "duration": { "type": "number", "default": 4000, "description": "Display duration in milliseconds" },
+        "action": { "type": "string", "description": "Optional action button label" }
+      },
+      "outputSchema": {
+        "dismissed": { "type": "boolean" },
+        "actionClicked": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "iso8601" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showAlert",
+      "description": "Display a persistent alert message to the user",
+      "proposedComponent": "ds-alert",
+      "requiredData": {
+        "title": { "type": "string", "description": "Alert title" },
+        "message": { "type": "string", "required": true, "description": "Alert content" },
+        "severity": { "type": "string", "enum": ["info", "success", "warning", "error"], "default": "info", "description": "Alert severity" },
+        "dismissible": { "type": "boolean", "default": true, "description": "Allow user to dismiss" }
+      },
+      "outputSchema": {
+        "dismissed": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showDataTable",
+      "description": "Display structured data in an interactive table with sorting and pagination",
+      "proposedComponent": "ds-data-grid",
+      "requiredData": {
+        "columns": { "type": "array", "required": true, "description": "Column definitions with name, label, type" },
+        "rows": { "type": "array", "required": true, "description": "Table data rows" },
+        "title": { "type": "string", "description": "Table title" },
+        "selectable": { "type": "boolean", "default": false, "description": "Enable row selection" },
+        "sortable": { "type": "boolean", "default": true, "description": "Enable column sorting" },
+        "filterable": { "type": "boolean", "default": true, "description": "Enable column filtering" },
+        "pageSize": { "type": "number", "default": 10, "description": "Rows per page" }
+      },
+      "outputSchema": {
+        "selectedRows": { "type": "array", "description": "Selected row indices" },
+        "sortedBy": { "type": "string", "description": "Column sorted by" },
+        "sortOrder": { "type": "string", "enum": ["asc", "desc"] },
+        "currentPage": { "type": "number" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showList",
+      "description": "Display a list of items with actions and selection support",
+      "proposedComponent": "ds-list",
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "List items with label, description, metadata" },
+        "title": { "type": "string", "description": "List title" },
+        "selectable": { "type": "boolean", "default": false, "description": "Enable item selection" },
+        "dense": { "type": "boolean", "default": false, "description": "Compact list layout" },
+        "onItemAction": { "type": "string", "description": "Action to trigger on item click" }
+      },
+      "outputSchema": {
+        "selectedItems": { "type": "array", "description": "Selected item indices or IDs" },
+        "actionTriggered": { "type": "string", "description": "Action name triggered" },
+        "actionTarget": { "type": "string", "description": "Item ID that triggered action" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showProgress",
+      "description": "Display loading state, progress bar, or skeleton placeholder",
+      "proposedComponent": ["ds-loading", "ds-pagination"],
+      "requiredData": {
+        "type": { "type": "string", "enum": ["linear", "circular", "skeleton", "indeterminate"], "default": "indeterminate", "description": "Progress type" },
+        "value": { "type": "number", "minimum": 0, "maximum": 100, "description": "Progress percentage (0-100)" },
+        "message": { "type": "string", "description": "Status message" },
+        "variant": { "type": "string", "enum": ["primary", "success", "warning", "danger"], "default": "primary" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showForm",
+      "description": "Display a form with multiple input fields",
+      "proposedComponent": ["ds-text-field", "ds-selection-controls", "ds-date-picker", "ds-tag-input", "ds-button"],
+      "requiredData": {
+        "fields": { "type": "array", "required": true, "description": "Form field definitions" },
+        "title": { "type": "string", "description": "Form title" },
+        "submitLabel": { "type": "string", "default": "Submit", "description": "Submit button label" },
+        "layout": { "type": "string", "enum": ["vertical", "horizontal", "grid"], "default": "vertical" },
+        "validation": { "type": "object", "description": "Field validation rules" }
+      },
+      "outputSchema": {
+        "formData": { "type": "object", "description": "Submitted form values" },
+        "validationErrors": { "type": "object", "description": "Field-level validation errors" },
+        "submitted": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "iso8601" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showSearchResults",
+      "description": "Display search results in a list with filters and refinement options",
+      "proposedComponent": ["ds-list", "ds-search", "ds-surface"],
+      "requiredData": {
+        "results": { "type": "array", "required": true, "description": "Search result items" },
+        "query": { "type": "string", "required": true, "description": "Original search query" },
+        "totalResults": { "type": "number", "description": "Total matching results" },
+        "filters": { "type": "array", "description": "Available filter options" },
+        "sortOptions": { "type": "array", "description": "Available sort options" }
+      },
+      "outputSchema": {
+        "selectedResult": { "type": "string", "description": "Selected result ID" },
+        "appliedFilters": { "type": "array" },
+        "sortBy": { "type": "string" },
+        "refinedQuery": { "type": "string" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showConversation",
+      "description": "Display an AI chat conversation with message history and input",
+      "proposedComponent": ["ds-ai-chat", "ds-text-field"],
+      "requiredData": {
+        "messages": { "type": "array", "required": true, "description": "Chat message history with role, content, timestamp" },
+        "title": { "type": "string", "description": "Conversation title" },
+        "allowInput": { "type": "boolean", "default": true, "description": "Enable user input" },
+        "placeholder": { "type": "string", "default": "Type a message...", "description": "Input placeholder text" }
+      },
+      "outputSchema": {
+        "userMessage": { "type": "string", "description": "User message sent" },
+        "timestamp": { "type": "string", "format": "iso8601" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showActivity",
+      "description": "Display activity feed or action history",
+      "proposedComponent": "ds-timeline",
+      "requiredData": {
+        "activities": { "type": "array", "required": true, "description": "Activity items with timestamp, action, actor, description" },
+        "title": { "type": "string", "description": "Activity feed title" },
+        "grouped": { "type": "boolean", "default": false, "description": "Group by date/time" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showTimeline",
+      "description": "Display a timeline of events or workflow steps",
+      "proposedComponent": "ds-timeline",
+      "requiredData": {
+        "events": { "type": "array", "required": true, "description": "Timeline events with title, description, timestamp, status" },
+        "title": { "type": "string", "description": "Timeline title" },
+        "orientation": { "type": "string", "enum": ["vertical", "horizontal"], "default": "vertical" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showStats",
+      "description": "Display key metrics and statistics in card format",
+      "proposedComponent": ["ds-card", "ds-badge"],
+      "requiredData": {
+        "stats": { "type": "array", "required": true, "description": "Stat cards with label, value, unit, trend" },
+        "title": { "type": "string", "description": "Stats section title" },
+        "layout": { "type": "string", "enum": ["grid", "flex"], "default": "grid" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showNavigation",
+      "description": "Display breadcrumb navigation or tab navigation",
+      "proposedComponent": ["ds-breadcrumb", "ds-tabs"],
+      "requiredData": {
+        "type": { "type": "string", "enum": ["breadcrumb", "tabs"], "required": true, "description": "Navigation type" },
+        "items": { "type": "array", "required": true, "description": "Navigation items with label, id, active state" }
+      },
+      "outputSchema": {
+        "selectedItem": { "type": "string", "description": "Selected navigation item ID" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showMenu",
+      "description": "Display a command palette or action menu",
+      "proposedComponent": "ds-command-palette",
+      "requiredData": {
+        "commands": { "type": "array", "required": true, "description": "Menu items with label, description, id, icon" },
+        "searchable": { "type": "boolean", "default": true, "description": "Enable search/filter" },
+        "title": { "type": "string", "description": "Menu title or placeholder" }
+      },
+      "outputSchema": {
+        "selectedCommand": { "type": "string", "description": "Selected command ID" },
+        "timestamp": { "type": "string", "format": "iso8601" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showFileUpload",
+      "description": "Display file upload interface with drag-drop support",
+      "proposedComponent": "ds-file-upload",
+      "requiredData": {
+        "accept": { "type": "array", "description": "Accepted file types (MIME types or extensions)" },
+        "multiple": { "type": "boolean", "default": false, "description": "Allow multiple file upload" },
+        "maxSize": { "type": "number", "description": "Max file size in bytes" },
+        "description": { "type": "string", "description": "Upload instructions" }
+      },
+      "outputSchema": {
+        "files": { "type": "array", "description": "Uploaded files with name, size, type, uploadId" },
+        "timestamp": { "type": "string", "format": "iso8601" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showEmptyState",
+      "description": "Display empty state placeholder when no data available",
+      "proposedComponent": "ds-empty-states",
+      "requiredData": {
+        "title": { "type": "string", "required": true, "description": "Empty state title" },
+        "description": { "type": "string", "description": "Empty state description" },
+        "icon": { "type": "string", "description": "Icon name or SVG" },
+        "action": { "type": "string", "description": "Call-to-action button label" },
+        "actionHref": { "type": "string", "description": "Action navigation target" }
+      },
+      "outputSchema": {
+        "actionClicked": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showApprovalWorkflow",
+      "description": "Display multi-step approval workflow with actions and notes",
+      "proposedComponent": ["ds-stepper", "ds-dialog", "ds-text-field"],
+      "requiredData": {
+        "steps": { "type": "array", "required": true, "description": "Workflow steps with title, description, status" },
+        "currentStep": { "type": "number", "required": true, "description": "Current step index" },
+        "allowReject": { "type": "boolean", "default": true, "description": "Allow rejection" },
+        "requireNotes": { "type": "boolean", "default": false, "description": "Require approval notes" }
+      },
+      "outputSchema": {
+        "action": { "type": "string", "enum": ["approve", "reject", "comment"], "description": "Workflow action taken" },
+        "notes": { "type": "string", "description": "Approval notes or rejection reason" },
+        "timestamp": { "type": "string", "format": "iso8601" }
+      },
+      "interruptRequired": true,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showCodeBlock",
+      "description": "Display syntax-highlighted code snippet",
+      "proposedComponent": "ds-card",
+      "requiredData": {
+        "code": { "type": "string", "required": true, "description": "Code content" },
+        "language": { "type": "string", "default": "plaintext", "description": "Programming language for syntax highlighting" },
+        "title": { "type": "string", "description": "Code block title" },
+        "copyable": { "type": "boolean", "default": true, "description": "Enable copy-to-clipboard" }
+      },
+      "outputSchema": {
+        "copied": { "type": "boolean", "description": "Whether code was copied" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showToolbar",
+      "description": "Display action toolbar with grouped buttons",
+      "proposedComponent": ["ds-button", "ds-icon-button", "ds-divider"],
+      "requiredData": {
+        "groups": { "type": "array", "required": true, "description": "Button groups with actions, labels, icons" },
+        "vertical": { "type": "boolean", "default": false, "description": "Vertical layout" }
+      },
+      "outputSchema": {
+        "actionTriggered": { "type": "string", "description": "Triggered action ID" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showPanel",
+      "description": "Display side panel or drawer with detailed content",
+      "proposedComponent": "ds-panel",
+      "requiredData": {
+        "title": { "type": "string", "required": true, "description": "Panel title" },
+        "content": { "type": "string", "description": "Panel content (HTML or plaintext)" },
+        "position": { "type": "string", "enum": ["left", "right", "top", "bottom"], "default": "right" },
+        "width": { "type": "string", "description": "Panel width (e.g., '400px', '50%')" },
+        "closeable": { "type": "boolean", "default": true }
+      },
+      "outputSchema": {
+        "closed": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showCollapsible",
+      "description": "Display accordion or expandable sections",
+      "proposedComponent": "ds-accordion",
+      "requiredData": {
+        "sections": { "type": "array", "required": true, "description": "Accordion sections with title, content, icon" },
+        "allowMultiple": { "type": "boolean", "default": false, "description": "Allow multiple open sections" }
+      },
+      "outputSchema": {
+        "openSections": { "type": "array", "description": "Open section indices" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showTreeView",
+      "description": "Display hierarchical tree structure with expand/collapse",
+      "proposedComponent": "ds-tree-view",
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "Tree items with label, children, icon, id" },
+        "selectable": { "type": "boolean", "default": true, "description": "Enable item selection" },
+        "expandable": { "type": "boolean", "default": true, "description": "Enable expand/collapse" }
+      },
+      "outputSchema": {
+        "selectedItems": { "type": "array" },
+        "expandedItems": { "type": "array" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showChips",
+      "description": "Display selectable or removable chips/tags",
+      "proposedComponent": ["ds-chip", "ds-tag-input"],
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "Chip items with label, id, removable, clickable" },
+        "selectable": { "type": "boolean", "default": false }
+      },
+      "outputSchema": {
+        "selectedChips": { "type": "array" },
+        "removedChips": { "type": "array" },
+        "addedChips": { "type": "array" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showBadges",
+      "description": "Display status badges and labels",
+      "proposedComponent": "ds-badge",
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "Badge items with label, variant, severity, count" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showSlider",
+      "description": "Display slider or range input control",
+      "proposedComponent": "ds-slider",
+      "requiredData": {
+        "min": { "type": "number", "required": true },
+        "max": { "type": "number", "required": true },
+        "value": { "type": "number", "description": "Initial slider value" },
+        "step": { "type": "number", "description": "Slider step size" },
+        "label": { "type": "string", "description": "Slider label" },
+        "range": { "type": "boolean", "default": false, "description": "Enable range selection (min-max)" }
+      },
+      "outputSchema": {
+        "value": { "type": "number" },
+        "range": { "type": "array", "description": "Selected range [min, max]" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showDateTimePicker",
+      "description": "Display date and time selection interface",
+      "proposedComponent": "ds-date-picker",
+      "requiredData": {
+        "type": { "type": "string", "enum": ["date", "time", "datetime", "daterange"], "required": true },
+        "value": { "type": "string", "description": "Initial selected date/time (ISO format)" },
+        "min": { "type": "string", "description": "Minimum selectable date" },
+        "max": { "type": "string", "description": "Maximum selectable date" },
+        "disabled": { "type": "array", "description": "Disabled dates (ISO format strings)" }
+      },
+      "outputSchema": {
+        "selectedDate": { "type": "string", "format": "iso8601" },
+        "selectedRange": { "type": "array", "description": "[startDate, endDate]" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showToggle",
+      "description": "Display toggle switch or checkbox controls",
+      "proposedComponent": "ds-selection-controls",
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "Toggle items with label, id, checked, disabled" },
+        "type": { "type": "string", "enum": ["checkbox", "switch", "radio"], "default": "checkbox" }
+      },
+      "outputSchema": {
+        "values": { "type": "object", "description": "Toggle states by id" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showPopover",
+      "description": "Display popover with content anchored to a trigger element",
+      "proposedComponent": "ds-popover",
+      "requiredData": {
+        "trigger": { "type": "string", "required": true, "description": "Trigger element selector or label" },
+        "content": { "type": "string", "required": true, "description": "Popover content" },
+        "position": { "type": "string", "enum": ["top", "bottom", "left", "right", "auto"], "default": "auto" },
+        "dismissible": { "type": "boolean", "default": true }
+      },
+      "outputSchema": {
+        "dismissed": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showTooltip",
+      "description": "Display tooltip hover hint text",
+      "proposedComponent": "ds-tooltip",
+      "requiredData": {
+        "text": { "type": "string", "required": true, "description": "Tooltip text" },
+        "position": { "type": "string", "enum": ["top", "bottom", "left", "right"], "default": "top" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showNotificationCenter",
+      "description": "Display notification center with history and filtering",
+      "proposedComponent": "ds-notification-center",
+      "requiredData": {
+        "notifications": { "type": "array", "required": true, "description": "Notification items with id, title, message, type, timestamp, read" },
+        "filters": { "type": "array", "description": "Filter options (all, unread, mentions, etc.)" }
+      },
+      "outputSchema": {
+        "selectedNotification": { "type": "string" },
+        "markedAsRead": { "type": "array" },
+        "dismissed": { "type": "array" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showBottomSheet",
+      "description": "Display bottom sheet modal for mobile-optimized content",
+      "proposedComponent": "ds-panel",
+      "requiredData": {
+        "title": { "type": "string", "description": "Bottom sheet title" },
+        "content": { "type": "string", "required": true, "description": "Bottom sheet content" },
+        "actions": { "type": "array", "description": "Action buttons with label, id, variant" },
+        "dragHandleVisible": { "type": "boolean", "default": true }
+      },
+      "outputSchema": {
+        "actionTriggered": { "type": "string" },
+        "dismissed": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showContextMenu",
+      "description": "Display context menu with actions",
+      "proposedComponent": "ds-menu",
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "Menu items with label, id, icon, disabled, divider" },
+        "x": { "type": "number", "description": "Menu x position (pixels)" },
+        "y": { "type": "number", "description": "Menu y position (pixels)" }
+      },
+      "outputSchema": {
+        "selectedItem": { "type": "string" },
+        "dismissed": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showAvatar",
+      "description": "Display user avatar with status indicator",
+      "proposedComponent": "ds-avatar",
+      "requiredData": {
+        "src": { "type": "string", "description": "Avatar image URL" },
+        "initials": { "type": "string", "description": "Fallback initials" },
+        "label": { "type": "string", "description": "User name or label" },
+        "status": { "type": "string", "enum": ["online", "offline", "away", "busy"], "description": "User status indicator" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showTopNavigation",
+      "description": "Display top navigation bar with branding and actions",
+      "proposedComponent": ["ds-button", "ds-icon-button", "ds-avatar"],
+      "requiredData": {
+        "title": { "type": "string", "description": "App/page title" },
+        "logo": { "type": "string", "description": "Logo image URL" },
+        "actions": { "type": "array", "description": "Navigation actions (buttons, menus)" },
+        "profile": { "type": "object", "description": "User profile with avatar, name" }
+      },
+      "outputSchema": {
+        "actionTriggered": { "type": "string" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showSidebar",
+      "description": "Display collapsible sidebar navigation",
+      "proposedComponent": ["ds-nav-rail", "ds-list"],
+      "requiredData": {
+        "items": { "type": "array", "required": true, "description": "Navigation items with label, id, icon, badge, children" },
+        "collapsible": { "type": "boolean", "default": true },
+        "collapsed": { "type": "boolean", "default": false }
+      },
+      "outputSchema": {
+        "selectedItem": { "type": "string" },
+        "collapsed": { "type": "boolean" }
+      },
+      "interruptRequired": false,
+      "aguiEventMapping": "ToolCallResult",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showSurface",
+      "description": "Display generic surface container for content grouping",
+      "proposedComponent": "ds-surface",
+      "requiredData": {
+        "content": { "type": "string", "required": true, "description": "Surface content (HTML or text)" },
+        "elevation": { "type": "number", "enum": [0, 1, 2, 3, 4], "default": 1, "description": "Surface elevation/shadow level" },
+        "padding": { "type": "string", "description": "Content padding" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    },
+    {
+      "name": "showDivider",
+      "description": "Display visual separator line",
+      "proposedComponent": "ds-divider",
+      "requiredData": {
+        "orientation": { "type": "string", "enum": ["horizontal", "vertical"], "default": "horizontal" },
+        "label": { "type": "string", "description": "Optional divider label" }
+      },
+      "outputSchema": null,
+      "interruptRequired": false,
+      "aguiEventMapping": "ActivitySnapshot",
+      "governancePhase": "released"
+    }
+  ],
+  "composedPatterns": [
+    {
+      "name": "FormWithValidation",
+      "description": "Form with real-time validation feedback",
+      "components": ["ds-text-field", "ds-alert", "ds-button"],
+      "usage": "For user data entry with inline error display"
+    },
+    {
+      "name": "DataGridWithSearch",
+      "description": "Data grid combined with search and filtering",
+      "components": ["ds-data-grid", "ds-search", "ds-selection-controls"],
+      "usage": "For browsing and filtering large datasets"
+    },
+    {
+      "name": "ModalWithForm",
+      "description": "Dialog containing a form",
+      "components": ["ds-dialog", "ds-text-field", "ds-button"],
+      "usage": "For inline data entry in modals"
+    },
+    {
+      "name": "TimelineWithDetails",
+      "description": "Timeline with expandable event details",
+      "components": ["ds-timeline", "ds-accordion", "ds-card"],
+      "usage": "For showing event progression with details"
+    },
+    {
+      "name": "NotificationStack",
+      "description": "Multiple stacked notifications",
+      "components": ["ds-toast"],
+      "usage": "For displaying multiple concurrent notifications"
+    }
+  ],
+  "eventMappingReference": {
+    "ToolCallResult": "Maps to tool return values that require user acknowledgment or input",
+    "ActivitySnapshot": "Maps to status updates, display-only content, async operations",
+    "StateChange": "Maps to application state changes that trigger UI updates",
+    "UserInteraction": "Maps to user gestures that trigger agent actions"
+  },
+  "governancePhases": {
+    "released": "Component is stable and fully integrated",
+    "beta": "Component is in testing phase",
+    "proposed": "Component awaiting approval"
+  }
+}

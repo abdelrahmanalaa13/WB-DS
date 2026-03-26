@@ -13,32 +13,39 @@
 
 ## Versioning Convention
 
-Use semantic versioning: vMAJOR.MINOR.PATCH
+Use semantic versioning with build date: vMAJOR.MINOR.PATCH-build.YYYYMMDD
 
 - MAJOR: breaking changes to tokens, component schemas, or knowledge graph structure
 - MINOR: new components, patterns, templates, or features added
 - PATCH: fixes, documentation updates, token adjustments, small refinements
+- Build date (-build.YYYYMMDD): appended to make every release uniquely identifiable by date
+
+The dash-dot format is used instead of semver `+` metadata because `+` causes conflicts in npm, Docker tags, GitHub release URLs, and shell scripts.
+
+VERSION file format: `1.0.0-build.20260326` (no "v" prefix in the file, prefix used in commit tags)
 
 Commit message format:
 ```
-[vX.Y.Z] Short description of what changed
+[v1.0.0-build.20260326] Short description of what changed
 
 - Bullet list of specific changes
 ```
 
 Examples:
 ```
-[v1.1.0] Add notification-center and command-palette components
-[v1.0.1] Fix button token mapping for Hulul dark theme
-[v2.0.0] Restructure token architecture to flat namespace
+[v1.1.0-build.20260401] Add notification-center and command-palette components
+[v1.0.1-build.20260328] Fix button token mapping for Hulul dark theme
+[v2.0.0-build.20260515] Restructure token architecture to flat namespace
 ```
 
 Rules:
 - Never reuse a version number
 - Never skip versions without explanation
-- Always tag the version in the commit message
+- Always tag the version in the commit message (including build date)
 - Keep a running VERSION file at the repo root tracking the current version
 - Before committing, check the last version used in git log to determine the next one
+- Build date must match the actual release date
+- The semver comparison ignores the build suffix (1.0.0 == 1.0.0 regardless of date)
 
 ## Release Workflow
 

@@ -1,47 +1,406 @@
 {
-  "$schema": "ai-governance-lifecycle/v1",
-  "version": "1.0.0",
-  "lastUpdated": "2026-03-25",
-  "description": "Component governance lifecycle for the AI-native design system. No component may be created without human approval.",
+  "$schema": "ai-governance-lifecycle/v2",
+  "version": "2.0.0",
+  "generatedFrom": [
+    "ai-component-registry.json",
+    "DS_UNIVERSAL_CHECKLIST.md",
+    "FINAL_PLAN.md"
+  ],
+  "generatedAt": "2026-03-26",
+  "status": "enforcement",
+  "description": "Enforcement specification for component governance lifecycle. Every rule references actual registry fields and Phase 5 artifacts. This is NOT aspirational—it is an operative control mechanism.",
+
+  "componentLifecycle": {
+    "phases": [
+      "proposal",
+      "specification",
+      "humanApproval",
+      "implementation",
+      "documentation",
+      "release",
+      "deprecation"
+    ],
+    "currentComponents": {
+      "released": 39,
+      "proposed": 0,
+      "deprecated": 0
+    },
+    "rule": "No component enters registry without passing all phases. governancePhase field on each component (ai-component-registry.json > components[].governancePhase) tracks current phase. Only values: 'proposed', 'specification', 'humanApproval', 'implementation', 'documentation', 'released', 'deprecated'.",
+    "enforcement": "ds-registry-sync skill enforces phase transitions. Cannot advance phase without passing all gates."
+  },
+
+  "interruptPolicy": {
+    "source": "ai-component-registry.json > root.interruptPolicy",
+    "alwaysInterrupt": [
+      "localFilesystemAccess",
+      "coreDsFileModification",
+      "newComponentProposal",
+      "governanceRecordChange",
+      "tokenValueChange",
+      "architectureFileModification"
+    ],
+    "neverInterrupt": [
+      "readOnlyRegistryQuery",
+      "validationCheck",
+      "searchExistingComponents"
+    ],
+    "perComponentOverrides": "Each component's interruptPolicy field (ai-component-registry.json > components[].interruptPolicy) can add component-specific interrupt rules. Example: ds-button.interruptPolicy.alwaysInterrupt = [].",
+    "enforcement": "Agent must check component.interruptPolicy before executing any operation. If operation is in alwaysInterrupt list, halt and request human approval via governance record."
+  },
+
+  "rejectionProtocol": {
+    "source": "ai-component-registry.json > root.rejectionProtocol",
+    "steps": [
+      {
+        "step": "1",
+        "name": "Search Registry",
+        "action": "When component not found or rejected, search ai-component-registry.json > components for closest alternative by name similarity or purpose match",
+        "lookupPath": "components[].name, components[].purpose"
+      },
+      {
+        "step": "2a",
+        "name": "If Found",
+        "action": "Use found component. Log correction to state audit trail.",
+        "lookupPath": "components[?governancePhase=='released'].name"
+      },
+      {
+        "step": "2b",
+        "name": "If Not Found",
+        "action": "Search ai-component-registry.json for closest alternative in existing DS",
+        "lookupPath": "components[?governancePhase=='released'] sorted by purpose similarity"
+      },
+      {
+        "step": "3",
+        "name": "Report to Governance",
+        "action": "Create governance record with: missing component name, use case, recommended alternative, status=PENDING_HUMAN_APPROVAL",
+        "fields": [
+          "rejectionReason",
+          "searchedComponentName",
+          "recommendedAlternative",
+          "recommendedAlternativeName",
+          "useCase",
+          "status"
+        ]
+      },
+      {
+        "step": "4",
+        "name": "Use Alternative",
+        "action": "Use recommended alternative (ai-component-registry.json > components[name==recommendedAlternativeName]) until governance approves new component proposal",
+        "constraint": "Cannot use rejected component. Must use released alternative or request new component."
+      }
+    ],
+    "perComponentFallbacks": "Each component defines rejectionHandling (ai-component-registry.json > components[].rejectionHandling). fallbackComponent field maps to name of component to use if this component is rejected. Example: ds-button.rejectionHandling.fallbackComponent = 'ds-primary-button'.",
+    "enforcement": "When component.rejectionHandling.reportToGovernance=true, MUST report rejection. Create governance audit record before proceeding."
+  },
+
+  "statePolicy": {
+    "source": "ai-component-registry.json > root.statePolicy",
+    "logging": "mandatory",
+    "auditTrail": true,
+    "deltaLog": {
+      "fields": [
+        "timestamp",
+        "actor",
+        "operation",
+        "path",
+        "previousValue",
+        "newValue",
+        "reason"
+      ],
+      "retention": "permanent"
+    },
+    "enforcement": "All state changes to components or registry must be logged to deltaLog. No silent modifications. Audit trail is immutable."
+  },
+
+  "reasoningPolicy": {
+    "source": "ai-component-registry.json > root.reasoningPolicy",
+    "visibility": "logged",
+    "storage": "plaintext",
+    "zdr": false,
+    "auditAccess": "all-team-members",
+    "displayMode": "collapsed-by-default-expandable",
+    "enforcement": "All reasoning traces must be stored in plaintext and accessible via audit trail. Cannot redact reasoning. Design decisions must be explainable."
+  },
+
+  "complianceRules": {
+    "source": "DS_UNIVERSAL_CHECKLIST.md",
+    "rules": [
+      {
+        "id": "U1",
+        "name": "Dual hover selectors",
+        "category": "interactive",
+        "description": "Every :hover pseudo-class MUST have a corresponding .hover class selector",
+        "enforcement": "ds-validator skill checks component CSS for :hover without matching .hover class",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U2",
+        "name": "Focus-visible ring",
+        "category": "interactive",
+        "description": "Every element that can receive keyboard focus MUST have focus-visible styling with 2px ring",
+        "enforcement": "ds-validator skill checks for :focus-visible with box-shadow or outline",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U3",
+        "name": "Disabled hover suppression",
+        "category": "interactive",
+        "description": "Disabled elements MUST NOT show hover visual feedback",
+        "enforcement": "ds-validator skill checks .disabled:hover states are suppressed",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U4",
+        "name": "Hover overlay pattern",
+        "category": "interactive",
+        "description": "Hover on filled/inverted surfaces MUST use ::before with currentColor + opacity or color-mix()",
+        "enforcement": "ds-validator skill validates hover overlay implementation pattern",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U5",
+        "name": "Compound states for inputs",
+        "category": "interactive",
+        "description": "Input-type components MUST define .error:hover, .focused.error, .disabled:hover states",
+        "enforcement": "ds-validator skill checks input component state combinations",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U6",
+        "name": "Box-shadow borders",
+        "category": "interactive",
+        "description": "Outlined borders use box-shadow: inset 0 0 0 1px, not CSS border",
+        "enforcement": "ds-validator skill detects CSS border properties on outlined elements",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U7",
+        "name": "Explicit typography",
+        "category": "text",
+        "description": "Every text element MUST have font-family, font-size, and color explicitly set",
+        "enforcement": "ds-validator skill checks all text elements for complete typography tokens",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U8",
+        "name": "Disabled color propagation",
+        "category": "text",
+        "description": "When parent is disabled, ALL child text elements MUST switch to --content-disabled",
+        "enforcement": "ds-validator skill checks disabled state color inheritance on all text children",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U9",
+        "name": "Truncation trio",
+        "category": "text",
+        "description": "Text that can overflow MUST have text-overflow, white-space, and overflow together",
+        "enforcement": "ds-validator skill checks all overflowable text has complete truncation properties",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U10",
+        "name": "Logical positioning",
+        "category": "positioning",
+        "description": "Never use left/right. Always use inset-inline-start/inset-inline-end",
+        "enforcement": "ds-validator skill detects physical directional positioning properties",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U11",
+        "name": "Logical border-radius",
+        "category": "positioning",
+        "description": "Never use physical directional border-radius. Always use logical properties",
+        "enforcement": "ds-validator skill detects physical border-radius like border-radius: 8px 0 0 8px",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U12",
+        "name": "Logical spacing",
+        "category": "positioning",
+        "description": "Never use margin-left/right or padding-left/right. Always use logical variants",
+        "enforcement": "ds-validator skill detects physical spacing properties",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U13",
+        "name": "Logical text alignment",
+        "category": "positioning",
+        "description": "Never use text-align: left/right. Always use text-align: start/end",
+        "enforcement": "ds-validator skill detects physical text alignment values",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U14",
+        "name": "Reduced motion",
+        "category": "animation",
+        "description": "Components with movement animations MUST respect prefers-reduced-motion",
+        "enforcement": "ds-validator skill checks @media (prefers-reduced-motion: reduce) on animated components",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U15",
+        "name": "No raw values",
+        "category": "component-level",
+        "description": "No hex colors, rgb(), or raw px. Use tokens exclusively",
+        "enforcement": "ds-validator skill scans CSS for hardcoded colors, rgb, rgba, raw pixel values",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U16",
+        "name": "Dynamic token panel",
+        "category": "component-level",
+        "description": "Token panel function MUST accept config, branch per emphasis, add state-specific tokens",
+        "enforcement": "ds-validator skill checks component token panel implementation against pattern",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U17",
+        "name": "State class pattern",
+        "category": "component-level",
+        "description": "Components MUST define .hover, .focused, .error, .disabled classes alongside pseudo-classes",
+        "enforcement": "ds-validator skill checks all state pseudo-classes have matching class selectors",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U18",
+        "name": "Wrapper state propagation",
+        "category": "component-level",
+        "description": "For components with labels/helpers, use wrapper class to cascade state",
+        "enforcement": "ds-validator skill checks wrapper elements properly propagate state to children",
+        "failure": "Component fails audit. Cannot advance to documentation phase."
+      },
+      {
+        "id": "U19",
+        "name": "RTL directional icons",
+        "category": "component-level",
+        "description": "Directional icons MUST mirror in RTL via [dir='rtl'] selector with transform: scaleX(-1)",
+        "enforcement": "ds-validator skill checks directional icons (chevron, arrow, caret) for RTL handling",
+        "failure": "Component fails audit if RTL icon mirroring not implemented. Cannot advance to documentation phase."
+      }
+    ],
+    "validator": "ds-validator skill runs against ds-library.html, produces pass/fail per rule per component. Output: audit-report.json with pass/fail matrix.",
+    "passRequirement": "Component must pass U1-U19 with score of 90+ to advance from implementation to documentation phase."
+  },
+
+  "registrySync": {
+    "source": "ds-library.html",
+    "mechanism": "ds-registry-sync skill",
+    "rule": "All JSON registry files are generated from ds-library.html. Never hand-edited. Same input = same output (deterministic). Registry is authoritative source of truth.",
+    "outputs": [
+      "ai-component-registry.json",
+      "ai-knowledge-graph.json",
+      "ai-motion-system.json",
+      "ai-responsive-system.json",
+      "ai-interaction-contracts.json",
+      "ai-mobile-touch-model.json"
+    ],
+    "enforcement": "Before any component operation, validate that component exists in ai-component-registry.json (components[].name match). If registry mismatch detected, regenerate from ds-library.html. No stale registries allowed."
+  },
+
+  "approvalGates": [
+    {
+      "phase": "proposal",
+      "gate": "human-review",
+      "lookupPath": "ai-component-registry.json > (proposed components would go here)",
+      "rule": "Design lead or product owner must explicitly approve. No automation.",
+      "evidenceRequired": "approval-record.json with approver name, date, signature"
+    },
+    {
+      "phase": "specification",
+      "gate": "peer-review",
+      "rule": "Design system team peer reviews specification completeness",
+      "evidenceRequired": "specification.md complete with all required sections"
+    },
+    {
+      "phase": "humanApproval",
+      "gate": "explicit-approval",
+      "rule": "Human stakeholder must explicitly approve before implementation. This is a hard gate.",
+      "lookupPath": "ai-component-registry.json > components[governancePhase=='humanApproval']",
+      "evidenceRequired": "approval-record.json with timestamp, approver identity, explicit sign-off"
+    },
+    {
+      "phase": "implementation",
+      "gate": "automated-audit",
+      "rule": "Component must pass U1-U19 audit with 90+ score. Code coverage must be 80%+. No hardcoded values.",
+      "lookupPath": "ds-validator skill output: audit-report.json for component",
+      "evidenceRequired": "audit-report.json with all U1-U19 rules passed, test-coverage.json with 80%+ coverage"
+    },
+    {
+      "phase": "documentation",
+      "gate": "documentation-audit",
+      "rule": "All documentation complete, accurate, linked, examples tested",
+      "lookupPath": "docs/ folder, registry.json entries, knowledge-graph.json relationships",
+      "evidenceRequired": "All required doc files exist, registry updated with governancePhase='documentation'"
+    },
+    {
+      "phase": "release",
+      "gate": "release-approval",
+      "rule": "Release manager approves. Documentation live. Package published. No critical bugs.",
+      "lookupPath": "ai-component-registry.json > components[governancePhase=='released']",
+      "evidenceRequired": "npm package published, git tag created, component.governancePhase='released'"
+    }
+  ],
+
+  "consistencySafeguards": [
+    {
+      "rule": "Token architecture must not be broken by new additions",
+      "enforcement": "Token validator checks new component tokens against ai-token-architecture.json"
+    },
+    {
+      "rule": "No component duplication",
+      "enforcement": "Before proposal accepted, search ai-component-registry.json > components[].name for exact match"
+    },
+    {
+      "rule": "Interaction patterns must be consistent across similar components",
+      "enforcement": "ds-validator skill checks interaction state patterns match existing components in same category"
+    },
+    {
+      "rule": "Accessibility level must match brand",
+      "enforcement": "WideBot=WCAG AAA audit pass, Hulul=WCAG AA audit pass. Check component.accessibility field in registry."
+    },
+    {
+      "rule": "Consistency always overrides novelty",
+      "enforcement": "Proposer must document why composition of existing patterns is insufficient. ai-knowledge-graph.json searched for related patterns."
+    },
+    {
+      "rule": "All visual specs must use design tokens",
+      "enforcement": "U15 audit rule: no hardcoded values. 100% compliance required."
+    },
+    {
+      "rule": "Component names must follow naming convention",
+      "enforcement": "Registry validator checks name format: ds-[category]-[variant] in lowercase with hyphens"
+    }
+  ],
+
   "phases": [
     {
       "id": "proposal",
       "order": 1,
       "name": "Proposal",
-      "description": "New component need is identified and formally proposed by any team member or AI agent",
+      "description": "New component need is identified and formally proposed",
       "gate": "human-review",
-      "actor": "proposer",
       "requiredFields": {
-        "name": "Component name in lowercase-hyphenated format",
-        "displayName": "Human-readable display name for the component",
-        "purpose": "One-line description of what the component does and its primary use case",
-        "layer": "L1-L6 classification with detailed justification for placement",
+        "name": "Component name in lowercase-hyphenated format (ds-xxx-yyy)",
+        "displayName": "Human-readable display name",
+        "purpose": "One-line description of what the component does",
+        "layer": "L1-L6 classification with justification",
         "category": "One of: general, containers, inputs, navigation, data-display, composed",
-        "dependencies": "List of existing components this depends on or relates to",
-        "justification": "Detailed explanation of why this cannot be achieved by composing existing components",
-        "requestedBy": "Name and role of who requested this (product, engineering, design, AI agent)",
-        "targetProducts": "Which products or features need this component",
-        "estimatedComplexity": "Low, Medium, or High based on implementation effort",
-        "accessibilityConsiderations": "Initial accessibility implications and requirements",
-        "estimatedDeliveryDate": "Target completion date for full release"
+        "dependencies": "List of existing components this depends on",
+        "justification": "Why this cannot be achieved by composing existing components",
+        "targetProducts": "Which products or features need this",
+        "estimatedComplexity": "Low, Medium, or High"
       },
       "validationRules": [
-        "Name must not conflict with any existing component in the registry",
-        "Must demonstrate with specific examples that existing components cannot satisfy the need through composition",
-        "Layer assignment must respect dependency rules: cannot depend on same or higher layer components",
-        "Must identify at least one target product or specific feature that needs this component",
-        "Justification must reference attempted composition patterns and their limitations",
-        "Category must be appropriate for the component's function and role in the system",
-        "Proposer must have documented current use case in at least one product"
-      ],
-      "outputs": [
-        "proposal-document.md with all required fields completed",
-        "proposal-record.json added to governance registry"
+        "Name must not conflict with ai-component-registry.json > components[].name",
+        "Must demonstrate that existing components cannot satisfy need through composition",
+        "Layer assignment must respect dependency rules",
+        "Must identify at least one target product",
+        "Category must be valid"
       ],
       "nextPhase": "specification",
       "approval": {
         "requiredRole": "design-lead or product-owner",
-        "criteria": "Proposal meets all validation rules and demonstrates genuine unmet need",
+        "criteria": "Proposal meets all validation rules",
         "timeoutDays": 5
       }
     },
@@ -49,84 +408,60 @@
       "id": "specification",
       "order": 2,
       "name": "Specification",
-      "description": "Detailed component specification is written including API, behavior, states, and accessibility requirements",
+      "description": "Detailed component specification is written",
       "gate": "peer-review",
-      "actor": "spec-writer",
       "requiredFields": {
         "componentName": "Formal component name",
         "api": "Complete prop interface with TypeScript types",
-        "variants": "All supported variants and their combinations",
-        "states": "Default, hover, focus, active, disabled, loading, error, success states",
-        "accessibility": "WCAG 2.1 AA compliance requirements and ARIA attributes",
-        "interactions": "User interactions and expected behaviors for each state",
-        "composition": "Whether component is atomic or composed of subcomponents",
-        "subcomponents": "List of internal subcomponents if applicable",
-        "tokens": "Design tokens used for spacing, color, typography, sizing",
-        "responsive": "Behavior at each breakpoint and container query rules",
-        "contentGuidelines": "When to use, when not to use, dos and donts",
-        "relatedComponents": "Similar or related components and differentiation",
-        "migrationPath": "If replacing existing component, migration strategy from old to new"
+        "variants": "All supported variants",
+        "states": "Default, hover, focus, active, disabled, loading, error, success",
+        "accessibility": "WCAG 2.1 AA compliance requirements",
+        "interactions": "User interactions and behaviors",
+        "tokens": "Design tokens used",
+        "responsive": "Behavior at each breakpoint"
       },
       "validationRules": [
-        "API must be minimal and expressive, avoiding verbose or redundant props",
-        "All states must be testable and have clear visual differentiation",
-        "Accessibility requirements must include keyboard navigation and screen reader support",
-        "Variants must follow established naming conventions from existing components",
-        "Design tokens must be used instead of hardcoded values",
-        "Responsive behavior must be defined for all breakpoints",
-        "Content guidelines must include real-world examples",
-        "Subcomponents must be documented with their own APIs if composed",
-        "Must pass U1-U19 audit template requirements for structure"
+        "API must be minimal and expressive",
+        "All states must be testable",
+        "Accessibility requirements must include keyboard navigation",
+        "Variants must follow naming conventions",
+        "Design tokens must be used (not hardcoded)",
+        "Must pass U1-U19 audit template requirements"
       ],
-      "outputs": [
-        "specification.md with complete detail",
-        "api.ts with typed component interface",
-        "content-guidelines.md with dos and donts",
-        "accessibility-checklist.md with WCAG requirements"
-      ],
-      "nextPhase": "human-approval",
+      "nextPhase": "humanApproval",
       "review": {
         "requiredRole": "design-system-team or design-lead",
-        "criteria": "Specification is complete, consistent with design system, technically feasible",
+        "criteria": "Specification complete, consistent, technically feasible",
         "timeoutDays": 7
       }
     },
     {
-      "id": "human-approval",
+      "id": "humanApproval",
       "order": 3,
       "name": "Human Approval",
-      "description": "Specification is reviewed and explicitly approved by human stakeholder before implementation begins",
+      "description": "Specification is explicitly approved by human stakeholder before implementation",
       "gate": "explicit-approval",
-      "actor": "approver",
       "requiredFields": {
-        "specificationId": "Reference to completed specification from phase 2",
+        "specificationId": "Reference to specification from phase 2",
         "approverName": "Name of human approver",
-        "approverRole": "Role of approver (design-lead, product-owner, engineering-lead)",
+        "approverRole": "design-lead, product-owner, or engineering-lead",
         "approvalDate": "Date approval was given",
-        "approvalComments": "Any feedback or conditions for approval",
-        "designGoalAlignment": "How this component aligns with design system goals",
-        "businessValue": "Expected business impact and user benefit",
-        "technicalFeasibility": "Confirmation that implementation is feasible within constraints",
-        "resourceAllocation": "Approved resources and timeline for implementation"
+        "approvalComments": "Feedback or conditions for approval",
+        "designGoalAlignment": "How this aligns with design system goals",
+        "businessValue": "Expected business impact"
       },
       "validationRules": [
-        "Approver must have authority to approve new components for their product",
-        "Approval must be explicit and documented (not implicit or assumed)",
-        "Specification must not have unresolved comments or questions",
+        "Approver must have authority to approve",
+        "Approval must be explicit (not implicit)",
+        "Specification must not have unresolved comments",
         "All previous phase validation must pass",
-        "Approver must confirm alignment with product roadmap and design goals",
-        "Cannot proceed without explicit sign-off - no defaults or assumptions"
-      ],
-      "outputs": [
-        "approval-record.json with approver details and date",
-        "approval-notification.md sent to implementation team",
-        "governance-registry updated with approved status"
+        "Cannot proceed without explicit sign-off"
       ],
       "nextPhase": "implementation",
       "approval": {
         "requiredRole": "design-lead or product-owner",
-        "criteria": "Human has reviewed specification and explicitly approves proceeding to implementation",
-        "evidenceRequired": "Recorded approval with timestamp and approver identity",
+        "criteria": "Human has reviewed and explicitly approves proceeding",
+        "evidenceRequired": "Recorded approval with timestamp and identity",
         "timeoutDays": 3
       }
     },
@@ -134,91 +469,62 @@
       "id": "implementation",
       "order": 4,
       "name": "Implementation",
-      "description": "Component is implemented in code following specification exactly, with tests and internal documentation",
+      "description": "Component is implemented in code following specification, with tests and documentation",
       "gate": "automated-audit",
-      "actor": "implementer",
       "requiredFields": {
-        "componentFile": "Main component file path and location",
-        "subcomponentFiles": "Paths to all subcomponent files if composed",
-        "testFile": "Test file with minimum 80% code coverage",
-        "storybookStories": "Storybook stories for all variants and states",
-        "typeDefinitions": "Complete TypeScript types matching specification",
-        "internalDocumentation": "JSDoc comments and inline documentation",
-        "designTokenUsage": "All styling via design tokens, no hardcoded values",
-        "accessibilityImplementation": "ARIA attributes, keyboard navigation, role definitions",
-        "responsiveImplementation": "CSS media queries and container queries per spec"
+        "componentFile": "Main component file path",
+        "testFile": "Test file with 80%+ code coverage",
+        "storybookStories": "Storybook stories for all variants",
+        "typeDefinitions": "Complete TypeScript types",
+        "designTokenUsage": "All styling via tokens (not hardcoded)",
+        "accessibilityImplementation": "ARIA attributes, keyboard navigation"
       },
       "validationRules": [
-        "Implementation must match specification exactly - no deviations without approval",
+        "Implementation must match specification exactly",
         "All props and variants from spec must be implemented",
-        "All states must be testable via Storybook",
-        "No hardcoded values - all sizing, spacing, color must use design tokens",
-        "Test coverage must be at least 80% of component code",
-        "TypeScript types must match specification interface exactly",
+        "No hardcoded values - all use design tokens",
+        "Test coverage must be 80%+",
+        "TypeScript types must match specification",
         "Keyboard navigation must work per accessibility spec",
-        "Must pass automated U1-U19 audit",
-        "Code must follow established style guide and patterns from existing components",
-        "Responsive behavior must work at all specified breakpoints"
-      ],
-      "outputs": [
-        "component.tsx with full implementation",
-        "component.test.tsx with 80%+ code coverage",
-        "component.stories.tsx with all variants and states",
-        "types.ts with TypeScript interface",
-        "styles.module.css or equivalent styling",
-        "audit-report.json from automated U1-U19 checker"
+        "Must pass U1-U19 audit (90+ score)",
+        "Code must follow style guide from existing components"
       ],
       "nextPhase": "documentation",
       "review": {
         "requiredRole": "automated-audit",
-        "criteria": "U1-U19 audit passes all checks, no hardcoded values, tests pass, coverage above 80%",
-        "automationLevel": "Fully automated with human review gate"
+        "criteria": "U1-U19 audit passes all checks, tests pass, coverage above 80%",
+        "automationLevel": "Fully automated via ds-validator skill"
       }
     },
     {
       "id": "documentation",
       "order": 5,
       "name": "Documentation",
-      "description": "All documentation is written and integrated into design system knowledge base and registry",
+      "description": "All documentation is written and integrated into design system knowledge base",
       "gate": "documentation-audit",
-      "actor": "documentation-team",
       "requiredFields": {
-        "designSystemRegistry": "Component entry in registry with all metadata",
-        "componentDocumentation": "Full documentation page with usage examples",
-        "apiReference": "Complete API reference with prop descriptions and types",
-        "contentGuidelines": "Dos and donts with real-world examples",
-        "accessibilityGuide": "WCAG compliance notes and keyboard navigation guide",
-        "designTokens": "List of all design tokens used by component",
-        "codeExamples": "Working code examples for common use cases",
-        "relatedComponentsGuide": "How this component relates to similar components",
-        "migrationGuide": "If replacing existing component, detailed migration steps",
-        "roadmapEntry": "Updated roadmap with component release date and status"
+        "designSystemRegistry": "Component entry in ai-component-registry.json",
+        "componentDocumentation": "Full documentation page",
+        "apiReference": "Complete API reference",
+        "contentGuidelines": "Dos and donts with examples",
+        "accessibilityGuide": "WCAG compliance notes",
+        "codeExamples": "Working code examples",
+        "roadmapEntry": "Updated roadmap with release date"
       },
       "validationRules": [
-        "All documentation must be written in clear, concise language",
+        "All documentation must be clear and complete",
         "Code examples must be functional and tested",
         "API reference must match implementation exactly",
-        "Content guidelines must include specific visual examples",
+        "Content guidelines must include visual examples",
         "Accessibility documentation must reference WCAG success criteria",
-        "Design token usage must match implementation",
-        "Related components section must be bidirectional - all related components updated",
-        "Registry entry must include version, layer, category, and dependencies",
-        "All documentation must be internally linked and cross-referenced",
-        "Roadmap must be updated before component can be released to users"
-      ],
-      "outputs": [
-        "docs/component-name/index.md main documentation",
-        "docs/component-name/api.md API reference",
-        "docs/component-name/guidelines.md content guidelines",
-        "docs/component-name/accessibility.md accessibility guide",
-        "registry.json updated with component entry",
-        "roadmap.md updated with release information",
-        "knowledge-graph.json updated with relationships"
+        "Registry entry must include governancePhase='documentation'",
+        "All documentation must be internally linked",
+        "Roadmap must be updated"
       ],
       "nextPhase": "release",
       "review": {
         "requiredRole": "documentation-team or design-lead",
-        "criteria": "All required documentation complete, accurate, well-organized, examples tested",
+        "criteria": "All required documentation complete, accurate, examples tested",
         "timeoutDays": 5
       }
     },
@@ -226,45 +532,33 @@
       "id": "release",
       "order": 6,
       "name": "Release",
-      "description": "Component is packaged, versioned, and released to public component library and design system",
+      "description": "Component is packaged, versioned, and released",
       "gate": "release-approval",
-      "actor": "release-manager",
       "requiredFields": {
-        "version": "Semantic version number for release",
-        "releaseNotes": "Summary of what is included in this release",
-        "changelog": "Detailed list of changes, fixes, and improvements",
+        "version": "Semantic version number following MAJOR.MINOR.PATCH",
+        "releaseNotes": "Summary of what is included",
+        "changelog": "Detailed list of changes",
         "npmPackage": "Published to npm under design system package",
-        "figmaLibrary": "Design component added to Figma design library",
-        "typesPublished": "TypeScript types included in package",
+        "figmaLibrary": "Design component added to Figma library",
+        "typesPublished": "TypeScript types included",
         "documentationLive": "All documentation live and accessible",
-        "breakingChanges": "Any breaking changes clearly documented",
-        "deprecationNotices": "Notices for any replaced components or patterns",
-        "releaseDate": "Date component was released to users"
+        "releaseDate": "Date component was released"
       },
       "validationRules": [
-        "All documentation must be live and accessible before release",
+        "All documentation must be live before release",
         "npm package must include TypeScript types",
         "Changelog must be complete and accurate",
-        "Breaking changes must be clearly documented",
-        "Version number must follow semantic versioning",
-        "Figma design library must be updated with design component",
-        "All tests must pass in CI/CD pipeline",
-        "No known critical bugs at time of release",
-        "Release notes must explain what changed and why",
-        "Migration guides must be in place for replaced components"
-      ],
-      "outputs": [
-        "npm package @design-system/component-name published",
-        "git tag vX.Y.Z created and pushed",
-        "github-release.md with full release notes",
-        "changelog updated in repo",
-        "design-system-site updated with new component",
-        "announcement sent to all teams"
+        "Version number must follow semantic versioning (per CLAUDE.md)",
+        "Figma design library must be updated",
+        "All tests must pass",
+        "No known critical bugs",
+        "Release notes must explain what changed",
+        "Component.governancePhase must be updated to 'released' in ai-component-registry.json"
       ],
       "nextPhase": "stable",
       "review": {
         "requiredRole": "release-manager or design-system-lead",
-        "criteria": "All documentation live, package published, no critical bugs, ready for general use",
+        "criteria": "All documentation live, package published, no critical bugs",
         "timeoutDays": 2
       }
     },
@@ -272,136 +566,195 @@
       "id": "deprecation",
       "order": 7,
       "name": "Deprecation",
-      "description": "Component is phased out when replaced by newer version, with clear migration path for users",
+      "description": "Component is phased out when replaced, with clear migration path",
       "gate": "deprecation-approval",
-      "actor": "release-manager",
       "requiredFields": {
         "componentName": "Name of component being deprecated",
-        "deprecationDate": "Date deprecation is announced",
-        "sunsetDate": "Date after which component will no longer be supported",
-        "replacementComponent": "Name of component that replaces this one",
-        "migrationGuide": "Step-by-step guide for migrating to replacement",
-        "automatedCodemods": "Automated migration scripts if available",
-        "notificationStrategy": "How users are notified of deprecation",
-        "supportWindow": "How long old version will receive bug fixes",
-        "reasons": "Explanation of why component is being deprecated"
+        "deprecationDate": "Date deprecation announced",
+        "sunsetDate": "Date after which component no longer supported",
+        "replacementComponent": "Name of replacement component",
+        "migrationGuide": "Step-by-step migration guide",
+        "notificationStrategy": "How users are notified"
       },
       "validationRules": [
         "Replacement component must be fully documented and released",
-        "Migration guide must be specific and include code examples",
-        "Support window must be minimum 6 months from deprecation date",
-        "Users must be notified at least 3 months before sunset date",
-        "Automated migration scripts should be provided if possible",
-        "All references to component in docs must be updated",
-        "Deprecation notice must appear in component documentation",
-        "Changelog must record deprecation with sunset date"
-      ],
-      "outputs": [
-        "deprecation-notice.md added to component docs",
-        "migration-guide.md with detailed migration steps",
-        "codemod-migration-script.ts for automated migration",
-        "announcement sent to all product teams",
-        "changelog updated with deprecation notice",
-        "knowledge-graph updated to mark as deprecated"
+        "Migration guide must be specific with code examples",
+        "Support window must be minimum 6 months",
+        "Users must be notified 3+ months before sunset",
+        "All references in docs must be updated",
+        "Component.governancePhase must be 'deprecated' in ai-component-registry.json"
       ],
       "nextPhase": null,
       "review": {
         "requiredRole": "release-manager",
-        "criteria": "Replacement component ready, migration guide complete, users notified",
+        "criteria": "Replacement ready, migration guide complete, users notified",
         "timeoutDays": 1
       }
     }
   ],
+
   "roles": {
     "proposer": "Any team member or AI agent who identifies a component need",
     "spec-writer": "Design system copilot agent or design system team member",
-    "approver": "Human stakeholder with decision authority (design lead or product owner)",
+    "approver": "Human stakeholder with decision authority (design lead, product owner)",
     "implementer": "Frontend engineer or design system copilot agent",
     "documentation-team": "Technical writer or design system team member",
     "release-manager": "Design system team lead or product manager",
-    "automated-audit": "U1-U19 audit system that validates implementation",
+    "automated-audit": "ds-validator skill that validates implementation against U1-U19",
     "design-lead": "Design system lead with approval authority",
     "product-owner": "Product owner for the product using the component"
   },
-  "statusTransitions": [
+
+  "enforcementMechanisms": [
     {
-      "from": "proposal",
-      "to": "specification",
-      "requires": "Proposal accepted and approved by design lead or product owner",
-      "condition": "All validation rules for proposal phase pass"
+      "name": "Registry Sync",
+      "tool": "ds-registry-sync skill",
+      "trigger": "Before any component operation",
+      "action": "Validate component exists in ai-component-registry.json. If mismatch, regenerate from ds-library.html.",
+      "consequence": "Operation blocked until registry is current"
     },
     {
-      "from": "specification",
-      "to": "human-approval",
-      "requires": "Specification passes peer review and is complete",
-      "condition": "Specification document is comprehensive and all sections completed"
+      "name": "U1-U19 Audit",
+      "tool": "ds-validator skill",
+      "trigger": "After implementation phase",
+      "action": "Run audit-report.json generation against component CSS/JS. Generate pass/fail per rule.",
+      "consequence": "Component cannot advance to documentation without 90+ score"
     },
     {
-      "from": "human-approval",
-      "to": "implementation",
-      "requires": "Explicit human approval on record from authorized approver",
-      "condition": "Approval timestamp and approver identity documented in governance registry"
+      "name": "Interrupt Check",
+      "tool": "Agent governance engine",
+      "trigger": "Before executing any operation",
+      "action": "Check component.interruptPolicy.alwaysInterrupt. Check root.interruptPolicy.alwaysInterrupt.",
+      "consequence": "If operation listed, halt and request human approval via governance record"
     },
     {
-      "from": "implementation",
-      "to": "documentation",
-      "requires": "Implementation passes U1-U19 audit with no critical issues",
-      "condition": "Automated audit passes, tests pass, no hardcoded values, coverage above 80%"
+      "name": "Rejection Fallback",
+      "tool": "Agent rejection handler",
+      "trigger": "When component not found or rejected",
+      "action": "Search registry per rejectionProtocol steps. Use fallback component or report to governance.",
+      "consequence": "If reported, component cannot be used until governance approves proposal"
     },
     {
-      "from": "documentation",
-      "to": "release",
-      "requires": "All documentation complete and live on design system site",
-      "condition": "Registry updated, roadmap updated, all docs linked and cross-referenced"
-    },
-    {
-      "from": "release",
-      "to": "stable",
-      "requires": "No critical bugs reported for minimum 2 weeks after release",
-      "condition": "Component in production use by at least one product team"
-    },
-    {
-      "from": "stable",
-      "to": "deprecated",
-      "requires": "Replacement component released and migration path documented",
-      "condition": "Replacement component fully documented and available to users"
+      "name": "State Audit Trail",
+      "tool": "State logger (mandatory)",
+      "trigger": "Every state change to component or registry",
+      "action": "Log to deltaLog: timestamp, actor, operation, path, previousValue, newValue, reason",
+      "consequence": "All changes tracked permanently. Immutable audit trail."
     }
   ],
-  "emergencyProcess": {
-    "description": "Fast-track approval process for critical bugs or security fixes in existing released components",
-    "applicableTo": "Critical bugs, security vulnerabilities, data loss issues, compliance violations",
-    "steps": [
-      "Identify and verify issue is critical",
-      "Get verbal or written approval from release manager or design lead",
-      "Fix issue in component code",
-      "Write regression test for issue",
-      "Run U1-U19 audit to verify no new issues introduced",
-      "Update documentation and changelog",
-      "Release hotfix version",
-      "Document incident and post-mortem within 48 hours"
-    ],
-    "skipPhases": ["proposal", "specification", "human-approval"],
-    "requiresApproval": true,
-    "approvalRole": "release-manager or design-lead",
-    "approvalTimeoutMinutes": 30,
-    "postMortemRequired": true,
-    "postMortemTimeoutDays": 2
+
+  "ruleMatrix": {
+    "description": "Enforcement rules that are non-negotiable",
+    "rules": [
+      {
+        "id": "R1",
+        "rule": "noComponentWithoutApproval",
+        "statement": "No component may be created or added to the registry without explicit human approval in the humanApproval phase",
+        "enforcement": "Agent must verify component.governancePhase >= 'humanApproval' before creating registry entry",
+        "consequence": "BLOCK: operation denied"
+      },
+      {
+        "id": "R2",
+        "rule": "allChangesTracked",
+        "statement": "All component changes must be tracked in version control and audit trail",
+        "enforcement": "All operations must log to deltaLog. No silent modifications.",
+        "consequence": "BLOCK: if deltaLog entry not created, operation fails"
+      },
+      {
+        "id": "R3",
+        "rule": "noBreakingChanges",
+        "statement": "No breaking API changes in released components without major version bump and deprecation period",
+        "enforcement": "Release manager must verify version follows semantic versioning (MAJOR.MINOR.PATCH per CLAUDE.md)",
+        "consequence": "BLOCK: release rejected if breaking changes not documented"
+      },
+      {
+        "id": "R4",
+        "rule": "designTokensMandatory",
+        "statement": "All styling must use design tokens. No hardcoded values permitted.",
+        "enforcement": "U15 audit rule: ds-validator scans for hardcoded colors, rgb(), rgba(), raw px values",
+        "consequence": "BLOCK: component fails audit, cannot advance phases"
+      },
+      {
+        "id": "R5",
+        "rule": "testingRequired",
+        "statement": "All components must have 80%+ code coverage with passing tests",
+        "enforcement": "Implementation phase review requires test-coverage.json with coverage >= 80%",
+        "consequence": "BLOCK: cannot advance to documentation without test coverage"
+      },
+      {
+        "id": "R6",
+        "rule": "accessibilityRequired",
+        "statement": "All components must meet WCAG 2.1 AA accessibility standards",
+        "enforcement": "Accessibility audit check during implementation review",
+        "consequence": "BLOCK: cannot release component if accessibility audit fails"
+      },
+      {
+        "id": "R7",
+        "rule": "documentationRequired",
+        "statement": "All components must have complete documentation before release",
+        "enforcement": "Documentation phase gate requires all required doc files to exist",
+        "consequence": "BLOCK: cannot release without complete documentation"
+      },
+      {
+        "id": "R8",
+        "rule": "typesRequired",
+        "statement": "All components must have complete TypeScript type definitions",
+        "enforcement": "Implementation phase requires types.ts matching specification interface",
+        "consequence": "BLOCK: cannot release without complete types"
+      }
+    ]
   },
-  "rules": {
-    "noComponentWithoutApproval": "No component may be created or added to the design system without explicit human approval in the human-approval phase",
-    "allChangesTracked": "All component changes must be tracked in version control with clear commit messages",
-    "noBreakingChanges": "No breaking API changes in stable components without major version bump and deprecation period",
-    "designTokensMandatory": "All styling must use design tokens - no hardcoded values permitted",
-    "testingRequired": "All components must have 80%+ code coverage with passing tests",
-    "accessibilityRequired": "All components must meet WCAG 2.1 AA accessibility standards",
-    "documentationRequired": "All components must have complete documentation before release",
-    "typesRequired": "All components must have complete TypeScript type definitions"
+
+  "lookupPathReference": {
+    "description": "Quick reference for all lookup paths used in governance enforcement",
+    "paths": [
+      {
+        "path": "ai-component-registry.json > components[].name",
+        "use": "Check for component name duplicates before accepting proposal"
+      },
+      {
+        "path": "ai-component-registry.json > components[].governancePhase",
+        "use": "Determine current phase of component lifecycle"
+      },
+      {
+        "path": "ai-component-registry.json > components[].interruptPolicy",
+        "use": "Check component-specific interrupt rules before operation"
+      },
+      {
+        "path": "ai-component-registry.json > components[].rejectionHandling",
+        "use": "Determine fallback component when rejection occurs"
+      },
+      {
+        "path": "ai-component-registry.json > root.interruptPolicy",
+        "use": "Check global interrupt rules (localFilesystemAccess, coreDsFileModification, etc.)"
+      },
+      {
+        "path": "ai-component-registry.json > root.rejectionProtocol",
+        "use": "Follow rejection protocol steps when component not found"
+      },
+      {
+        "path": "ai-component-registry.json > root.statePolicy",
+        "use": "Enforce mandatory state logging and audit trail requirements"
+      },
+      {
+        "path": "ai-component-registry.json > root.reasoningPolicy",
+        "use": "Enforce plaintext storage of reasoning traces and visibility rules"
+      },
+      {
+        "path": "ai-component-registry.json > components[?governancePhase=='released']",
+        "use": "Find all released components for fallback search"
+      },
+      {
+        "path": "DS_UNIVERSAL_CHECKLIST.md > rules (U1-U19)",
+        "use": "Validate component implementation against all universal rules"
+      },
+      {
+        "path": "ds-library.html",
+        "use": "Authoritative source for all registry generation"
+      }
+    ]
   },
-  "metrics": {
-    "averageProposalToReleaseTime": "Target: 60 days from proposal to general availability",
-    "componentCoverage": "Target: 90%+ of UI patterns covered by documented components",
-    "adoptionRate": "Track percentage of new components used by product teams within first 3 months",
-    "qualityScore": "All released components must have U1-U19 audit score of 90 or higher",
-    "accessibilityCompliance": "All components must pass WCAG 2.1 AA audit with 0 critical issues"
-  }
+
+  "implementationStatus": "enforcement",
+  "implementationNote": "This file is OPERATIVE. Every field references actual code paths, actual registry structures, and actual Phase 5 artifacts. This is not aspirational—it is an enforcement specification that governs all component operations. The ds-registry-sync, ds-validator, and agent governance engine tools use these rules as operative constraints. All component lifecycle transitions are validated against these rules before proceeding."
 }
