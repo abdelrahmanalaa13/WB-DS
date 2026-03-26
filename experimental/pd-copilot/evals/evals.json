@@ -1,0 +1,23 @@
+{
+  "skill_name": "pd-copilot",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to build an inbox screen for our customer support module. It should work for WideBot brand, support both Arabic and English, and have a conversation list on the left with a chat panel on the right.",
+      "expected_output": "Should fetch DS registries from GitHub, identify relevant DS components (list, panel, ai-chat, tabs, etc.), ask clarifying questions about brand/direction, then orchestrate ui-feature-builder to generate specs. Should NOT create any custom components.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "The dashboard needs a custom gradient background with #1a1a2e to #16213e colors and a rounded card with 20px border radius and a new chart component we don't have yet.",
+      "expected_output": "Should REJECT the hex colors and pixel values, explain that all values must come from DS tokens. Should check ai-component-registry.json for chart component, find it doesn't exist, and create a DS Proposal template instead of building a custom one.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Write user stories for a workflow approval system in the Hulul ERP. Managers need to approve leave requests, purchase orders, and expense reports.",
+      "expected_output": "Should set brand=hulul (WCAG AA), orchestrate pm-toolkit for user stories with Gherkin scenarios, cross-reference DS components (dialog, button, data-grid, stepper, toast) to ensure stories reference real components. Should validate that all UI elements in the stories exist in the DS.",
+      "files": []
+    }
+  ]
+}
